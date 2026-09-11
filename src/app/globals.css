@@ -1,0 +1,246 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #000000;
+  --color-ink: #050506;
+  --color-anthracite: #0e1013;
+  --color-anthracite-2: #15181c;
+  --color-anthracite-3: #1c2026;
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.18);
+  --color-mist: #8d939c;
+  --color-mist-2: #b9bfc7;
+  --color-platinum: #e6e8eb;
+  --color-silver: #a8aeb7;
+
+  --font-display: var(--font-serif-display), "Iowan Old Style", "Palatino Linotype",
+    Palatino, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+
+  --radius-card: 18px;
+}
+
+:root {
+  color-scheme: dark;
+  --platinum-gradient: linear-gradient(
+    118deg,
+    #ffffff 0%,
+    #d9dde2 28%,
+    #8f959e 52%,
+    #e8ebee 78%,
+    #b6bcc4 100%
+  );
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-platinum);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(230, 232, 235, 0.22);
+}
+
+/* ----------------------------- Bausteine ---------------------------------- */
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+}
+
+.platinum-text {
+  background: var(--platinum-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mono-label {
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-mist);
+}
+
+.hairline {
+  border: 1px solid var(--color-line);
+}
+
+.surface {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0) 55%),
+    var(--color-anthracite);
+  border: 1px solid var(--color-line);
+}
+
+.surface-hover {
+  transition:
+    border-color 0.35s ease,
+    background-color 0.35s ease,
+    transform 0.35s ease;
+}
+
+.surface-hover:hover {
+  border-color: var(--color-line-strong);
+  transform: translateY(-2px);
+}
+
+/* Platin-Button */
+.btn-platinum {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.875rem 1.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #07080a;
+  background: var(--platinum-gradient);
+  background-size: 180% 180%;
+  background-position: 0% 50%;
+  border: none;
+  cursor: pointer;
+  transition: background-position 0.6s ease, box-shadow 0.4s ease, opacity 0.2s ease;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+
+.btn-platinum:hover {
+  background-position: 100% 50%;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 14px 40px rgba(0, 0, 0, 0.6);
+}
+
+.btn-platinum:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  padding: 0.875rem 1.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-platinum);
+  border: 1px solid var(--color-line-strong);
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Formulare */
+.field {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--color-line);
+  background: rgba(255, 255, 255, 0.025);
+  padding: 0.75rem 0.9rem;
+  font-size: 0.9375rem;
+  color: var(--color-platinum);
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.field::placeholder {
+  color: #666c75;
+}
+
+.field:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-mist-2);
+}
+
+select.field option {
+  background: #15181c;
+  color: #e6e8eb;
+}
+
+/* Hintergrund-Effekte */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.aura {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(110px);
+  pointer-events: none;
+}
+
+.grid-lines {
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 84px 84px;
+}
+
+/* Locked-Cards */
+.locked-blur {
+  filter: blur(7px);
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.signal-dot {
+  animation: pulse-soft 2.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-dot { animation: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0a0b0d; }
+::-webkit-scrollbar-thumb {
+  background: #262b31;
+  border-radius: 999px;
+  border: 2px solid #0a0b0d;
+}
+::-webkit-scrollbar-thumb:hover { background: #363c44; }
