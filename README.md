@@ -142,6 +142,17 @@ Empfohlen ist **Vercel** — dort läuft Next.js ohne weitere Konfiguration.
 4. Neu deployen, damit die Variablen greifen.
 5. Im Stripe-Dashboard den Webhook auf die echte Domain umstellen.
 
+### Production Branch
+
+Vercel baut die Live-Version nur aus einem einzigen Branch — dem *Production
+Branch*. Er steht unter *Settings → Git* und muss mit dem Branch übereinstimmen,
+auf dem der Code tatsächlich liegt (hier: `main`).
+
+Zeigt die Einstellung auf einen Branch, den es nicht (mehr) gibt — etwa nach
+einer Umbenennung —, meldet Vercel dauerhaft **"No Production Deployments"**
+und baut nichts. Dann den Namen korrigieren und einen Commit auf den richtigen
+Branch pushen; ein gespeichertes Formular allein löst noch kein Deployment aus.
+
 > **Wichtig:** Ohne Supabase gehen auf Vercel alle über die Admin-Oberfläche
 > angelegten Analysen beim nächsten Deployment verloren, weil serverlose
 > Umgebungen kein beschreibbares Dateisystem haben. Für den Live-Betrieb ist
