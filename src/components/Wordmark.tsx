@@ -18,7 +18,13 @@ export default function Wordmark({ compact = false }: { compact?: boolean }) {
             <stop offset="100%" stopColor="#e9ecef" />
           </linearGradient>
         </defs>
-        <path d="M3 20V4l9 9 9-9v16" stroke="url(#wm)" strokeWidth="1.6" fill="none" />
+        <path
+          d="M4.75 4.75 19.25 19.25M19.25 4.75 4.75 19.25"
+          stroke="url(#wm)"
+          strokeWidth="1.9"
+          strokeLinecap="round"
+          fill="none"
+        />
       </svg>
       <span className="flex items-baseline gap-1.5">
         <span className="text-[0.95rem] font-semibold tracking-[0.2em] text-[var(--color-platinum)]">

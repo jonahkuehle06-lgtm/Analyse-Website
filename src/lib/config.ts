@@ -134,7 +134,7 @@ export function priceFor(plan: PlanId, interval: BillingInterval): number {
 }
 
 export const COMPANY = {
-  name: process.env.NEXT_PUBLIC_COMPANY_NAME || "Muster Research GmbH",
+  name: process.env.NEXT_PUBLIC_COMPANY_NAME || "PAX Solutions",
   legalForm:
     process.env.NEXT_PUBLIC_COMPANY_LEGAL_FORM || "Gesellschaft mit beschränkter Haftung",
   street: process.env.NEXT_PUBLIC_COMPANY_STREET || "Musterstraße 1",
@@ -149,8 +149,8 @@ export const COMPANY = {
 };
 
 export const BRAND = {
-  name: "MERIDIAN",
-  suffix: "Research",
+  name: "PAX",
+  suffix: "Solutions",
   claim: "Aktienanalysen mit klarer Signalstärke.",
 };
 
