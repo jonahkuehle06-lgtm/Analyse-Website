@@ -62,9 +62,9 @@ export default async function HomePage() {
             </span>
           </h1>
 
-          <p className="mx-auto mt-7 max-w-xl text-[1.0625rem] leading-relaxed text-[var(--color-mist)]">
-            Jede Analyse auf einen Blick: Titel, Kurs, eine präzise Begründung in ein bis
-            zwei Sätzen — und ein Farbcode, der die Signalstärke sofort einordnet.
+          <p className="mx-auto mt-7 max-w-2xl text-[1.0625rem] leading-relaxed text-[var(--color-mist)]">
+            Klarheit am Markt schaffen, um finanzielle Freiheit zu erreichen. Analysen auf
+            Basis fundamentaler und technischer Methoden – mit langfristigem Value-Ansatz.
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">

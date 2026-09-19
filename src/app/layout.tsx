@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: `%s — ${BRAND.name} ${BRAND.suffix}`,
   },
   description:
-    "Entgeltliche Anlageempfehlungen mit klarer Signalstärke: kurze Begründung, Kursziel und Farbcode je Titel. Basic, Black und Platin.",
+    "Aktienanalysen auf Basis fundamentaler und technischer Methoden – mit langfristigem Value-Ansatz. Kurzbegründung, Kursziel und Signalstärke je Titel.",
   robots: { index: true, follow: true },
 };
 

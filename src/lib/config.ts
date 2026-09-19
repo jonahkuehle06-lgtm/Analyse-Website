@@ -151,7 +151,7 @@ export const COMPANY = {
 export const BRAND = {
   name: "PAX",
   suffix: "Solutions",
-  claim: "Aktienanalysen mit klarer Signalstärke.",
+  claim: "Klarheit am Markt schaffen, um finanzielle Freiheit zu erreichen.",
 };
 
 export function siteUrl(): string {
