@@ -40,7 +40,7 @@ export default async function HomePage() {
           aria-hidden="true"
         />
 
-        <div className="relative mx-auto max-w-4xl px-5 pb-24 pt-20 text-center sm:px-8 sm:pt-28">
+        <div className="relative mx-auto max-w-5xl px-5 pb-24 pt-20 text-center sm:px-8 sm:pt-28">
           <span className="hairline inline-flex items-center gap-2.5 rounded-full bg-[rgba(255,255,255,0.03)] px-4 py-1.5">
             <span
               className="signal-dot inline-block h-1.5 w-1.5 rounded-full"
@@ -54,10 +54,12 @@ export default async function HomePage() {
             </span>
           </span>
 
-          <h1 className="display mt-8 text-[2.75rem] leading-[1.06] sm:text-6xl lg:text-7xl">
-            <span className="platinum-text">Aktienanalysen mit</span>
+          <h1 className="display mt-8 text-[2.5rem] leading-[1.08] sm:text-5xl lg:text-6xl">
+            <span className="platinum-text">Fundierte Analysen,</span>
             <br />
-            <span className="text-[var(--color-platinum)]">klarer Signalstärke.</span>
+            <span className="text-[var(--color-platinum)]">
+              die über das Investieren hinausgehen.
+            </span>
           </h1>
 
           <p className="mx-auto mt-7 max-w-xl text-[1.0625rem] leading-relaxed text-[var(--color-mist)]">
