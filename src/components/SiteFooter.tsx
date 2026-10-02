@@ -6,6 +6,7 @@ const LEGAL = [
   { href: "/impressum", label: "Impressum" },
   { href: "/haftungsausschluss", label: "Haftungsausschluss" },
   { href: "/datenschutz", label: "Datenschutz" },
+  { href: "/cookies", label: "Cookies" },
   { href: "/agb", label: "AGB" },
   { href: "/widerruf", label: "Widerruf" },
 ];

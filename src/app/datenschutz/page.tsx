@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import LegalPage, { LegalSection } from "@/components/LegalPage";
 import { COMPANY } from "@/lib/config";
 
@@ -45,7 +46,12 @@ export default function DatenschutzPage() {
         <p>
           Zur Anmeldung setzen wir ein technisch notwendiges Sitzungs-Cookie. Es enthält
           ausschließlich eine signierte Kennung Ihres Kontos und wird nicht für Analyse-
-          oder Werbezwecke verwendet.
+          oder Werbezwecke verwendet. Eine Aufstellung aller gesetzten Cookies finden Sie
+          in den{" "}
+          <Link href="/cookies" className="underline underline-offset-2">
+            Cookie-Hinweisen
+          </Link>
+          .
         </p>
       </LegalSection>
 

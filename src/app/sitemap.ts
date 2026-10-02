@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/impressum`, lastModified: now, priority: 0.3 },
     { url: `${base}/haftungsausschluss`, lastModified: now, priority: 0.4 },
     { url: `${base}/datenschutz`, lastModified: now, priority: 0.3 },
+    { url: `${base}/cookies`, lastModified: now, priority: 0.3 },
     { url: `${base}/agb`, lastModified: now, priority: 0.3 },
     { url: `${base}/widerruf`, lastModified: now, priority: 0.3 },
   ];
