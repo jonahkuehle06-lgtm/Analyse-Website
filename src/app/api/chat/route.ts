@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /** Voreinstellung; ueber ANTHROPIC_MODEL aenderbar. */
-const DEFAULT_MODEL = "claude-opus-5-5";
+const DEFAULT_MODEL = "claude-sonnet-5-5";
 
 export function chatConfigured(): boolean {
   return Boolean(process.env.ANTHROPIC_API_KEY);

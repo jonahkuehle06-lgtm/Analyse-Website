@@ -195,7 +195,8 @@ Ohne Schluessel erscheint das Chat-Fenster gar nicht erst — die Seite
 funktioniert vollstaendig ohne ihn.
 
 Ueber `ANTHROPIC_MODEL` laesst sich das Modell wechseln. Voreingestellt ist
-`claude-opus-5-5`; `claude-sonnet-5-5` und `claude-haiku-4-5` sind guenstiger.
+`claude-sonnet-5-5`; `claude-haiku-4-5` ist guenstiger, `claude-opus-5-5`
+staerker.
 
 ### Grenzen, die fest eingebaut sind
 
