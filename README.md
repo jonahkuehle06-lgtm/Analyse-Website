@@ -178,6 +178,47 @@ Felder je Analyse:
 
 ---
 
+## 6a. Seiten-Assistent (Chat)
+
+Rechts unten auf der Seite sitzt ein Chat-Fenster, in dem Besucher Fragen zum
+Angebot stellen koennen. Es beantwortet Fragen zu Paketen, Preisen,
+Signalstufen, Zahlung und Kuendigung.
+
+### Einrichten
+
+1. Auf <https://console.anthropic.com> ein Konto anlegen und Guthaben
+   hinterlegen (Abrechnung nach Verbrauch, kein Abo).
+2. Unter *API Keys* einen Schluessel erzeugen.
+3. In Vercel als `ANTHROPIC_API_KEY` eintragen (Typ: Secret), neu deployen.
+
+Ohne Schluessel erscheint das Chat-Fenster gar nicht erst — die Seite
+funktioniert vollstaendig ohne ihn.
+
+Ueber `ANTHROPIC_MODEL` laesst sich das Modell wechseln. Voreingestellt ist
+`claude-opus-5-5`; `claude-sonnet-5-5` und `claude-haiku-4-5` sind guenstiger.
+
+### Grenzen, die fest eingebaut sind
+
+Der Assistent darf **keine Anlageberatung** geben. Er lehnt Fragen zu
+einzelnen Wertpapieren, Kursprognosen, Portfolios und zur persoenlichen
+Finanzlage ab und verweist auf das Angebot. Die Inhalte der Analysen
+(Begruendung, Kursziel) kennt er nicht — sie sind zahlungspflichtig, und der
+Chat soll die Paywall nicht umgehen koennen. Unter dem Eingabefeld steht ein
+dauerhaft sichtbarer Hinweis darauf.
+
+Diese Grenzen stehen in `src/lib/chat-knowledge.ts`. Wer sie lockert, sollte
+sich der Erlaubnispflicht nach KWG/WpIG bewusst sein.
+
+### Missbrauchsschutz
+
+Pro IP sind 15 Nachrichten in 10 Minuten moeglich, je Nachricht hoechstens
+1200 Zeichen, je Gespraech 20 Nachrichten. Die Zaehlung liegt im
+Arbeitsspeicher der jeweiligen Serverinstanz — auf Vercel laufen mehrere
+parallel, die Grenze wirkt dort also weicher als angegeben. Fuer harte
+Garantien braeuchte es einen gemeinsamen Speicher (etwa Vercel KV).
+
+---
+
 ## 7. Rechtliches — bitte lesen
 
 Die Seite enthält Entwürfe für Impressum, Haftungsausschluss,

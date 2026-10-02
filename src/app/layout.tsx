@@ -4,6 +4,7 @@ import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import SiteChrome from "@/components/SiteChrome";
+import ChatWidget from "@/components/ChatWidget";
 import { BRAND, siteUrl } from "@/lib/config";
 import { currentUser } from "@/lib/auth";
 
@@ -39,6 +40,7 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await currentUser();
+  const chatEnabled = Boolean(process.env.ANTHROPIC_API_KEY);
 
   return (
     <html lang="de" className={`${inter.variable} ${serifDisplay.variable}`}>
@@ -48,6 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <SiteChrome>
           <SiteFooter />
         </SiteChrome>
+        {chatEnabled && <ChatWidget />}
       </body>
     </html>
   );
