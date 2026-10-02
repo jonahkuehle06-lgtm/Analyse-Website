@@ -5,6 +5,11 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import SiteChrome from "@/components/SiteChrome";
 import ChatWidget from "@/components/ChatWidget";
+import {
+  GoogleTagManagerConsent,
+  GoogleTagManagerNoScript,
+  GoogleTagManagerScript,
+} from "@/components/GoogleTagManager";
 import { BRAND, siteUrl } from "@/lib/config";
 import { currentUser } from "@/lib/auth";
 
@@ -44,13 +49,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="de" className={`${inter.variable} ${serifDisplay.variable}`}>
+      <head>
+        {/* Muss vor dem GTM-Container laufen: setzt alle einwilligungs-
+            pflichtigen Zwecke zunaechst auf "denied". */}
+        <GoogleTagManagerConsent />
+      </head>
       <body className="grain min-h-screen antialiased">
+        <GoogleTagManagerNoScript />
         <SiteHeader loggedIn={Boolean(user)} />
         <main className="min-h-[60vh]">{children}</main>
         <SiteChrome>
           <SiteFooter />
         </SiteChrome>
         {chatEnabled && <ChatWidget />}
+        <GoogleTagManagerScript />
       </body>
     </html>
   );

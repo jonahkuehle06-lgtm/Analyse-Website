@@ -220,6 +220,44 @@ Garantien braeuchte es einen gemeinsamen Speicher (etwa Vercel KV).
 
 ---
 
+## 6b. Google Tag Manager (optional)
+
+Vorbereitet, aber nicht aktiv. Sobald `NEXT_PUBLIC_GTM_ID` auf eine
+Container-ID der Form `GTM-XXXXXXX` gesetzt ist, wird der Container geladen -
+ohne die Variable kommt kein einziges Google-Skript auf die Seite.
+
+### Einwilligung
+
+Vor dem Container laeuft der **Google Consent Mode v2** mit der Voreinstellung
+`denied` fuer `analytics_storage`, `ad_storage`, `ad_user_data` und
+`ad_personalization`. GTM startet damit zwar, feuert aber keine
+einwilligungspflichtigen Tags.
+
+**Es fehlt noch ein Einwilligungsfenster.** Solange es keines gibt, wird die
+Einwilligung nie erteilt und GTM laeuft wirkungslos mit. Das ist bewusst so:
+Analyse- oder Werbe-Tags ohne vorherige Einwilligung waeren nach
+§ 25 Abs. 1 TDDDG rechtswidrig.
+
+Ein spaeteres Banner steuert die Einwilligung ueber diese Schnittstelle:
+
+```js
+window.paxConsent.update({ analytics: true, ads: false }); // erteilen
+window.paxConsent.read();                                  // aktuelle Wahl lesen
+window.paxConsent.revoke();                                // widerrufen
+```
+
+Die Wahl liegt unter `pax_consent` im localStorage und wird beim naechsten
+Besuch automatisch wieder angewendet.
+
+### Cookie-Seite
+
+`/cookies` passt sich an: Ohne Container-ID erklaert sie, warum es keinen
+Banner gibt. Mit Container-ID beschreibt sie stattdessen den Tag Manager und
+den Consent Mode - samt Platzhalter fuer die konkret eingebundenen Dienste,
+der vor dem Livegang zu fuellen ist.
+
+---
+
 ## 7. Rechtliches — bitte lesen
 
 Die Seite enthält Entwürfe für Impressum, Haftungsausschluss,

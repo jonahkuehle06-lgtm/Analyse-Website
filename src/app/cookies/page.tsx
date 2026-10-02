@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import LegalPage, { LegalSection } from "@/components/LegalPage";
 import { COMPANY } from "@/lib/config";
+import { gtmId } from "@/components/GoogleTagManager";
 
 export const metadata: Metadata = {
   title: "Cookies",
@@ -27,11 +28,19 @@ const COOKIES = [
 ];
 
 export default function CookiesPage() {
+  // Der Text richtet sich danach, ob tatsaechlich ein Tag Manager eingebunden
+  // ist - sonst wuerde die Seite etwas behaupten, das nicht stimmt.
+  const tagManagerActive = Boolean(gtmId());
+
   return (
     <LegalPage
       eyebrow="Transparenz"
       title="Cookie-Hinweise"
-      intro="Diese Website kommt mit zwei Cookies aus. Beide sind technisch notwendig, keines dient der Analyse oder Werbung."
+      intro={
+        tagManagerActive
+          ? "Diese Website setzt zwei technisch notwendige Cookies. Zusätzlich ist ein Tag Manager eingebunden, der weitere Dienste nachladen kann — aber erst nach Ihrer Einwilligung."
+          : "Diese Website kommt mit zwei Cookies aus. Beide sind technisch notwendig, keines dient der Analyse oder Werbung."
+      }
     >
       <LegalSection title="Was Cookies sind">
         <p>
@@ -95,21 +104,50 @@ export default function CookiesPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="Warum es keinen Cookie-Banner gibt">
-        <p>
-          Eine Einwilligung ist nach § 25 Abs. 2 Nr. 2 TDDDG entbehrlich, wenn die
-          Speicherung unbedingt erforderlich ist, damit ein vom Nutzer ausdrücklich
-          gewünschter Dienst bereitgestellt werden kann. Genau das trifft auf beide
-          Cookies zu: Ohne sie lässt sich der kostenpflichtige Bereich nicht nutzen.
-        </p>
-        <p>
-          Wir setzen <strong>keine</strong> Cookies für Reichweitenmessung, Statistik,
-          Profilbildung, Wiedererkennung über mehrere Websites hinweg oder Werbung. Es sind
-          keine Dienste wie Google Analytics, Meta-Pixel oder vergleichbare Werkzeuge
-          eingebunden, und es werden keine Skripte Dritter geladen. Deshalb erscheint beim
-          Aufruf dieser Seite kein Einwilligungsfenster.
-        </p>
-      </LegalSection>
+      {tagManagerActive ? (
+        <LegalSection title="Google Tag Manager und Einwilligung">
+          <p>
+            Auf dieser Website ist der Google Tag Manager der Google Ireland Limited
+            eingebunden. Er lädt selbst keine Messdaten, sondern verwaltet, welche
+            weiteren Dienste geladen werden dürfen.
+          </p>
+          <p>
+            Der Tag Manager läuft mit dem Google Consent Mode v2 und der Voreinstellung{" "}
+            <strong>abgelehnt</strong>: Solange Sie nicht einwilligen, werden keine Cookies
+            für Reichweitenmessung, Statistik, Profilbildung oder Werbung gesetzt und keine
+            entsprechenden Daten übertragen. Rechtsgrundlage für eine Einwilligung wäre
+            § 25 Abs. 1 TDDDG i.V.m. Art. 6 Abs. 1 lit. a DSGVO.
+          </p>
+          <p>
+            Ihre Entscheidung wird unter dem Schlüssel <code>pax_consent</code> lokal in
+            Ihrem Browser gespeichert, damit sie beim nächsten Besuch nicht erneut
+            abgefragt werden muss. Diese Speicherung dient allein der Umsetzung Ihrer Wahl
+            und wird nicht übertragen; löschen Sie die Browserdaten, ist sie entfernt.
+          </p>
+          <p>
+            [Platzhalter — sobald konkrete Dienste über den Tag Manager eingebunden werden
+            (etwa Google Analytics oder Werbe-Tags), sind sie hier einzeln mit Zweck,
+            Anbieter, Speicherdauer und etwaiger Drittlandsübermittlung aufzuführen. Diese
+            Angaben sind zusammen mit dem Einwilligungsfenster zu ergänzen.]
+          </p>
+        </LegalSection>
+      ) : (
+        <LegalSection title="Warum es keinen Cookie-Banner gibt">
+          <p>
+            Eine Einwilligung ist nach § 25 Abs. 2 Nr. 2 TDDDG entbehrlich, wenn die
+            Speicherung unbedingt erforderlich ist, damit ein vom Nutzer ausdrücklich
+            gewünschter Dienst bereitgestellt werden kann. Genau das trifft auf beide
+            Cookies zu: Ohne sie lässt sich der kostenpflichtige Bereich nicht nutzen.
+          </p>
+          <p>
+            Wir setzen <strong>keine</strong> Cookies für Reichweitenmessung, Statistik,
+            Profilbildung, Wiedererkennung über mehrere Websites hinweg oder Werbung. Es
+            sind keine Dienste wie Google Analytics, Meta-Pixel oder vergleichbare
+            Werkzeuge eingebunden, und es werden keine Skripte Dritter geladen. Deshalb
+            erscheint beim Aufruf dieser Seite kein Einwilligungsfenster.
+          </p>
+        </LegalSection>
+      )}
 
       <LegalSection title="Zahlungsabwicklung über Stripe">
         <p>
