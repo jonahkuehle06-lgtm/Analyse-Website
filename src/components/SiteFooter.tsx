@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Wordmark from "./Wordmark";
+import ConsentSettingsLink from "./ConsentSettingsLink";
+import { gtmId } from "./GoogleTagManager";
 import { BRAND, COMPANY } from "@/lib/config";
 
 const LEGAL = [
@@ -60,6 +62,12 @@ export default function SiteFooter() {
                   </Link>
                 </li>
               ))}
+              {/* Nur sinnvoll, wenn es ueberhaupt etwas einzuwilligen gibt. */}
+              {gtmId() && (
+                <li>
+                  <ConsentSettingsLink />
+                </li>
+              )}
             </ul>
           </div>
         </div>

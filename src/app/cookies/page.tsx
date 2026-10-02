@@ -119,6 +119,12 @@ export default function CookiesPage() {
             § 25 Abs. 1 TDDDG i.V.m. Art. 6 Abs. 1 lit. a DSGVO.
           </p>
           <p>
+            Beim ersten Besuch werden Sie um eine Entscheidung gebeten. Ablehnen ist
+            dabei genauso einfach wie Zustimmen, und keine Auswahl ist vorangekreuzt. Sie
+            können Ihre Entscheidung jederzeit über „Cookie-Einstellungen" in der Fußzeile
+            ändern oder vollständig widerrufen (Art. 7 Abs. 3 DSGVO).
+          </p>
+          <p>
             Ihre Entscheidung wird unter dem Schlüssel <code>pax_consent</code> lokal in
             Ihrem Browser gespeichert, damit sie beim nächsten Besuch nicht erneut
             abgefragt werden muss. Diese Speicherung dient allein der Umsetzung Ihrer Wahl

@@ -9,7 +9,9 @@ import {
   GoogleTagManagerConsent,
   GoogleTagManagerNoScript,
   GoogleTagManagerScript,
+  gtmId,
 } from "@/components/GoogleTagManager";
+import ConsentBanner from "@/components/ConsentBanner";
 import { BRAND, siteUrl } from "@/lib/config";
 import { currentUser } from "@/lib/auth";
 
@@ -62,6 +64,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <SiteFooter />
         </SiteChrome>
         {chatEnabled && <ChatWidget />}
+        {gtmId() && <ConsentBanner />}
         <GoogleTagManagerScript />
       </body>
     </html>

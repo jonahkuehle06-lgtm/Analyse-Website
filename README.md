@@ -233,12 +233,18 @@ Vor dem Container laeuft der **Google Consent Mode v2** mit der Voreinstellung
 `ad_personalization`. GTM startet damit zwar, feuert aber keine
 einwilligungspflichtigen Tags.
 
-**Es fehlt noch ein Einwilligungsfenster.** Solange es keines gibt, wird die
-Einwilligung nie erteilt und GTM laeuft wirkungslos mit. Das ist bewusst so:
-Analyse- oder Werbe-Tags ohne vorherige Einwilligung waeren nach
-§ 25 Abs. 1 TDDDG rechtswidrig.
+Das **Einwilligungsfenster** erscheint beim ersten Besuch, sobald eine
+Container-ID gesetzt ist. Es bietet "Nur notwendige", "Einstellungen" und
+"Alle akzeptieren" in gleicher Groesse und gleicher Gestaltung - ein
+hervorgehobener Zustimmen-Knopf neben einem unscheinbaren Ablehnen-Knopf gilt
+als unzulaessige Beeinflussung. Statistik und Marketing sind nicht
+vorangekreuzt. Ueber "Cookie-Einstellungen" in der Fusszeile laesst sich die
+Wahl jederzeit aendern oder widerrufen.
 
-Ein spaeteres Banner steuert die Einwilligung ueber diese Schnittstelle:
+Ohne Container-ID erscheint weder das Fenster noch der Fusszeilen-Link - dann
+gibt es nichts einzuwilligen.
+
+Das Fenster steuert die Einwilligung ueber diese Schnittstelle:
 
 ```js
 window.paxConsent.update({ analytics: true, ads: false }); // erteilen
