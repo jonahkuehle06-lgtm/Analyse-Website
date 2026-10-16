@@ -8,17 +8,38 @@ export const metadata: Metadata = {
     "Wie die Signalstärke zustande kommt und was eine Analyse enthält.",
 };
 
-/**
- * Die sechs Saeulen der Analyse. Der Beschreibungstext je Saeule wird noch
- * nachgereicht; bis dahin bleibt `body` leer und die Zeile zeigt nur den Titel.
- */
-const PILLARS: { step: string; title: string; body?: string }[] = [
-  { step: "01", title: "Fundamentalanalyse" },
-  { step: "02", title: "Bewertungsmodelle" },
-  { step: "03", title: "Chart und Indikatoren" },
-  { step: "04", title: "Ökonomie" },
-  { step: "05", title: "Zyklen und Sentiment" },
-  { step: "06", title: "Risikomanagement" },
+/** Die sechs Saeulen, auf denen eine Analyse steht. */
+const PILLARS = [
+  {
+    step: "01",
+    title: "Fundamentalanalyse",
+    body: "Bewertung von Unternehmenskennzahlen und Analyse fundamentaler Daten. Berücksichtigung der Zusammenhänge zwischen Bilanzkennzahlen sowie deren Verhältnis zum Aktienkurs (KBV, FCF, Verbindlichkeiten, Management, Burggraben etc.).",
+  },
+  {
+    step: "02",
+    title: "Bewertungsmodelle",
+    body: "Ermittlung des Unternehmenswertes unter verschiedenen Szenarien. Ableitung von Kurszielen, Prognosen und Eintrittswahrscheinlichkeiten (DCF, Multiples etc.).",
+  },
+  {
+    step: "03",
+    title: "Charttechnik & Indikatoren",
+    body: "Technische Analyse anhand von Charts, Widerständen, Fibonacci-Retracements und Chartmustern wie Elliott-Wellen. Ergänzende Analyse mithilfe technischer Indikatoren wie RSI, MACD, gleitenden Durchschnitten und Volumenprofilen.",
+  },
+  {
+    step: "04",
+    title: "Ökonomie",
+    body: "Beobachtung der Geldpolitik, der wirtschaftlichen Lage sowie der demografischen Entwicklung und der Entwicklungen an den Märkten.",
+  },
+  {
+    step: "05",
+    title: "Zyklen & Sentiment",
+    body: "Analyse branchentypischer Muster aus vergangenen Marktphasen sowie der Stimmung und Positionierung der Marktteilnehmer.",
+  },
+  {
+    step: "06",
+    title: "Risikomanagement",
+    body: "Bewusste Abwägung von Chancen und Risiken sowie Minimierung von Verlusten durch Diversifikation, Positionsgrößensteuerung und weitere Risikomanagementmaßnahmen.",
+  },
 ];
 
 export default function MethodikPage() {
@@ -32,36 +53,54 @@ export default function MethodikPage() {
         Mehrstufiger Prozess für nachvollziehbare Analysen.
       </p>
 
-      {/* Sechs Balken untereinander - eine Tabelle, die die Analyse beschreibt. */}
+      {/* Sechs Balken untereinander - eine Tabelle, die die Analyse beschreibt.
+          Die Nummer steht in einem eigenen Feld, daneben ein Platinstrich ueber
+          die volle Zeilenhoehe; beim Ueberfahren hellt die Zeile leicht auf. */}
       <div
-        className="mt-14 grid gap-px overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]"
+        className="mt-14 overflow-hidden border border-[var(--color-line)]"
         style={{ borderRadius: "var(--radius-card)" }}
       >
-        {PILLARS.map((item) => (
-          <div
-            key={item.step}
-            className="flex items-start gap-5 bg-[var(--color-anthracite)] px-6 py-6 sm:gap-7 sm:px-8"
-          >
-            <span className="mono-label mt-1 shrink-0 tabular-nums">{item.step}</span>
+        {/* Platin-Haarlinie als oberer Abschluss */}
+        <span
+          aria-hidden="true"
+          className="block h-px w-full"
+          style={{ background: "var(--platinum-gradient)", opacity: 0.55 }}
+        />
 
-            <span
-              aria-hidden="true"
-              className="mt-1 h-6 w-px shrink-0"
-              style={{ background: "var(--platinum-gradient)", opacity: 0.6 }}
-            />
+        <div className="grid gap-px bg-[var(--color-line)]">
+          {PILLARS.map((item) => (
+            <div
+              key={item.step}
+              className="group flex flex-col bg-[var(--color-anthracite)] px-5 py-6 transition-colors duration-300 hover:bg-[var(--color-anthracite-2)] sm:flex-row sm:items-stretch sm:gap-8 sm:px-8 sm:py-7"
+            >
+              {/* Am Telefon steht die Nummer ueber dem Titel - sonst bliebe fuer
+                  den Text nur eine sehr schmale Spalte. */}
+              <span className="mono-label !text-[0.6875rem] tabular-nums transition-colors duration-300 group-hover:text-[var(--color-silver)] sm:hidden">
+                {item.step}
+              </span>
 
-            <div className="min-w-0 flex-1">
-              <h2 className="display text-2xl text-[var(--color-platinum)]">
-                {item.title}
-              </h2>
-              {item.body && (
-                <p className="mt-2.5 text-sm leading-relaxed text-[var(--color-mist)]">
+              <span className="mono-label hidden w-6 shrink-0 pt-1 !text-[0.6875rem] tabular-nums transition-colors duration-300 group-hover:text-[var(--color-silver)] sm:block">
+                {item.step}
+              </span>
+
+              {/* Platinstrich ueber die volle Zeilenhoehe, nur ab Tablet */}
+              <span
+                aria-hidden="true"
+                className="hidden w-px shrink-0 self-stretch sm:block"
+                style={{ background: "var(--platinum-gradient)", opacity: 0.35 }}
+              />
+
+              <div className="min-w-0 flex-1">
+                <h2 className="display mt-1.5 text-[1.375rem] leading-snug text-[var(--color-platinum)] sm:mt-0 sm:text-2xl">
+                  {item.title}
+                </h2>
+                <p className="mt-2.5 max-w-2xl text-[0.875rem] leading-relaxed text-[var(--color-mist)] sm:text-[0.9375rem]">
                   {item.body}
                 </p>
-              )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <h2 className="display mt-20 text-3xl text-[var(--color-platinum)]">
