@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import SignalIndicator from "@/components/SignalIndicator";
 import { SIGNALS, SIGNAL_LEVELS } from "@/lib/config";
 
 export const metadata: Metadata = {
@@ -127,6 +128,50 @@ export default function MethodikPage() {
             </div>
           );
         })}
+      </div>
+
+      {/* Von der Startseite hierher verschoben - erklaert, was auf einer
+          Analyse-Karte steht. Steht bewusst hinter den Signalstufen. */}
+      <div className="mt-20 grid items-center gap-14 lg:grid-cols-2">
+        <div>
+          <p className="mono-label">Aufbau</p>
+          <h2 className="display mt-4 text-3xl text-[var(--color-platinum)] sm:text-4xl">
+            So liest sich eine Analyse
+          </h2>
+          <p className="mt-5 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
+            Jede Karte enthält den Aktientitel mit Kürzel, den Kurs zum Zeitpunkt der
+            Analyse, die Signalstärke als Farbbalken, die Kurzbegründung sowie die nach
+            Art. 20 MAR erforderlichen Angaben zu Ersteller, Datum und möglichen
+            Interessenkonflikten.
+          </p>
+          <ul className="mt-8 space-y-5">
+            {[
+              ["Signalstärke", "Fünfstufige Skala mit eindeutigem Farbcode."],
+              ["Kurzbegründung", "Ein bis zwei Sätze — der Kern der Einschätzung."],
+              ["Pflichtangaben", "Ersteller, Erstellungsdatum, Interessenkonflikte."],
+            ].map(([title, body]) => (
+              <li key={title} className="border-l border-[var(--color-line-strong)] pl-5">
+                <p className="text-sm font-medium text-[var(--color-platinum)]">{title}</p>
+                <p className="mt-1 text-sm text-[var(--color-mist)]">{body}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="surface p-8" style={{ borderRadius: "var(--radius-card)" }}>
+          <p className="mono-label">Beispielhafte Darstellung</p>
+          <div className="mt-6 space-y-6">
+            {SIGNAL_LEVELS.slice(0, 3).map((level) => (
+              <div key={level}>
+                <SignalIndicator level={level} size="sm" />
+              </div>
+            ))}
+          </div>
+          <p className="mt-8 border-t border-[var(--color-line)] pt-5 text-xs leading-relaxed text-[#6b7179]">
+            Darstellung dient ausschließlich der Illustration des Signalcodes und stellt
+            keine Empfehlung für einen konkreten Wert dar.
+          </p>
+        </div>
       </div>
 
       <div

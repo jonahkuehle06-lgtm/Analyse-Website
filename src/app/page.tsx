@@ -1,12 +1,27 @@
 import Link from "next/link";
 import PricingSection from "@/components/PricingSection";
-import SignalIndicator from "@/components/SignalIndicator";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
-import { BRAND, PLANS, SIGNALS, SIGNAL_LEVELS } from "@/lib/config";
+import { BRAND, PLANS } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
+
+/** Die drei Grundsaetze, die unter dem Hero stehen. */
+const PRINCIPLES = [
+  {
+    title: "Authentische Analysen",
+    body: "Bei PAX handeln wir konsequent auf Grundlage unserer eigenen Analysen. Unsere Methoden wurden durch praktische Erfahrungen und die eigene Tätigkeit an den Finanzmärkten entwickelt.",
+  },
+  {
+    title: "Institutionelle Standards",
+    body: "Unabhängig vom gewählten Paket umfasst unser Aktienuniversum ausschließlich sorgfältig ausgewählte Aktien. Unsere Analysemethoden orientieren sich an professionellen Investmentstandards und werden laufend weiterentwickelt.",
+  },
+  {
+    title: "Diversifikation",
+    body: "Unser Analyseuniversum ist international ausgerichtet und bewusst über verschiedene Branchen diversifiziert. Dazu zählen unter anderem Technologie, Konsumgüter, Finanzen, Versorger und das Gesundheitswesen.",
+  },
+];
 
 export default async function HomePage() {
   const [analyses, user] = await Promise.all([listAnalyses(), currentUser()]);
@@ -82,48 +97,28 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* -------------------------- Signal-Legende -------------------------- */}
+      {/* ------------------------------ Grundsätze --------------------------- */}
       <section className="border-y border-[var(--color-line)] bg-[var(--color-void)]">
-        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
-          <div className="max-w-2xl">
-            <p className="mono-label">Signalcode</p>
-            <h2 className="display mt-4 text-3xl sm:text-4xl text-[var(--color-platinum)]">
-              Fünf Stufen. Eine Farbe. Keine Interpretationsfrage.
-            </h2>
-            <p className="mt-4 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
-              Die Signalstärke fasst das Ergebnis unserer Analyse in einer Skala zusammen —
-              von leuchtendem Grün bis leuchtendem Rot.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-px overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)] sm:grid-cols-2 lg:grid-cols-5"
-               style={{ borderRadius: "var(--radius-card)" }}>
-            {SIGNAL_LEVELS.map((level) => {
-              const meta = SIGNALS[level];
-              return (
-                <div key={level} className="bg-[var(--color-anthracite)] p-6">
-                  <span
-                    className="inline-block h-2.5 w-2.5 rounded-full"
-                    style={{
-                      backgroundColor: meta.color,
-                      boxShadow: `0 0 14px ${meta.glow}`,
-                    }}
-                    aria-hidden="true"
-                  />
-                  <p
-                    className="mt-4 text-sm font-semibold"
-                    style={{ color: meta.color }}
-                  >
-                    {meta.label}
-                  </p>
-                  <p className="mono-label mt-1 !tracking-[0.12em]">{meta.short}</p>
-                  <p className="mt-4 text-[0.8125rem] leading-relaxed text-[var(--color-mist)]">
-                    {meta.description}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
+        <div className="mx-auto max-w-5xl space-y-4 px-5 py-20 sm:px-8 sm:py-24">
+          {PRINCIPLES.map((item) => (
+            <article
+              key={item.title}
+              className="surface surface-hover relative overflow-hidden p-7 sm:p-9"
+              style={{ borderRadius: "var(--radius-card)" }}
+            >
+              <span
+                aria-hidden="true"
+                className="absolute inset-y-0 left-0 w-px"
+                style={{ background: "var(--platinum-gradient)", opacity: 0.45 }}
+              />
+              <h2 className="display text-2xl text-[var(--color-platinum)] sm:text-[1.75rem]">
+                {item.title}
+              </h2>
+              <p className="mt-3.5 max-w-2xl text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
+                {item.body}
+              </p>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -200,50 +195,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ------------------------------ Beispiel ---------------------------- */}
-      <section className="mx-auto max-w-6xl px-5 py-24 sm:px-8">
-        <div className="grid items-center gap-14 lg:grid-cols-2">
-          <div>
-            <p className="mono-label">Aufbau</p>
-            <h2 className="display mt-4 text-3xl sm:text-4xl text-[var(--color-platinum)]">
-              So liest sich eine Analyse
-            </h2>
-            <p className="mt-5 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
-              Jede Karte enthält den Aktientitel mit Kürzel, den Kurs zum Zeitpunkt der
-              Analyse, die Signalstärke als Farbbalken, die Kurzbegründung sowie die nach
-              Art. 20 MAR erforderlichen Angaben zu Ersteller, Datum und möglichen
-              Interessenkonflikten.
-            </p>
-            <ul className="mt-8 space-y-5">
-              {[
-                ["Signalstärke", "Fünfstufige Skala mit eindeutigem Farbcode."],
-                ["Kurzbegründung", "Ein bis zwei Sätze — der Kern der Einschätzung."],
-                ["Pflichtangaben", "Ersteller, Erstellungsdatum, Interessenkonflikte."],
-              ].map(([title, body]) => (
-                <li key={title} className="border-l border-[var(--color-line-strong)] pl-5">
-                  <p className="text-sm font-medium text-[var(--color-platinum)]">{title}</p>
-                  <p className="mt-1 text-sm text-[var(--color-mist)]">{body}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="surface p-8" style={{ borderRadius: "var(--radius-card)" }}>
-            <p className="mono-label">Beispielhafte Darstellung</p>
-            <div className="mt-6 space-y-6">
-              {SIGNAL_LEVELS.slice(0, 3).map((level) => (
-                <div key={level}>
-                  <SignalIndicator level={level} size="sm" />
-                </div>
-              ))}
-            </div>
-            <p className="mt-8 border-t border-[var(--color-line)] pt-5 text-xs leading-relaxed text-[#6b7179]">
-              Darstellung dient ausschließlich der Illustration des Signalcodes und stellt
-              keine Empfehlung für einen konkreten Wert dar.
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* ------------------------------ Pakete ------------------------------ */}
       <div className="border-t border-[var(--color-line)] bg-[var(--color-void)]">
