@@ -8,27 +8,17 @@ export const metadata: Metadata = {
     "Wie die Signalstärke zustande kommt und was eine Analyse enthält.",
 };
 
-const STEPS = [
-  {
-    step: "01",
-    title: "Auswahl",
-    body: "Wir beobachten ein festes Universum liquider Titel aus DAX, MDAX und ausgewählten internationalen Indizes. Aufgenommen wird, was eine belastbare Datengrundlage bietet.",
-  },
-  {
-    step: "02",
-    title: "Analyse",
-    body: "Grundlage sind veröffentlichte Unternehmenskennzahlen, Bewertungsvergleiche innerhalb der Branche sowie markttechnische Faktoren wie Trendstruktur und relative Stärke.",
-  },
-  {
-    step: "03",
-    title: "Signalbildung",
-    body: "Die Einzelfaktoren werden zu einer fünfstufigen Signalstärke verdichtet. Je einheitlicher die Faktoren in eine Richtung zeigen, desto stärker das Signal.",
-  },
-  {
-    step: "04",
-    title: "Veröffentlichung",
-    body: "Jede Analyse wird mit Ersteller, Erstellungsdatum und Offenlegung möglicher Interessenkonflikte veröffentlicht und ist unmittelbar im Kundenbereich sichtbar.",
-  },
+/**
+ * Die sechs Saeulen der Analyse. Der Beschreibungstext je Saeule wird noch
+ * nachgereicht; bis dahin bleibt `body` leer und die Zeile zeigt nur den Titel.
+ */
+const PILLARS: { step: string; title: string; body?: string }[] = [
+  { step: "01", title: "Fundamentalanalyse" },
+  { step: "02", title: "Bewertungsmodelle" },
+  { step: "03", title: "Chart und Indikatoren" },
+  { step: "04", title: "Ökonomie" },
+  { step: "05", title: "Zyklen und Sentiment" },
+  { step: "06", title: "Risikomanagement" },
 ];
 
 export default function MethodikPage() {
@@ -39,22 +29,37 @@ export default function MethodikPage() {
         <span className="platinum-text">Methodik</span>
       </h1>
       <p className="mt-5 max-w-2xl text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
-        Transparenz über das Zustandekommen einer Empfehlung ist nicht nur guter Stil,
-        sondern nach Art. 20 MAR i.V.m. der Delegierten Verordnung (EU) 2016/958
-        vorgeschrieben. Dieser Abschnitt beschreibt unser Vorgehen.
+        Mehrstufiger Prozess für nachvollziehbare Analysen.
       </p>
 
-      <div className="mt-14 grid gap-px overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)] sm:grid-cols-2"
-           style={{ borderRadius: "var(--radius-card)" }}>
-        {STEPS.map((item) => (
-          <div key={item.step} className="bg-[var(--color-anthracite)] p-8">
-            <p className="mono-label">{item.step}</p>
-            <h2 className="display mt-4 text-2xl text-[var(--color-platinum)]">
-              {item.title}
-            </h2>
-            <p className="mt-3 text-sm leading-relaxed text-[var(--color-mist)]">
-              {item.body}
-            </p>
+      {/* Sechs Balken untereinander - eine Tabelle, die die Analyse beschreibt. */}
+      <div
+        className="mt-14 grid gap-px overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)]"
+        style={{ borderRadius: "var(--radius-card)" }}
+      >
+        {PILLARS.map((item) => (
+          <div
+            key={item.step}
+            className="flex items-start gap-5 bg-[var(--color-anthracite)] px-6 py-6 sm:gap-7 sm:px-8"
+          >
+            <span className="mono-label mt-1 shrink-0 tabular-nums">{item.step}</span>
+
+            <span
+              aria-hidden="true"
+              className="mt-1 h-6 w-px shrink-0"
+              style={{ background: "var(--platinum-gradient)", opacity: 0.6 }}
+            />
+
+            <div className="min-w-0 flex-1">
+              <h2 className="display text-2xl text-[var(--color-platinum)]">
+                {item.title}
+              </h2>
+              {item.body && (
+                <p className="mt-2.5 text-sm leading-relaxed text-[var(--color-mist)]">
+                  {item.body}
+                </p>
+              )}
+            </div>
           </div>
         ))}
       </div>
