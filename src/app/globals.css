@@ -126,7 +126,15 @@ body {
   overflow-x: hidden;
 }
 
-::selection {
+/* Technische Bezeichner (Cookie-Namen, Variablen) bleiben in der
+     Textschrift - es bleibt bei genau zwei Schriften. */
+  code, kbd, samp, pre {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.95em;
+  }
+
+  ::selection {
   background: rgba(239, 234, 225, 0.85);
   color: #070707;
 }

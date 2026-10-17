@@ -28,7 +28,7 @@ export default function AnalysisCard({ analysis }: { analysis: Analysis }) {
   return (
     <Link
       href={`/analysen/${analysis.id}`}
-      className="group block h-full"
+      className="group block h-full min-w-0"
       aria-label={`${analysis.title} — Analyse öffnen`}
     >
       <article className="surface surface-hover relative flex h-full flex-col p-6 sm:p-7">
@@ -102,7 +102,7 @@ export default function AnalysisCard({ analysis }: { analysis: Analysis }) {
 export function LockedAnalysisCard({ analysis }: { analysis: Analysis }) {
   return (
     <article
-      className="surface relative flex min-h-[240px] flex-col p-6 sm:p-7"
+      className="surface relative flex min-h-[240px] min-w-0 flex-col p-6 sm:p-7"
       aria-label={`${analysis.title} — nicht im Paketumfang enthalten`}
     >
       <header className="flex items-start justify-between gap-4">
