@@ -147,16 +147,7 @@ export default async function AnalyseDetail({
 
       <footer className="mt-10 border-t border-[var(--color-line)] pt-6">
         <p className="text-xs leading-relaxed text-[#6b7179]">
-          Anlageempfehlung im Sinne des § 85 WpHG · Ersteller: {analysis.author || "—"} ·
-          Erstellt am {datum(analysis.publishedAt)}
-        </p>
-        <p className="mt-2 text-xs leading-relaxed text-[#6b7179]">
-          Keine individuelle Anlageberatung. Wertpapiergeschäfte sind mit Risiken bis hin
-          zum Totalverlust verbunden.{" "}
-          <Link href="/haftungsausschluss" className="underline underline-offset-2">
-            Haftungsausschluss
-          </Link>
-          {aktiv && user?.plan ? ` · Paket ${PLANS[user.plan].name}` : ""}
+          Ersteller: {analysis.author || "—"} · Erstellt am {datum(analysis.publishedAt)}
         </p>
       </footer>
     </div>

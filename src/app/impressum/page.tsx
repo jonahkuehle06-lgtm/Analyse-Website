@@ -74,35 +74,6 @@ export default function ImpressumPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="Aufsichtsbehörde / Erlaubnis">
-        <p>
-          [Platzhalter — hier ist einzutragen, ob und in welchem Umfang eine Erlaubnis nach
-          KWG bzw. WpIG vorliegt oder ob die Tätigkeit erlaubnisfrei ist. Die reine
-          Erstellung und Verbreitung von Anlageempfehlungen an einen unbestimmten
-          Personenkreis ist in der Regel keine erlaubnispflichtige Finanzdienstleistung —
-          dies ist jedoch für den konkreten Geschäftsbetrieb anwaltlich zu prüfen.
-          Zuständige Behörde wäre die Bundesanstalt für Finanzdienstleistungsaufsicht
-          (BaFin), Marie-Curie-Straße 24–28, 60439 Frankfurt am Main.]
-        </p>
-      </LegalSection>
-
-      <LegalSection title="Hinweis zu Anlageempfehlungen">
-        <p>
-          Bei den über {BRAND.name} {BRAND.suffix} bereitgestellten Analysen handelt es
-          sich um <strong className="text-[var(--color-platinum)]">entgeltliche,
-          öffentlich zugängliche Anlageempfehlungen</strong> im Sinne des § 85 WpHG i.V.m.
-          Art. 20 der Verordnung (EU) Nr. 596/2014 (Marktmissbrauchsverordnung, MAR) und
-          der Delegierten Verordnung (EU) 2016/958. Jede Analyse ist als Anlageempfehlung
-          gekennzeichnet und weist den Ersteller sowie das Datum der Erstellung aus. Die
-          vollständigen Hinweise einschließlich der Risiko- und Interessenkonfliktangaben
-          finden Sie im{" "}
-          <Link href="/haftungsausschluss" className="underline underline-offset-2">
-            Haftungsausschluss
-          </Link>
-          .
-        </p>
-      </LegalSection>
-
       <LegalSection title="Streitbeilegung">
         <p>
           Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS)

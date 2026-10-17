@@ -21,9 +21,7 @@ export default function LegalReviewNote() {
       <p className="mt-2 text-sm leading-relaxed text-[var(--color-mist-2)]">
         Dieser Text ist eine Vorlage und keine Rechtsberatung. Er muss vor dem Livegang
         durch eine Rechtsanwältin oder einen Rechtsanwalt geprüft und an den tatsächlichen
-        Geschäftsbetrieb angepasst werden — insbesondere hinsichtlich der Pflichten für
-        entgeltliche Anlageempfehlungen (§ 85 WpHG, Art. 20 MAR, Delegierte Verordnung
-        (EU) 2016/958) sowie einer etwaigen Erlaubnispflicht nach KWG/WpIG.
+        Geschäftsbetrieb angepasst werden.
       </p>
       <p className="mt-3 text-xs text-[#8d939c]">
         Nach der Prüfung <code className="text-[var(--color-mist-2)]">NEXT_PUBLIC_LEGAL_REVIEWED=true</code>{" "}

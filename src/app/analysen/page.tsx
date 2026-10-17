@@ -128,12 +128,6 @@ export default async function AnalysenPage({
         </div>
       )}
 
-      <p className="mt-16 border-t border-[var(--color-line)] pt-8 text-xs leading-relaxed text-[#6b7179]">
-        Sämtliche Angaben stellen entgeltliche Anlageempfehlungen im Sinne des § 85 WpHG
-        dar und geben die Einschätzung zum jeweils angegebenen Erstellungszeitpunkt wieder.
-        Sie sind keine individuelle Anlageberatung. Wertpapiergeschäfte sind mit Risiken
-        bis hin zum Totalverlust verbunden.
-      </p>
     </div>
   );
 }

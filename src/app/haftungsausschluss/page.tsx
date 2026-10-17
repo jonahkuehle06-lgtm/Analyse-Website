@@ -7,27 +7,10 @@ import { BRAND, COMPANY } from "@/lib/config";
 export const metadata: Metadata = {
   title: "Haftungsausschluss",
   description:
-    "Risikohinweise, Kennzeichnung als Anlageempfehlung und Offenlegung möglicher Interessenkonflikte.",
+    "Risikohinweise, Haftungsausschluss und Hinweise zu möglichen Interessenkonflikten.",
 };
 
 const PARAGRAPHS: { heading?: string; body: React.ReactNode }[] = [
-  {
-    heading: "Kennzeichnung als Anlageempfehlung",
-    body: (
-      <>
-        Bei sämtlichen auf dieser Website veröffentlichten Analysen, Berichten,
-        Handelsanregungen und Publikationen handelt es sich um{" "}
-        <strong>entgeltliche, öffentlich zugängliche Anlageempfehlungen</strong> im Sinne
-        des § 85 WpHG i.V.m. Art. 20 der Verordnung (EU) Nr. 596/2014
-        (Marktmissbrauchsverordnung) und der Delegierten Verordnung (EU) 2016/958. Jede
-        einzelne Analyse weist den <strong>Ersteller der Empfehlung</strong> (Name und
-        Funktion) sowie das <strong>Datum ihrer Erstellung</strong> unmittelbar auf der
-        jeweiligen Karte aus. Die zum Ausdruck gebrachten Meinungen geben ausschließlich
-        die Einschätzung zum angegebenen Zeitpunkt wieder und können sich jederzeit ohne
-        vorherige Ankündigung ändern.
-      </>
-    ),
-  },
   {
     heading: "Keine individuelle Anlageberatung",
     body: (
@@ -82,24 +65,12 @@ const PARAGRAPHS: { heading?: string; body: React.ReactNode }[] = [
     ),
   },
   {
-    heading: "Weitere Umstände, die Interessenkonflikte begründen können",
-    body: (
-      <>
-        [Platzhalter — bitte vor dem Livegang durch die tatsächlichen Verhältnisse
-        ersetzen und anwaltlich prüfen lassen:] Über eigene Positionen hinaus können
-        Interessenkonflikte etwa aus Vergütungen durch Emittenten, Auftrags- oder
-        Beratungsverhältnissen, Beteiligungen von mehr als 0,5 % am Kapital eines
-        besprochenen Unternehmens, Market-Making-Tätigkeiten oder sonstigen
-        Geschäftsbeziehungen entstehen. Hier sind die tatsächlich bestehenden Umstände
-        aufzuführen; bestehen keine, ist auch das anzugeben.
-      </>
-    ),
-  },
-  {
     heading: "Haftung",
     body: (
       <>
-        {COMPANY.name} übernimmt keinerlei Haftung für die bereitgestellten Analysen,
+        Die zum Ausdruck gebrachten Meinungen geben ausschließlich die Einschätzung zum
+        angegebenen Zeitpunkt wieder und können sich jederzeit ohne vorherige Ankündigung
+        ändern. {COMPANY.name} übernimmt keinerlei Haftung für die bereitgestellten Analysen,
         Berichte, Handelsanregungen, Publikationen und Informationen. Analysen und
         anderweitige Informationen stellen in keiner Weise einen Aufruf oder eine
         Aufforderung zur individuellen oder allgemeinen Nachbildung dar, auch nicht

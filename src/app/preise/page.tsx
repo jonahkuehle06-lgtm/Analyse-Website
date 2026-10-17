@@ -29,7 +29,7 @@ const FAQ = [
   },
   {
     q: "Ist das eine Anlageberatung?",
-    a: "Nein. Es handelt sich um entgeltliche, öffentlich zugängliche Anlageempfehlungen nach § 85 WpHG. Sie berücksichtigen keine persönlichen Verhältnisse und ersetzen keine individuelle Beratung.",
+    a: "Nein. Die Analysen richten sich an alle Abonnenten gleichermaßen, berücksichtigen keine persönlichen Verhältnisse und ersetzen keine individuelle Beratung.",
   },
 ];
 

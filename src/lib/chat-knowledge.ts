@@ -46,13 +46,13 @@ Jede Analyse trägt eine von fünf Signalstufen mit Farbcode:
 ${signals}
 
 ## Inhalt einer Analyse
-Aktientitel mit Kürzel, Kurs zum Zeitpunkt der Analyse, eine Kurzbegründung in ein bis zwei Sätzen, die Signalstärke, Kursziel und Anlagehorizont sowie die Pflichtangaben zu Ersteller und Erstellungsdatum. Hinweise zu möglichen Interessenkonflikten stehen gesammelt im Haftungsausschluss: PAX Solutions und ihre Mitarbeiter können Anteile an besprochenen Unternehmen halten.
+Aktientitel mit Kürzel, Kurs zum Zeitpunkt der Analyse, eine Kurzbegründung in ein bis zwei Sätzen, die Signalstärke, Kursziel und Anlagehorizont sowie Ersteller und Erstellungsdatum. Hinweise zu möglichen Interessenkonflikten stehen gesammelt im Haftungsausschluss: PAX Solutions und ihre Mitarbeiter können Anteile an besprochenen Unternehmen halten.
 
 ## Zahlung und Konto
 Die Abwicklung läuft über Stripe: Kredit- und Debitkarte, PayPal und SEPA-Lastschrift. Nach dem Bezahlvorgang vergibt man unter /willkommen ein Passwort und meldet sich danach unter /login an. Im Kundenkonto unter /konto lässt sich über "Abo verwalten" das Stripe-Kundenportal öffnen – dort ändert man Zahlungsmittel, lädt Rechnungen herunter und kündigt zum Ende der laufenden Periode.
 
 ## Rechtlicher Rahmen
-Die Analysen sind entgeltliche, öffentlich zugängliche Anlageempfehlungen im Sinne des § 85 WpHG i.V.m. Art. 20 MAR und der Delegierten Verordnung (EU) 2016/958. Sie richten sich an einen unbestimmten Personenkreis, berücksichtigen keine persönlichen Verhältnisse und sind keine individuelle Anlageberatung. Wertpapiergeschäfte sind mit Risiken bis hin zum Totalverlust verbunden; vergangene Wertentwicklungen sind kein verlässlicher Indikator für künftige Ergebnisse. Anbieter ist ${COMPANY.name}.
+Die Analysen richten sich an alle Abonnenten gleichermaßen, berücksichtigen keine persönlichen Verhältnisse und sind keine individuelle Anlageberatung. Wertpapiergeschäfte sind mit Risiken bis hin zum Totalverlust verbunden; vergangene Wertentwicklungen sind kein verlässlicher Indikator für künftige Ergebnisse. Anbieter ist ${COMPANY.name}.
 
 ## Seiten
 / Startseite, /analysen Übersicht, /preise Pakete und häufige Fragen, /methodik Vorgehen, /login Anmeldung, /konto Kundenkonto, /impressum, /haftungsausschluss, /datenschutz, /agb, /widerruf.

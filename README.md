@@ -230,7 +230,8 @@ Chat soll die Paywall nicht umgehen koennen. Unter dem Eingabefeld steht ein
 dauerhaft sichtbarer Hinweis darauf.
 
 Diese Grenzen stehen in `src/lib/chat-knowledge.ts`. Wer sie lockert, sollte
-sich der Erlaubnispflicht nach KWG/WpIG bewusst sein.
+bedenken: Persönlich zugeschnittene Empfehlungen im Chat wären keine
+allgemeine Analyse mehr, sondern individuelle Anlageberatung.
 
 ### Missbrauchsschutz
 
@@ -375,21 +376,21 @@ alter table public.analyses
 
 Die Seite enthält Entwürfe für Impressum, Haftungsausschluss,
 Datenschutzerklärung, AGB und Widerrufsbelehrung. Der Haftungsausschluss
-berücksichtigt insbesondere:
+enthält:
 
-- Kennzeichnung als **entgeltliche Anlageempfehlung** (§ 85 WpHG i.V.m.
-  Art. 20 MAR, Delegierte Verordnung (EU) 2016/958) mit Ersteller und Datum —
-  sowohl seitenweit als auch auf jeder einzelnen Analyse-Karte
 - Hinweis, dass **keine individuelle Anlageberatung** vorliegt
 - Hinweis auf die **allgemeinen Risiken** von Wertpapiergeschäften inkl.
   Totalverlustrisiko
-- **Platzhalter für die Offenlegung von Interessenkonflikten** — allgemein auf
-  der Disclaimer-Seite und je Analyse als eigenes Feld
+- Hinweis, dass PAX Solutions und ihre Mitarbeiter **Anteile an besprochenen
+  Unternehmen halten** können
+- Haftungsausschluss und Nutzungsrechte
+
+Der kurze Risikohinweis steht zusätzlich in der Fußzeile jeder Seite. Jede
+Analyse nennt Ersteller und Erstellungsdatum.
 
 **Diese Texte sind Vorlagen und keine Rechtsberatung.** Sie müssen vor dem
 Livegang anwaltlich geprüft und an den tatsächlichen Geschäftsbetrieb angepasst
-werden — insbesondere die mit `[Platzhalter …]` markierten Stellen und die Frage
-einer etwaigen Erlaubnispflicht nach KWG/WpIG.
+werden — insbesondere die mit `[Platzhalter …]` markierten Stellen.
 
 Auf allen Rechtsseiten erscheint dazu ein Hinweiskasten. Nach der Prüfung
 `NEXT_PUBLIC_LEGAL_REVIEWED=true` setzen, um ihn auszublenden.

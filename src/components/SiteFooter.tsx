@@ -29,8 +29,7 @@ export default function SiteFooter() {
           <div>
             <Wordmark />
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-[var(--color-mist)]">
-              {BRAND.claim} Entgeltliche Anlageempfehlungen im Sinne des § 85 WpHG
-              i.V.m. Art. 20 MAR.
+              {BRAND.claim}
             </p>
           </div>
 

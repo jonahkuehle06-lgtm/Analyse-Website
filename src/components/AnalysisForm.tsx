@@ -359,17 +359,17 @@ export default function AnalysisForm({
         </div>
       </fieldset>
 
-      {/* ------------------------ Pflichtangaben ------------------------- */}
+      {/* --------------------------- Ersteller --------------------------- */}
       <fieldset
         className="surface p-6 sm:p-7"
         style={{ borderRadius: "var(--radius-card)" }}
       >
-        <legend className="mono-label px-2">Pflichtangabe (Art. 20 MAR)</legend>
+        <legend className="mono-label px-2">Ersteller</legend>
 
         <div className="mt-4 grid gap-5">
           <div>
             <label className="field-label" htmlFor="author">
-              Ersteller der Empfehlung
+              Ersteller der Analyse
             </label>
             <input
               id="author"

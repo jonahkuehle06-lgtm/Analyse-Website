@@ -4,7 +4,7 @@ import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import LogoScene from "@/components/LogoScene";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
-import { BRAND, PLANS } from "@/lib/config";
+import { PLANS } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -92,9 +92,6 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <p className="mt-8 text-xs text-[#6b7179]">
-            Entgeltliche Anlageempfehlung · keine individuelle Anlageberatung
-          </p>
         </div>
       </section>
 
@@ -208,34 +205,6 @@ export default async function HomePage() {
       <div className="border-t border-[var(--color-line)] bg-[var(--color-void)]">
         <PricingSection currentPlan={user?.plan ?? null} />
       </div>
-
-      {/* --------------------------- Rechtlicher Hinweis -------------------- */}
-      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
-        <div
-          className="surface p-8 sm:p-10"
-          style={{ borderRadius: "var(--radius-card)" }}
-        >
-          <p className="mono-label">Wichtiger Hinweis</p>
-          <h2 className="display mt-4 text-2xl text-[var(--color-platinum)]">
-            Anlageempfehlung — keine Anlageberatung
-          </h2>
-          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-[var(--color-mist)]">
-            Bei den auf dieser Website veröffentlichten Inhalten handelt es sich um
-            entgeltliche, öffentlich zugängliche Anlageempfehlungen im Sinne des § 85 WpHG
-            i.V.m. Art. 20 MAR und der Delegierten Verordnung (EU) 2016/958. Sie richten
-            sich an einen unbestimmten Personenkreis, berücksichtigen keine persönlichen
-            Verhältnisse und ersetzen keine individuelle Beratung durch qualifizierte
-            Anlage-, Vermögens- oder Steuerberater. {BRAND.name} übernimmt keine Haftung
-            für Anlageentscheidungen, die auf Grundlage dieser Inhalte getroffen werden.
-          </p>
-          <Link
-            href="/haftungsausschluss"
-            className="mt-6 inline-block text-sm text-[var(--color-platinum)] underline underline-offset-4"
-          >
-            Vollständigen Haftungsausschluss lesen
-          </Link>
-        </div>
-      </section>
     </>
   );
 }

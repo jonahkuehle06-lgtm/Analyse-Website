@@ -87,7 +87,7 @@ export default function AnalysisCard({ analysis }: { analysis: Analysis }) {
 
       <footer className="mt-5 flex items-end justify-between gap-4 border-t border-[var(--color-line)] pt-4">
         <p className="text-[0.6875rem] leading-relaxed text-[#6b7179]">
-          Anlageempfehlung · Ersteller: {analysis.author || "—"} · Erstellt am{" "}
+          Ersteller: {analysis.author || "—"} · Erstellt am{" "}
           {formatDate(analysis.publishedAt)}
         </p>
         <span className="shrink-0 text-[0.6875rem] whitespace-nowrap text-[var(--color-mist)] transition-colors group-hover:text-[var(--color-platinum)]">

@@ -19,7 +19,7 @@ export interface Analysis {
   signal: SignalLevel;
   /** Anlagehorizont, z.B. "3-6 Monate" */
   horizon: string;
-  /** Ersteller der Empfehlung (Pflichtangabe nach MAR/DelVO 2016/958) */
+  /** Ersteller der Analyse */
   author: string;
   /** Offenlegung möglicher Interessenkonflikte */
   conflictDisclosure: string;
