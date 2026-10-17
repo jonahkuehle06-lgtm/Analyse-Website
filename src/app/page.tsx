@@ -98,27 +98,36 @@ export default async function HomePage() {
       </section>
 
       {/* ------------------------------ Grundsätze --------------------------- */}
+      {/* Die Karten stehen linksbuendig in einer schmalen Spalte; rechts bleibt
+          Platz fuer die Bildmarke. */}
       <section className="border-y border-[var(--color-line)] bg-[var(--color-void)]">
-        <div className="mx-auto max-w-5xl space-y-4 px-5 py-20 sm:px-8 sm:py-24">
-          {PRINCIPLES.map((item) => (
-            <article
-              key={item.title}
-              className="surface surface-hover relative overflow-hidden p-7 sm:p-9"
-              style={{ borderRadius: "var(--radius-card)" }}
-            >
-              <span
-                aria-hidden="true"
-                className="absolute inset-y-0 left-0 w-px"
-                style={{ background: "var(--platinum-gradient)", opacity: 0.45 }}
-              />
-              <h2 className="display text-2xl text-[var(--color-platinum)] sm:text-[1.75rem]">
-                {item.title}
-              </h2>
-              <p className="mt-3.5 max-w-2xl text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
-                {item.body}
-              </p>
-            </article>
-          ))}
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.75fr)]">
+            <div className="space-y-3">
+              {PRINCIPLES.map((item) => (
+                <article
+                  key={item.title}
+                  className="surface surface-hover relative overflow-hidden px-6 py-5"
+                  style={{ borderRadius: "14px" }}
+                >
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-y-0 left-0 w-px"
+                    style={{ background: "var(--platinum-gradient)", opacity: 0.45 }}
+                  />
+                  <h2 className="display text-xl text-[var(--color-platinum)]">
+                    {item.title}
+                  </h2>
+                  <p className="mt-2 text-[0.875rem] leading-relaxed text-[var(--color-mist)]">
+                    {item.body}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            {/* Rechte Spalte: hier kommt die PAX-Bildmarke hin. */}
+            <div aria-hidden="true" className="hidden lg:block" />
+          </div>
         </div>
       </section>
 
