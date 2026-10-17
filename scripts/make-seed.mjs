@@ -34,6 +34,23 @@ const analyses = rows.map(
   ([title, ticker, price, currency, targetPrice, signal, horizon, reason, conflict], i) => {
     const date = new Date(Date.UTC(2026, 7, 28 - i, 12));
     const iso = date.toISOString();
+    // Kurszonen nur bei den ersten drei Beispielen, damit beide Faelle
+    // sichtbar sind: mit Balken in der Detailansicht und ohne.
+    const zonen =
+      i < 3 && price
+        ? {
+            zoneStrongEntryTo: +(price * 0.8).toFixed(2),
+            zoneEntryTo: +(price * 0.95).toFixed(2),
+            zoneNeutralTo: +(price * 1.1).toFixed(2),
+            zoneExitTo: +(price * 1.25).toFixed(2),
+          }
+        : {
+            zoneStrongEntryTo: null,
+            zoneEntryTo: null,
+            zoneNeutralTo: null,
+            zoneExitTo: null,
+          };
+
     return {
       id: randomUUID(),
       title,
@@ -41,6 +58,7 @@ const analyses = rows.map(
       price,
       currency,
       targetPrice,
+      ...zonen,
       reason,
       signal,
       horizon,

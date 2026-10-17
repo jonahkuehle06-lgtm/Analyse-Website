@@ -87,6 +87,11 @@ async function supabase(): Promise<SupabaseClientType> {
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/** Numerische Spalte aus Supabase, leer bleibt leer. */
+function zahl(v: unknown): number | null {
+  return v === null || v === undefined ? null : Number(v);
+}
+
 function analysisFromRow(row: any): Analysis {
   return {
     id: row.id,
@@ -98,6 +103,10 @@ function analysisFromRow(row: any): Analysis {
       row.target_price === null || row.target_price === undefined
         ? null
         : Number(row.target_price),
+    zoneStrongEntryTo: zahl(row.zone_strong_entry_to),
+    zoneEntryTo: zahl(row.zone_entry_to),
+    zoneNeutralTo: zahl(row.zone_neutral_to),
+    zoneExitTo: zahl(row.zone_exit_to),
     reason: row.reason ?? "",
     signal: Number(row.signal) as Analysis["signal"],
     horizon: row.horizon ?? "",
@@ -116,6 +125,10 @@ function analysisToRow(input: AnalysisInput) {
     price: input.price,
     currency: input.currency,
     target_price: input.targetPrice,
+    zone_strong_entry_to: input.zoneStrongEntryTo,
+    zone_entry_to: input.zoneEntryTo,
+    zone_neutral_to: input.zoneNeutralTo,
+    zone_exit_to: input.zoneExitTo,
     reason: input.reason,
     signal: input.signal,
     horizon: input.horizon,

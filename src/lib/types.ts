@@ -23,6 +23,16 @@ export interface Analysis {
   author: string;
   /** Offenlegung möglicher Interessenkonflikte */
   conflictDisclosure: string;
+  /**
+   * Kurszonen: die vier Grenzen, die die fuenf Signalbereiche trennen.
+   * Von unten nach oben - unterhalb von zoneStrongEntryTo liegt der starke
+   * Einstiegsbereich, oberhalb von zoneExitTo der starke Ausstiegsbereich.
+   * Werden sie nicht gepflegt, zeigt die Detailansicht keinen Kursverlauf.
+   */
+  zoneStrongEntryTo: number | null;
+  zoneEntryTo: number | null;
+  zoneNeutralTo: number | null;
+  zoneExitTo: number | null;
   /** ISO-Datum der Erstellung/Veroeffentlichung */
   publishedAt: string;
   createdAt: string;

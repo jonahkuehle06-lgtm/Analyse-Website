@@ -1,3 +1,4 @@
+import Link from "next/link";
 import SignalIndicator from "./SignalIndicator";
 import { SIGNALS } from "@/lib/config";
 import type { Analysis } from "@/lib/types";
@@ -25,8 +26,13 @@ export default function AnalysisCard({ analysis }: { analysis: Analysis }) {
   const meta = SIGNALS[analysis.signal];
 
   return (
+    <Link
+      href={`/analysen/${analysis.id}`}
+      className="group block rounded-[var(--radius-card)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-silver)]"
+      aria-label={`${analysis.title} — Analyse öffnen`}
+    >
     <article
-      className="surface surface-hover relative flex flex-col overflow-hidden p-6"
+      className="surface surface-hover relative flex h-full flex-col overflow-hidden p-6"
       style={{ borderRadius: "var(--radius-card)" }}
     >
       {/* Farbakzent oben, passend zur Signalstärke */}
@@ -79,13 +85,17 @@ export default function AnalysisCard({ analysis }: { analysis: Analysis }) {
         </dl>
       )}
 
-      <footer className="mt-5 border-t border-[var(--color-line)] pt-4">
+      <footer className="mt-5 flex items-end justify-between gap-4 border-t border-[var(--color-line)] pt-4">
         <p className="text-[0.6875rem] leading-relaxed text-[#6b7179]">
           Anlageempfehlung · Ersteller: {analysis.author || "—"} · Erstellt am{" "}
           {formatDate(analysis.publishedAt)}
         </p>
+        <span className="shrink-0 text-[0.6875rem] whitespace-nowrap text-[var(--color-mist)] transition-colors group-hover:text-[var(--color-platinum)]">
+          Öffnen →
+        </span>
       </footer>
     </article>
+    </Link>
   );
 }
 

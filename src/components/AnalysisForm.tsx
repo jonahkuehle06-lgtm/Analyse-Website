@@ -212,6 +212,49 @@ export default function AnalysisForm({
         </div>
       </fieldset>
 
+      {/* --------------------------- Kurszonen --------------------------- */}
+      <fieldset
+        className="surface p-6 sm:p-7"
+        style={{ borderRadius: "var(--radius-card)" }}
+      >
+        <legend className="mono-label px-2">Kurszonen</legend>
+        <p className="mt-3 text-xs leading-relaxed text-[#6b7179]">
+          Vier Kursgrenzen, die die fünf Signalbereiche trennen — von unten nach oben.
+          Die Detailansicht zeigt daraus einen Balken mit dem aktuellen Kurs. Lässt du
+          die Felder leer, erscheint dort kein Balken.
+        </p>
+
+        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ["zoneStrongEntryTo", "Starker Einstieg bis", "bis zu diesem Kurs", 1],
+            ["zoneEntryTo", "Einstieg bis", "darüber bis", 2],
+            ["zoneNeutralTo", "Neutral bis", "darüber bis", 3],
+            ["zoneExitTo", "Ausstieg bis", "darüber: starker Ausstieg", 4],
+          ].map(([name, label, hinweis, stufe]) => (
+            <div key={name as string}>
+              <label className="field-label flex items-center gap-2" htmlFor={name as string}>
+                <span
+                  aria-hidden="true"
+                  className="inline-block h-2 w-2 shrink-0 rounded-full"
+                  style={{ backgroundColor: SIGNALS[stufe as SignalLevel].color }}
+                />
+                {label}
+              </label>
+              <input
+                id={name as string}
+                name={name as string}
+                className="field"
+                inputMode="decimal"
+                defaultValue={
+                  (analysis?.[name as keyof Analysis] as number | null | undefined) ?? ""
+                }
+              />
+              <p className="mt-1.5 text-[0.6875rem] text-[#6b7179]">{hinweis}</p>
+            </div>
+          ))}
+        </div>
+      </fieldset>
+
       {/* ------------------------ Pflichtangaben ------------------------- */}
       <fieldset
         className="surface p-6 sm:p-7"

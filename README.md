@@ -174,6 +174,7 @@ Felder je Analyse:
 - Kurze Begründung (ein bis zwei Sätze, max. 400 Zeichen)
 - Signalstärke in fünf Stufen mit Farbcode
 - Anlagehorizont, Erstellungsdatum
+- Kurszonen: vier Kursgrenzen, die die fünf Signalbereiche trennen
 - Ersteller und Offenlegung möglicher Interessenkonflikte (Pflichtangaben)
 
 ---
@@ -261,6 +262,52 @@ Besuch automatisch wieder angewendet.
 Banner gibt. Mit Container-ID beschreibt sie stattdessen den Tag Manager und
 den Consent Mode - samt Platzhalter fuer die konkret eingebundenen Dienste,
 der vor dem Livegang zu fuellen ist.
+
+---
+
+## 6c. Detailansicht einer Analyse
+
+Jede freigeschaltete Analyse laesst sich anklicken und oeffnet unter
+`/analysen/<id>` eine eigene Seite: Kurs, Kursziel, Horizont, Datum,
+Signalstaerke mit Erlaeuterung, die Begruendung und - sofern gepflegt -
+der Kurszonen-Balken.
+
+**Die Paywall gilt dort genauso.** Die Detailseite prueft serverseitig
+dieselbe Regel wie die Uebersicht: freigeschaltet sind die N aktuellsten
+Analysen des gebuchten Pakets, ohne Abo nur die neueste als Leseprobe.
+Wer eine gesperrte Kennung direkt aufruft, landet auf `/preise`. Gesperrte
+Karten sind nicht verlinkt. Die Seiten sind zudem auf `noindex` gesetzt -
+bezahlte Inhalte gehoeren nicht in den Suchindex.
+
+### Kurszonen
+
+Die vier Grenzen im Admin-Formular trennen die fuenf Signalbereiche, von
+unten nach oben. Beispiel bei einem Kurs von 186 EUR:
+
+| Feld | Wert | bedeutet |
+|---|---|---|
+| Starker Einstieg bis | 149 | darunter: starker Einstiegsbereich |
+| Einstieg bis | 177 | 149 bis 177 |
+| Neutral bis | 205 | 177 bis 205 |
+| Ausstieg bis | 233 | 205 bis 233, darueber starker Ausstieg |
+
+Die Werte werden **nicht berechnet**. Sie sind eine Einschaetzung des
+Erstellers; aus Kurs und Kursziel liesse sich so etwas nicht seriöes
+ableiten. Bleiben die Felder leer oder sind sie nicht aufsteigend, zeigt
+die Detailansicht schlicht keinen Balken - alles andere bleibt sichtbar.
+
+### Datenbank nachziehen
+
+Bei einer bereits angelegten Supabase-Datenbank einmalig im SQL Editor
+ausfuehren (steht auch am Ende von `supabase-schema.sql`):
+
+```sql
+alter table public.analyses
+  add column if not exists zone_strong_entry_to numeric(14,4),
+  add column if not exists zone_entry_to        numeric(14,4),
+  add column if not exists zone_neutral_to      numeric(14,4),
+  add column if not exists zone_exit_to         numeric(14,4);
+```
 
 ---
 

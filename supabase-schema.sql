@@ -49,3 +49,19 @@ create index if not exists users_stripe_customer_idx
 -- oeffentliche anon-Key keinerlei Daten lesen oder schreiben kann.
 alter table public.analyses enable row level security;
 alter table public.users    enable row level security;
+
+-- ---------------------------------------------------------------------------
+-- Nachtrag: Kurszonen je Analyse
+--
+-- Die vier Grenzen trennen die fuenf Signalbereiche. Unterhalb von
+-- zone_strong_entry_to liegt der starke Einstiegsbereich, oberhalb von
+-- zone_exit_to der starke Ausstiegsbereich. Bleiben sie leer, zeigt die
+-- Detailansicht keinen Kursverlauf an.
+--
+-- Bei einer bestehenden Datenbank einmalig im SQL Editor ausfuehren.
+-- ---------------------------------------------------------------------------
+alter table public.analyses
+  add column if not exists zone_strong_entry_to numeric(14,4),
+  add column if not exists zone_entry_to        numeric(14,4),
+  add column if not exists zone_neutral_to      numeric(14,4),
+  add column if not exists zone_exit_to         numeric(14,4);
