@@ -158,6 +158,25 @@ Branch pushen; ein gespeichertes Formular allein löst noch kein Deployment aus.
 > Umgebungen kein beschreibbares Dateisystem haben. Für den Live-Betrieb ist
 > Schritt 2 (Supabase) deshalb nicht optional.
 
+### Commit-Autor: Vercel baut nicht jeden Push
+
+Vercel legt **nur für Commits ein Deployment an, deren GitHub-Autor Zugriff
+auf das Projekt hat** — im Regelfall also dein eigenes Konto. Ein Commit mit
+einer fremden Autoren-E-Mail wird kommentarlos übergangen: keine Fehlermeldung,
+kein Eintrag unter *Deployments*, die Live-Seite bleibt auf dem alten Stand.
+
+Deshalb muss die Git-Identität im Projekt stimmen:
+
+```bash
+git config user.name  "Dein Name"
+git config user.email "deine@adresse.de"   # dieselbe wie in deinem GitHub-Konto
+```
+
+Prüfen lässt sich das mit `git log -3 --pretty='%h %an <%ae> | %s'`. Steht dort
+eine fremde Adresse, hilft kein erneutes Pushen — es braucht einen neuen Commit
+unter der richtigen Autorenschaft. Der bringt den gesamten Stand mit, auch die
+übergangenen Commits.
+
 ---
 
 ## 6. Bedienung der Admin-Oberfläche

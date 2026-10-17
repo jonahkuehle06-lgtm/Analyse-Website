@@ -345,7 +345,7 @@ export default function AnalysisForm({
                 <textarea
                   id={`scenario${schluessel}Note`}
                   name={`scenario${schluessel}Note`}
-                  className="field min-h-[72px] resize-y"
+                  className="field min-h-[104px] resize-y"
                   maxLength={240}
                   defaultValue={
                     (analysis?.[
