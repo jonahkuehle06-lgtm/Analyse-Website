@@ -129,11 +129,6 @@ export default function PricingSection({
                 <h3 className="display text-2xl text-[var(--color-platinum)]">
                   {plan.name}
                 </h3>
-                {plan.highlight && (
-                  <span className="mono-label !text-[0.625rem] !tracking-[0.2em] text-[var(--color-silver)]">
-                    Empfohlen
-                  </span>
-                )}
               </div>
 
               <p className="mt-3 min-h-[42px] text-sm leading-relaxed text-[var(--color-mist)]">
