@@ -67,22 +67,21 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
   return (
     <section
       className="surface p-6 sm:p-8"
-      style={{ borderRadius: "var(--radius-card)" }}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <p className="mono-label">Kurszonen</p>
-        <p className="text-xs text-[#6b7179]">Angaben in {analysis.currency}</p>
+        <p className="text-xs text-[var(--color-muted)]">Angaben in {analysis.currency}</p>
       </div>
 
       {/* Marke für den aktuellen Kurs - zwei Zeilen, daher genug Hoehe */}
-      <div className="relative mt-8 h-12">
+      <div className="relative mt-6 h-16">
         {kursAnteil !== null && (
           <div
-            className="absolute bottom-0 -translate-x-1/2 whitespace-nowrap text-center"
+            className="absolute bottom-3 -translate-x-1/2 whitespace-nowrap text-center"
             style={{ left: `${Math.min(Math.max(kursAnteil, 8), 92)}%` }}
           >
-            <span className="mono-label !text-[0.625rem]">Kurs</span>
-            <span className="mt-0.5 block text-[0.8125rem] font-medium tabular-nums text-[var(--color-platinum)]">
+            <span className="mono-label">Kurs</span>
+            <span className="tabular mt-0.5 block text-sm font-medium text-[var(--color-platinum)]">
               {zahl(analysis.price!)}
             </span>
           </div>
@@ -91,7 +90,7 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
 
       {/* Der Balken */}
       <div className="relative h-11">
-        <div className="absolute inset-0 flex overflow-hidden rounded-lg">
+        <div className="absolute inset-0 flex gap-px overflow-hidden">
           {abschnitte.map(({ stufe, breite }) => (
             <span
               key={stufe}
@@ -109,7 +108,7 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
         {zielAnteil !== null && zielAnteil >= 0 && zielAnteil <= 100 && (
           <span
             aria-hidden="true"
-            className="absolute top-0 h-full w-px bg-[rgba(5,5,6,0.65)]"
+            className="absolute top-0 h-full w-0.5 -translate-x-1/2 bg-[rgba(7,7,7,0.75)]"
             style={{ left: `${zielAnteil}%` }}
           />
         )}
@@ -118,18 +117,18 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
         {kursAnteil !== null && (
           <span
             aria-hidden="true"
-            className="absolute -top-1.5 h-[56px] w-[3px] -translate-x-1/2 rounded-full bg-[var(--color-platinum)] shadow-[0_0_10px_rgba(0,0,0,0.8)]"
+            className="absolute -top-1.5 h-[56px] w-[3px] -translate-x-1/2 bg-[var(--color-platinum)] shadow-[0_0_0_2px_var(--color-anthracite)]"
             style={{ left: `${Math.min(Math.max(kursAnteil, 0), 100)}%` }}
           />
         )}
       </div>
 
       {/* Grenzwerte unter dem Balken */}
-      <div className="relative mt-2 h-5">
+      <div className="relative mt-2.5 h-6">
         {grenzen.map((wert, i) => (
           <span
             key={i}
-            className="absolute -translate-x-1/2 text-[0.6875rem] tabular-nums text-[#7b8189]"
+            className="tabular absolute -translate-x-1/2 text-xs text-[var(--color-muted)]"
             style={{ left: `${prozent(wert, zonen)}%` }}
           >
             {zahl(wert)}
@@ -147,7 +146,7 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
                 ? `über ${zahl(grenzen[3])}`
                 : `${zahl(grenzen[stufe - 2])} – ${zahl(grenzen[stufe - 1])}`;
           return (
-            <li key={stufe} className="flex items-center justify-between gap-3 text-[0.8125rem]">
+            <li key={stufe} className="flex items-center justify-between gap-3 text-sm">
               <span className="flex items-center gap-2.5">
                 <span
                   aria-hidden="true"
@@ -163,13 +162,13 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
       </ul>
 
       {zielAnteil !== null && (
-        <p className="mt-5 text-xs text-[#6b7179]">
+        <p className="mt-5 text-xs text-[var(--color-muted)]">
           Die dunkle Linie im Balken markiert das Kursziel von{" "}
           {zahl(analysis.targetPrice!)} {analysis.currency}.
         </p>
       )}
 
-      <p className="mt-2 text-xs leading-relaxed text-[#6b7179]">
+      <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">
         Die Zonen geben die Einschätzung zum Erstellungszeitpunkt wieder und sind keine
         Zusage über künftige Kursverläufe.
       </p>

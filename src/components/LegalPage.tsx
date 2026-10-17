@@ -1,4 +1,5 @@
 import LegalReviewNote from "./LegalReviewNote";
+import PageHeader from "./PageHeader";
 
 export default function LegalPage({
   eyebrow,
@@ -12,20 +13,14 @@ export default function LegalPage({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
-      <p className="mono-label">{eyebrow}</p>
-      <h1 className="display mt-4 text-4xl sm:text-5xl">
-        <span className="platinum-text">{title}</span>
-      </h1>
-      {intro && (
-        <p className="mt-5 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
-          {intro}
-        </p>
-      )}
+    <div className="frame frame-lines">
+      <div className="mx-auto max-w-4xl py-14 sm:py-20">
+        <PageHeader label={eyebrow} title={title} lead={intro} />
 
-      <div className="mt-12">
-        <LegalReviewNote />
-        <div className="legal-body space-y-8">{children}</div>
+        <div className="mt-12 max-w-[72ch]">
+          <LegalReviewNote />
+          <div className="legal-body space-y-10">{children}</div>
+        </div>
       </div>
     </div>
   );
@@ -40,8 +35,10 @@ export function LegalSection({
 }) {
   return (
     <section>
-      <h2 className="display text-2xl text-[var(--color-platinum)]">{title}</h2>
-      <div className="mt-3 space-y-4 text-sm leading-relaxed text-[var(--color-mist-2)]">
+      <h2 className="display text-[length:var(--step-h4)] font-normal text-[var(--color-platinum)]">
+        {title}
+      </h2>
+      <div className="mt-4 space-y-4 text-[0.9375rem] leading-relaxed text-[var(--color-mist-2)]">
         {children}
       </div>
     </section>

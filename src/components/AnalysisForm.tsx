@@ -143,7 +143,7 @@ export default function AnalysisForm({
             placeholder="Auftragsbestand auf Rekordniveau, Margenziel angehoben — die Bewertung liegt weiterhin unter dem Branchenschnitt."
             defaultValue={analysis?.reason}
           />
-          <p className="mt-1.5 text-xs text-[#6b7179]">Maximal 400 Zeichen.</p>
+          <p className="mt-1.5 text-xs text-[var(--color-muted)]">Maximal 400 Zeichen.</p>
         </div>
 
         <div className="mt-6">
@@ -159,10 +159,10 @@ export default function AnalysisForm({
                   type="button"
                   onClick={() => setSignal(level)}
                   aria-pressed={selected}
-                  className="flex flex-col items-start gap-2.5 rounded-xl border p-3.5 text-left transition-all"
+                  className="flex flex-col items-start gap-2.5 border p-3.5 text-left transition-all"
                   style={{
                     borderColor: selected ? meta.color : "var(--color-line)",
-                    backgroundColor: selected ? `${meta.color}12` : "rgba(255,255,255,0.02)",
+                    backgroundColor: selected ? `${meta.color}12` : "transparent",
                   }}
                 >
                   <span
@@ -173,7 +173,7 @@ export default function AnalysisForm({
                     }}
                   />
                   <span
-                    className="text-[0.8125rem] font-medium leading-tight"
+                    className="text-sm font-medium leading-tight"
                     style={{ color: selected ? meta.color : "var(--color-mist)" }}
                   >
                     {meta.label}
@@ -218,7 +218,7 @@ export default function AnalysisForm({
         style={{ borderRadius: "var(--radius-card)" }}
       >
         <legend className="mono-label px-2">Kurszonen</legend>
-        <p className="mt-3 text-xs leading-relaxed text-[#6b7179]">
+        <p className="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">
           Vier Kursgrenzen, die die fünf Signalbereiche trennen — von unten nach oben.
           Die Detailansicht zeigt daraus einen Balken mit dem aktuellen Kurs. Lässt du
           die Felder leer, erscheint dort kein Balken.
@@ -249,7 +249,7 @@ export default function AnalysisForm({
                   (analysis?.[name as keyof Analysis] as number | null | undefined) ?? ""
                 }
               />
-              <p className="mt-1.5 text-[0.6875rem] text-[#6b7179]">{hinweis}</p>
+              <p className="mt-1.5 text-xs text-[var(--color-muted)]">{hinweis}</p>
             </div>
           ))}
         </div>
@@ -261,7 +261,7 @@ export default function AnalysisForm({
         style={{ borderRadius: "var(--radius-card)" }}
       >
         <legend className="mono-label px-2">Szenarien</legend>
-        <p className="mt-3 text-xs leading-relaxed text-[#6b7179]">
+        <p className="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">
           Drei Kursziele mit Eintrittswahrscheinlichkeit. Die Detailansicht zeichnet
           daraus einen Fächer vom heutigen Kurs zu den drei Zielen. Das Diagramm
           erscheint nur, wenn alle drei Kurse ausgefüllt sind. Die
@@ -284,12 +284,12 @@ export default function AnalysisForm({
         <div className="mt-6 grid gap-5 lg:grid-cols-3">
           {[
             ["Best", "Best Case", "#1baf7a"],
-            ["Base", "Base Case", "#a8aeb7"],
+            ["Base", "Base Case", "#aba59b"],
             ["Worst", "Worst Case", "#d03b3b"],
           ].map(([schluessel, titel, farbe]) => (
             <div
               key={schluessel}
-              className="rounded-xl border border-[var(--color-line)] bg-[rgba(255,255,255,0.02)] p-4"
+              className="border border-[var(--color-line)] p-4"
             >
               <p className="flex items-center gap-2.5 text-sm font-medium text-[var(--color-platinum)]">
                 <span
@@ -383,7 +383,7 @@ export default function AnalysisForm({
       </fieldset>
 
       {state?.error && (
-        <p className="text-sm text-[#F08B8B]" role="alert">
+        <p className="text-sm text-[var(--color-danger)]" role="alert">
           {state.error}
         </p>
       )}

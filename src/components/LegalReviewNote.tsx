@@ -12,19 +12,19 @@ export default function LegalReviewNote() {
 
   return (
     <aside
-      className="mb-10 rounded-xl border border-[rgba(232,198,75,0.32)] bg-[rgba(232,198,75,0.06)] px-6 py-5"
+      className="mb-10 border border-[rgba(232,198,75,0.32)] border-l-2 border-l-[var(--color-warning)] bg-[rgba(232,198,75,0.05)] px-6 py-5"
       role="note"
     >
-      <p className="text-sm font-semibold text-[#E8C64B]">
+      <p className="text-sm font-semibold text-[var(--color-warning)]">
         Entwurf — noch nicht rechtlich geprüft
       </p>
-      <p className="mt-2 text-sm leading-relaxed text-[var(--color-mist-2)]">
+      <p className="mt-2 text-[0.9375rem] leading-relaxed text-[var(--color-mist-2)]">
         Dieser Text ist eine Vorlage und keine Rechtsberatung. Er muss vor dem Livegang
         durch eine Rechtsanwältin oder einen Rechtsanwalt geprüft und an den tatsächlichen
         Geschäftsbetrieb angepasst werden.
       </p>
-      <p className="mt-3 text-xs text-[#8d939c]">
-        Nach der Prüfung <code className="text-[var(--color-mist-2)]">NEXT_PUBLIC_LEGAL_REVIEWED=true</code>{" "}
+      <p className="mt-3 text-xs text-[var(--color-muted)]">
+        Nach der Prüfung <code className="font-sans font-semibold break-all text-[var(--color-mist-2)]">NEXT_PUBLIC_LEGAL_REVIEWED=true</code>{" "}
         setzen, um diesen Kasten auszublenden.
       </p>
     </aside>

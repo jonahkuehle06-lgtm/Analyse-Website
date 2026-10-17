@@ -69,87 +69,77 @@ export default async function AnalyseDetail({
   const meta = SIGNALS[analysis.signal];
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
-      <Link
-        href="/analysen"
-        className="text-sm text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)]"
-      >
-        ← Alle Analysen
-      </Link>
+    <div className="frame frame-lines">
+      <div className="mx-auto max-w-4xl py-10 sm:py-14">
+        <Link href="/analysen" className="btn-link !border-transparent text-[0.9375rem] text-[var(--color-mist)] hover:!border-[var(--color-mist)] hover:text-[var(--color-platinum)]">
+          <span aria-hidden="true">←</span>
+          Alle Analysen
+        </Link>
 
-      <header className="mt-7">
-        <p className="mono-label">{analysis.ticker || "—"}</p>
-        <h1 className="display mt-2 text-4xl text-[var(--color-platinum)] sm:text-5xl">
-          {analysis.title}
-        </h1>
-      </header>
+        <header className="mt-10 border-b border-[var(--color-line)] pb-10">
+          <span className="tag">
+            <span
+              className="inline-block h-2 w-2 rounded-full"
+              style={{ backgroundColor: meta.color }}
+              aria-hidden="true"
+            />
+            {analysis.ticker || "—"}
+          </span>
+          <h1 className="display mt-6 text-[length:var(--step-h1)] text-[var(--color-platinum)]">
+            {analysis.title}
+          </h1>
+        </header>
 
-      {/* Kennzahlen */}
-      <dl
-        className="surface mt-8 grid grid-cols-2 gap-px overflow-hidden sm:grid-cols-4"
-        style={{ borderRadius: "var(--radius-card)", backgroundColor: "var(--color-line)" }}
-      >
-        {[
-          ["Kurs", geld(analysis.price, analysis.currency)],
-          ["Kursziel", geld(analysis.targetPrice, analysis.currency)],
-          ["Horizont", analysis.horizon || "—"],
-          ["Erstellt am", datum(analysis.publishedAt)],
-        ].map(([label, wert]) => (
-          <div key={label} className="bg-[var(--color-anthracite)] px-5 py-4">
-            <dt className="mono-label">{label}</dt>
-            <dd className="mt-1.5 text-sm tabular-nums text-[var(--color-platinum)]">
-              {wert}
-            </dd>
+        {/* Kennzahlen */}
+        <dl className="grid grid-cols-2 gap-px border-b border-[var(--color-line)] bg-[var(--color-line)] sm:grid-cols-4">
+          {[
+            ["Kurs", geld(analysis.price, analysis.currency)],
+            ["Kursziel", geld(analysis.targetPrice, analysis.currency)],
+            ["Horizont", analysis.horizon || "—"],
+            ["Erstellt am", datum(analysis.publishedAt)],
+          ].map(([label, wert], i) => (
+            <div
+              key={label}
+              className={`bg-[var(--color-ink)] py-6 pr-4 ${i % 2 === 1 ? "pl-5" : ""} sm:pl-6 ${i === 0 ? "sm:!pl-0" : ""}`}
+            >
+              <dt className="mono-label">{label}</dt>
+              <dd className="display tabular mt-2 text-[1.625rem] font-normal leading-tight text-[var(--color-platinum)]">
+                {wert}
+              </dd>
+            </div>
+          ))}
+        </dl>
+
+        {/* Signalstärke und Begründung: links das Etikett, rechts der Inhalt */}
+        <section className="grid gap-4 border-b border-[var(--color-line)] py-9 md:grid-cols-[200px_1fr] md:gap-10">
+          <p className="mono-label md:pt-1">Signalstärke</p>
+          <div>
+            <SignalIndicator level={analysis.signal} />
+            <p className="mt-5 max-w-[60ch] text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
+              {meta.description}
+            </p>
           </div>
-        ))}
-      </dl>
+        </section>
 
-      {/* Signalstärke */}
-      <section
-        className="surface relative mt-5 overflow-hidden p-6 sm:p-8"
-        style={{ borderRadius: "var(--radius-card)" }}
-      >
-        <span
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-px"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${meta.color}, transparent)`,
-            opacity: 0.7,
-          }}
-        />
-        <p className="mono-label">Signalstärke</p>
-        <div className="mt-5">
-          <SignalIndicator level={analysis.signal} />
+        <section className="grid gap-4 border-b border-[var(--color-line)] py-9 md:grid-cols-[200px_1fr] md:gap-10">
+          <p className="mono-label md:pt-1.5">Begründung</p>
+          <p className="display max-w-[34ch] text-[length:var(--step-h4)] font-normal leading-snug text-[var(--color-platinum)]">
+            {analysis.reason}
+          </p>
+        </section>
+
+        {/* Szenarien und Kurszonen — jeweils nur, wenn gepflegt */}
+        <div className="mt-10 space-y-5">
+          <ScenarioChart analysis={analysis} />
+          <PriceZones analysis={analysis} />
         </div>
-        <p className="mt-4 text-sm leading-relaxed text-[var(--color-mist)]">
-          {meta.description}
-        </p>
-      </section>
 
-      {/* Begründung */}
-      <section
-        className="surface mt-5 p-6 sm:p-8"
-        style={{ borderRadius: "var(--radius-card)" }}
-      >
-        <p className="mono-label">Begründung</p>
-        <p className="mt-4 text-[0.9375rem] leading-relaxed text-[var(--color-mist-2)]">
-          {analysis.reason}
-        </p>
-      </section>
-
-      {/* Szenarien und Kurszonen — jeweils nur, wenn gepflegt */}
-      <div className="mt-5">
-        <ScenarioChart analysis={analysis} />
+        <footer className="mt-10 border-t border-[var(--color-line)] pt-6">
+          <p className="text-xs leading-relaxed text-[var(--color-muted)]">
+            Ersteller: {analysis.author || "—"} · Erstellt am {datum(analysis.publishedAt)}
+          </p>
+        </footer>
       </div>
-      <div className="mt-5">
-        <PriceZones analysis={analysis} />
-      </div>
-
-      <footer className="mt-10 border-t border-[var(--color-line)] pt-6">
-        <p className="text-xs leading-relaxed text-[#6b7179]">
-          Ersteller: {analysis.author || "—"} · Erstellt am {datum(analysis.publishedAt)}
-        </p>
-      </footer>
     </div>
   );
 }

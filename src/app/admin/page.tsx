@@ -54,7 +54,7 @@ export default async function AdminPage({
 
       {(gespeichert || geloescht) && (
         <p
-          className="mt-6 rounded-xl border border-[rgba(123,227,161,0.3)] bg-[rgba(123,227,161,0.07)] px-5 py-3 text-sm text-[#7BE3A1]"
+          className="mt-6 border border-[rgba(123,227,161,0.3)] bg-[rgba(123,227,161,0.07)] px-5 py-3 text-sm text-[var(--color-success)]"
           role="status"
         >
           {gespeichert
@@ -66,7 +66,7 @@ export default async function AdminPage({
       {/* Hinweise zur Konfiguration */}
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         {driver === "local" && (
-          <div className="rounded-xl border border-[rgba(232,198,75,0.3)] bg-[rgba(232,198,75,0.06)] px-5 py-4 text-sm leading-relaxed text-[#E8C64B]">
+          <div className="border border-[rgba(232,198,75,0.3)] bg-[rgba(232,198,75,0.06)] px-5 py-4 text-sm leading-relaxed text-[var(--color-warning)]">
             <strong className="font-semibold">Lokaler Testbetrieb.</strong> Die Daten
             liegen in <code>data/store.local.json</code>. Für den Live-Betrieb bitte
             Supabase hinterlegen — sonst gehen Änderungen beim nächsten Deployment
@@ -74,7 +74,7 @@ export default async function AdminPage({
           </div>
         )}
         {!stripeConfigured() && (
-          <div className="rounded-xl border border-[rgba(232,198,75,0.3)] bg-[rgba(232,198,75,0.06)] px-5 py-4 text-sm leading-relaxed text-[#E8C64B]">
+          <div className="border border-[rgba(232,198,75,0.3)] bg-[rgba(232,198,75,0.06)] px-5 py-4 text-sm leading-relaxed text-[var(--color-warning)]">
             <strong className="font-semibold">Stripe ist nicht verbunden.</strong> Ohne{" "}
             <code>STRIPE_SECRET_KEY</code> und Preis-IDs lässt sich kein Paket buchen.
           </div>
@@ -98,7 +98,7 @@ export default async function AdminPage({
 
       {/* Verteilung der Signalstufen */}
       {analyses.length > 0 && (
-        <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-[var(--color-line)] bg-[var(--color-line)] grid-cols-2 sm:grid-cols-5">
+        <div className="mt-8 grid gap-px overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)] grid-cols-2 sm:grid-cols-5">
           {([1, 2, 3, 4, 5] as const).map((level) => (
             <div key={level} className="bg-[var(--color-anthracite)] px-5 py-4">
               <span
@@ -138,14 +138,13 @@ export default async function AdminPage({
               <li
                 key={analysis.id}
                 className="surface flex flex-wrap items-center gap-4 px-5 py-4 sm:flex-nowrap"
-                style={{ borderRadius: "14px" }}
               >
-                <span className="w-8 shrink-0 text-xs tabular-nums text-[#6b7179]">
+                <span className="w-8 shrink-0 text-xs tabular-nums text-[var(--color-muted)]">
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
                 <span
-                  className="h-8 w-1 shrink-0 rounded-full"
+                  className="h-8 w-1 shrink-0"
                   style={{ backgroundColor: meta.color, boxShadow: `0 0 10px ${meta.glow}` }}
                   aria-hidden="true"
                 />
@@ -169,7 +168,7 @@ export default async function AdminPage({
                   {meta.label}
                 </span>
 
-                <span className="shrink-0 text-xs tabular-nums text-[#6b7179]">
+                <span className="shrink-0 text-xs tabular-nums text-[var(--color-muted)]">
                   {new Intl.DateTimeFormat("de-DE").format(new Date(analysis.publishedAt))}
                 </span>
 
@@ -184,7 +183,7 @@ export default async function AdminPage({
                     <input type="hidden" name="id" value={analysis.id} />
                     <button
                       type="submit"
-                      className="text-sm text-[#6b7179] transition-colors hover:text-[#F08B8B]"
+                      className="text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-danger)]"
                     >
                       Löschen
                     </button>

@@ -58,23 +58,23 @@ export default function CookiesPage() {
           {COOKIES.map((cookie) => (
             <div
               key={cookie.name}
-              className="rounded-xl border border-[var(--color-line)] bg-[rgba(255,255,255,0.02)] p-4"
+              className="border border-[var(--color-line)] bg-[var(--color-anthracite)] p-5"
             >
               <div className="flex items-baseline justify-between gap-3">
-                <code className="text-[0.8125rem] text-[var(--color-platinum)]">
+                <code className="text-sm text-[var(--color-platinum)]">
                   {cookie.name}
                 </code>
-                <span className="text-[0.75rem] whitespace-nowrap text-[var(--color-mist)]">
+                <span className="text-xs whitespace-nowrap text-[var(--color-mist)]">
                   {cookie.duration}
                 </span>
               </div>
-              <p className="mt-2.5 text-[0.8125rem] leading-relaxed">{cookie.purpose}</p>
-              <p className="mt-1.5 text-[0.75rem] text-[#6b7179]">{cookie.when}</p>
+              <p className="mt-2.5 text-sm leading-relaxed">{cookie.purpose}</p>
+              <p className="mt-1.5 text-xs text-[var(--color-muted)]">{cookie.when}</p>
             </div>
           ))}
         </div>
 
-        <table className="hidden w-full border-collapse text-left text-[0.8125rem] sm:table">
+        <table className="hidden w-full border-collapse text-left text-sm sm:table">
           <thead>
             <tr className="border-b border-[var(--color-line)]">
               <th className="py-3 pr-4 font-medium text-[var(--color-platinum)]">Name</th>
@@ -90,7 +90,7 @@ export default function CookiesPage() {
                 </td>
                 <td className="py-4 pr-4 align-top leading-relaxed">
                   {cookie.purpose}
-                  <span className="mt-1.5 block text-[#6b7179]">{cookie.when}</span>
+                  <span className="mt-1.5 block text-[var(--color-muted)]">{cookie.when}</span>
                 </td>
                 <td className="py-4 align-top whitespace-nowrap">{cookie.duration}</td>
               </tr>

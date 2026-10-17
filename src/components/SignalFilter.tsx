@@ -9,10 +9,11 @@ export default function SignalFilter({ active }: { active: SignalLevel | null })
     <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Nach Signalstärke filtern">
       <Link
         href="/analysen"
-        className={`rounded-full border px-4 py-2 text-[0.8125rem] transition-colors ${
+        aria-current={active === null ? "true" : undefined}
+        className={`inline-flex min-h-10 items-center border px-4 text-sm transition-colors duration-200 ${
           active === null
-            ? "border-[var(--color-line-strong)] bg-[rgba(255,255,255,0.07)] text-[var(--color-platinum)]"
-            : "border-[var(--color-line)] text-[var(--color-mist)] hover:text-[var(--color-platinum)]"
+            ? "border-[var(--color-platinum)] bg-[var(--color-platinum)] font-medium text-[var(--color-ink)]"
+            : "border-[var(--color-line-strong)] text-[var(--color-mist)] hover:border-[var(--color-platinum)] hover:text-[var(--color-platinum)]"
         }`}
       >
         Alle
@@ -24,15 +25,20 @@ export default function SignalFilter({ active }: { active: SignalLevel | null })
           <Link
             key={level}
             href={`/analysen?signal=${level}`}
-            className="flex items-center gap-2 rounded-full border px-4 py-2 text-[0.8125rem] transition-colors"
-            style={{
-              borderColor: isActive ? meta.color : "var(--color-line)",
-              color: isActive ? meta.color : "var(--color-mist)",
-              backgroundColor: isActive ? `${meta.color}14` : "transparent",
-            }}
+            aria-current={isActive ? "true" : undefined}
+            className={`inline-flex min-h-10 items-center gap-2 border px-4 text-sm transition-colors duration-200 ${
+              isActive
+                ? "font-medium"
+                : "border-[var(--color-line-strong)] text-[var(--color-mist)] hover:border-[var(--color-mist)] hover:text-[var(--color-platinum)]"
+            }`}
+            style={
+              isActive
+                ? { borderColor: meta.color, color: meta.color, backgroundColor: `${meta.color}14` }
+                : undefined
+            }
           >
             <span
-              className="inline-block h-1.5 w-1.5 rounded-full"
+              className="inline-block h-2 w-2 rounded-full"
               style={{ backgroundColor: meta.color }}
               aria-hidden="true"
             />

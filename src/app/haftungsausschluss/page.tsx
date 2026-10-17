@@ -110,29 +110,17 @@ const PARAGRAPHS: { heading?: string; body: React.ReactNode }[] = [
 
 export default function HaftungsausschlussPage() {
   return (
-    <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-20">
+    <div className="frame frame-lines">
+      <div className="mx-auto max-w-5xl py-14 sm:py-20">
       <LegalReviewNote />
 
       {/* Tafel im Stil klassischer Disclaimer-Seiten */}
       <article
-        className="relative overflow-hidden border border-[var(--color-line)] bg-[#0b0d11] px-6 py-10 sm:px-12 sm:py-14"
-        style={{ borderRadius: "var(--radius-card)" }}
+        className="relative overflow-hidden border border-[var(--color-line)] bg-[var(--color-anthracite)] px-6 py-10 sm:px-12 sm:py-14"
       >
-        <div
-          className="aura"
-          style={{
-            width: 520,
-            height: 520,
-            top: -260,
-            right: -180,
-            background:
-              "radial-gradient(circle, rgba(160,170,185,0.13) 0%, rgba(0,0,0,0) 70%)",
-          }}
-          aria-hidden="true"
-        />
 
         <header className="relative flex flex-wrap items-start justify-between gap-6 border-b border-[var(--color-line)] pb-8">
-          <h1 className="text-3xl font-bold uppercase leading-tight tracking-tight text-white sm:text-5xl">
+          <h1 className="text-[2rem] font-semibold uppercase leading-[1.05] tracking-[-0.01em] text-[var(--color-platinum)] sm:text-5xl">
             Hinweis
             <br />
             Haftungsausschluss
@@ -146,11 +134,11 @@ export default function HaftungsausschlussPage() {
           {PARAGRAPHS.map((item, index) => (
             <section key={index}>
               {item.heading && (
-                <h2 className="text-[0.8125rem] font-semibold uppercase tracking-[0.14em] text-[var(--color-silver)]">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-[var(--color-silver)]">
                   {item.heading}
                 </h2>
               )}
-              <p className="mt-3 text-[0.9375rem] leading-[1.75] text-[#c3c8ce]">
+              <p className="mt-3 text-[0.9375rem] leading-[1.75] text-[var(--color-mist-2)]">
                 {item.body}
               </p>
             </section>
@@ -158,7 +146,7 @@ export default function HaftungsausschlussPage() {
         </div>
 
         <footer className="relative mt-12 border-t border-[var(--color-line)] pt-8">
-          <p className="text-xs leading-relaxed text-[#6b7179]">
+          <p className="text-xs leading-relaxed text-[var(--color-muted)]">
             Stand: {new Intl.DateTimeFormat("de-DE", { dateStyle: "long" }).format(new Date())}{" "}
             · {BRAND.name} {BRAND.suffix} ist ein Angebot der {COMPANY.name}. Ergänzende
             Angaben finden Sie im{" "}
@@ -177,6 +165,7 @@ export default function HaftungsausschlussPage() {
           </p>
         </footer>
       </article>
+    </div>
     </div>
   );
 }

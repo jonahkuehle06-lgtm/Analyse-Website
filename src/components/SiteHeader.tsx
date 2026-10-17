@@ -37,28 +37,40 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
 
   if (pathname?.startsWith("/admin")) return null;
 
+  const aktiv = (href: string) => pathname === href || pathname?.startsWith(href + "/");
+  const mobileItems = [
+    ...NAV,
+    loggedIn
+      ? { href: "/konto", label: "Mein Konto" }
+      : { href: "/login", label: "Anmelden" },
+  ];
+
   return (
     <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        scrolled
-          ? "border-b border-[var(--color-line)] bg-[rgba(5,5,6,0.82)] backdrop-blur-xl"
-          : "border-b border-transparent"
+      // Wichtig: Bei offenem Menue keine Unschaerfe. backdrop-filter macht die
+      // Kopfzeile zum Bezugsrahmen fuer "fixed" - das Menue darunter waere
+      // dann nur so hoch wie die Kopfzeile selbst.
+      className={`sticky top-0 z-50 border-b border-[var(--color-line)] transition-colors duration-300 ${
+        scrolled && !open
+          ? "bg-[rgba(7,7,7,0.88)] backdrop-blur-xl"
+          : "bg-[var(--color-ink)]"
       }`}
     >
-      <div className="mx-auto flex h-[68px] max-w-6xl items-center justify-between px-5 sm:px-8">
+      <div className="frame flex h-16 items-center justify-between gap-6 md:h-[76px]">
         <Link href="/" aria-label="Zur Startseite" className="shrink-0">
           <Wordmark />
         </Link>
 
-        <nav className="hidden items-center gap-9 md:flex">
+        <nav aria-label="Hauptnavigation" className="hidden items-center gap-9 md:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm transition-colors ${
-                pathname === item.href
-                  ? "text-[var(--color-platinum)]"
-                  : "text-[var(--color-mist)] hover:text-[var(--color-platinum)]"
+              aria-current={aktiv(item.href) ? "page" : undefined}
+              className={`relative py-2 text-[0.9375rem] transition-colors duration-200 after:absolute after:inset-x-0 after:-bottom-px after:h-px after:origin-left after:bg-[var(--color-platinum)] after:transition-transform after:duration-300 ${
+                aktiv(item.href)
+                  ? "text-[var(--color-platinum)] after:scale-x-100"
+                  : "text-[var(--color-mist)] after:scale-x-0 hover:text-[var(--color-platinum)] hover:after:scale-x-100"
               }`}
             >
               {item.label}
@@ -66,16 +78,16 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
           {loggedIn ? (
             <>
               <Link
                 href="/konto"
-                className="text-sm text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)]"
+                className="text-[0.9375rem] text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)]"
               >
                 Mein Konto
               </Link>
-              <Link href="/analysen" className="btn-platinum !px-5 !py-2.5 !text-sm">
+              <Link href="/analysen" className="btn-platinum !min-h-0 !px-4 !py-2.5 !text-[0.875rem]">
                 Zu den Analysen
               </Link>
             </>
@@ -83,11 +95,11 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
             <>
               <Link
                 href="/login"
-                className="text-sm text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)]"
+                className="text-[0.9375rem] text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)]"
               >
                 Anmelden
               </Link>
-              <Link href="/preise" className="btn-platinum !px-5 !py-2.5 !text-sm">
+              <Link href="/preise" className="btn-platinum !min-h-0 !px-4 !py-2.5 !text-[0.875rem]">
                 Zugang sichern
               </Link>
             </>
@@ -99,22 +111,18 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Menü schließen" : "Menü öffnen"}
           aria-expanded={open}
-          className="flex h-10 w-10 items-center justify-center md:hidden"
+          aria-controls="mobile-menu"
+          className="-mr-2 flex h-11 w-11 items-center justify-center md:hidden"
         >
-          <span className="relative block h-4 w-6">
+          <span className="relative block h-3 w-6">
             <span
               className={`absolute left-0 block h-px w-6 bg-[var(--color-platinum)] transition-all duration-300 ${
-                open ? "top-2 rotate-45" : "top-0"
+                open ? "top-1.5 rotate-45" : "top-0"
               }`}
             />
             <span
-              className={`absolute left-0 top-2 block h-px w-6 bg-[var(--color-platinum)] transition-opacity duration-200 ${
-                open ? "opacity-0" : "opacity-100"
-              }`}
-            />
-            <span
-              className={`absolute left-0 block h-px w-6 bg-[var(--color-platinum)] transition-all duration-300 ${
-                open ? "top-2 -rotate-45" : "top-4"
+              className={`absolute left-0 block h-px bg-[var(--color-platinum)] transition-all duration-300 ${
+                open ? "top-1.5 w-6 -rotate-45" : "top-3 w-4"
               }`}
             />
           </span>
@@ -122,20 +130,26 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
       </div>
 
       {open && (
-        <div className="fixed inset-x-0 top-[68px] bottom-0 z-40 border-t border-[var(--color-line)] bg-[var(--color-ink)] px-5 pt-8 md:hidden">
-          <nav className="flex flex-col gap-1">
-            {[
-              ...NAV,
-              loggedIn
-                ? { href: "/konto", label: "Mein Konto" }
-                : { href: "/login", label: "Anmelden" },
-            ].map((item) => (
+        <div
+          id="mobile-menu"
+          className="plus-grid fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col overflow-y-auto border-t border-[var(--color-line)] bg-[var(--color-ink)] px-[var(--gutter)] pb-8 md:hidden"
+        >
+          <nav aria-label="Hauptnavigation" className="mt-4 flex flex-col">
+            {mobileItems.map((item, i) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="display border-b border-[var(--color-line)] py-5 text-3xl text-[var(--color-platinum)]"
+                aria-current={aktiv(item.href) ? "page" : undefined}
+                className="group flex items-baseline gap-4 border-b border-[var(--color-line)] py-5"
               >
-                {item.label}
+                <span className="mono-label w-6 tabular">{String(i + 1).padStart(2, "0")}</span>
+                <span
+                  className={`display text-[2.125rem] leading-none ${
+                    aktiv(item.href) ? "italic text-[var(--color-platinum)]" : "text-[var(--color-platinum)]"
+                  }`}
+                >
+                  {item.label}
+                </span>
               </Link>
             ))}
           </nav>
@@ -144,6 +158,7 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
             className="btn-platinum mt-8 w-full"
           >
             {loggedIn ? "Zu den Analysen" : "Zugang sichern"}
+            <span className="pfeil" aria-hidden="true">→</span>
           </Link>
         </div>
       )}

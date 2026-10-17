@@ -61,18 +61,17 @@ export default function ConsentBanner() {
       className="fixed inset-x-0 bottom-0 z-[80] px-3 pb-3 sm:px-5 sm:pb-5"
     >
       <div
-        className="surface mx-auto max-w-3xl p-6 shadow-[0_-10px_60px_rgba(0,0,0,0.75)] sm:p-7"
-        style={{ borderRadius: "var(--radius-card)" }}
+        className="surface mx-auto max-w-3xl p-6 shadow-[var(--shadow-overlay)] sm:p-8"
       >
         <p className="mono-label">Datenschutz</p>
         <h2
           id="consent-titel"
-          className="display mt-3 text-2xl text-[var(--color-platinum)]"
+          className="display mt-3 text-[length:var(--step-h4)] font-normal text-[var(--color-platinum)]"
         >
           Deine Entscheidung über Cookies
         </h2>
 
-        <p className="mt-3 text-sm leading-relaxed text-[var(--color-mist)]">
+        <p className="mt-3 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
           Für den Betrieb der Seite und deine Anmeldung setzen wir technisch notwendige
           Cookies — die brauchen keine Einwilligung. Darüber hinaus möchten wir messen, wie
           die Seite genutzt wird. Das geschieht nur, wenn du zustimmst. Du kannst deine
@@ -80,7 +79,7 @@ export default function ConsentBanner() {
         </p>
 
         {details && (
-          <div className="mt-6 space-y-px overflow-hidden rounded-xl border border-[var(--color-line)]">
+          <div className="mt-6 divide-y divide-[var(--color-line)] border border-[var(--color-line)]">
             <Zweck
               titel="Technisch notwendig"
               text="Anmeldung, Sitzungsverwaltung und Sicherheit. Ohne diese Cookies funktioniert der Kundenbereich nicht."
@@ -127,7 +126,7 @@ export default function ConsentBanner() {
             <button
               type="button"
               onClick={() => setDetails(true)}
-              className="w-full rounded-full px-6 py-3.5 text-sm text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)] sm:flex-1"
+              className="min-h-12 w-full px-6 text-[0.9375rem] text-[var(--color-mist)] underline decoration-transparent underline-offset-4 transition-colors hover:text-[var(--color-platinum)] hover:decoration-current sm:flex-1"
             >
               Einstellungen
             </button>
@@ -142,7 +141,7 @@ export default function ConsentBanner() {
           </button>
         </div>
 
-        <p className="mt-5 text-xs text-[#6b7179]">
+        <p className="mt-5 text-xs text-[var(--color-muted)]">
           Mehr dazu in den{" "}
           <Link href="/cookies" className="underline underline-offset-2">
             Cookie-Hinweisen
@@ -172,10 +171,10 @@ function Zweck({
   onChange?: (v: boolean) => void;
 }) {
   return (
-    <div className="flex items-start justify-between gap-5 bg-[rgba(255,255,255,0.02)] p-4">
+    <div className="flex items-start justify-between gap-5 p-4">
       <div className="min-w-0">
         <p className="text-sm font-medium text-[var(--color-platinum)]">{titel}</p>
-        <p className="mt-1 text-[0.8125rem] leading-relaxed text-[var(--color-mist)]">
+        <p className="mt-1 text-sm leading-relaxed text-[var(--color-mist)]">
           {text}
         </p>
       </div>
@@ -196,7 +195,7 @@ function Zweck({
         <span
           className="block h-4 w-4 rounded-full transition-transform"
           style={{
-            backgroundColor: an ? "#7BE3A1" : "var(--color-mist)",
+            backgroundColor: an ? "var(--color-success)" : "var(--color-mist)",
             transform: an ? "translateX(24px)" : "translateX(4px)",
           }}
         />

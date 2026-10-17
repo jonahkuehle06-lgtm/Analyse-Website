@@ -10,7 +10,10 @@ import { useEffect, useRef, useState } from "react";
  * nicht. Ist im System "Bewegung reduzieren" eingestellt, steht das Modell
  * still; fehlt WebGL, bleibt die Flaeche einfach leer.
  */
-export default function LogoScene() {
+const STANDARD_GROESSE =
+  "mx-auto h-[280px] w-full max-w-[380px] sm:h-[340px] lg:h-[420px] lg:max-w-none";
+
+export default function LogoScene({ className = STANDARD_GROESSE }: { className?: string }) {
   const host = useRef<HTMLDivElement>(null);
   const [sichtbar, setSichtbar] = useState(false);
 
@@ -55,7 +58,7 @@ export default function LogoScene() {
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(breite(), hoehe());
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.15;
+      renderer.toneMappingExposure = 1.05;
       el.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
@@ -66,27 +69,34 @@ export default function LogoScene() {
       const pmrem = new THREE.PMREMGenerator(renderer);
       scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-      scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-      const key = new THREE.DirectionalLight(0xffffff, 2.2);
+      // Wenig Grundlicht, dafuer ein warmes Hauptlicht und eine kuehle
+      // Kante - so entstehen Glanzlichter statt einer flachen grauen Flaeche.
+      scene.add(new THREE.AmbientLight(0xffffff, 0.16));
+      const key = new THREE.DirectionalLight(0xfff2e2, 2.6);
       key.position.set(3, 4, 5);
       scene.add(key);
-      const rim = new THREE.DirectionalLight(0xc8ced6, 1.4);
+      const rim = new THREE.DirectionalLight(0xd5dce5, 1.7);
       rim.position.set(-4, -1, -3);
       scene.add(rim);
+      const fill = new THREE.DirectionalLight(0x9aa3ad, 0.45);
+      fill.position.set(-3, -3, 4);
+      scene.add(fill);
 
       const gruppe = new THREE.Group();
       scene.add(gruppe);
 
       const materialien: Record<string, InstanceType<typeof THREE.MeshStandardMaterial>> = {
         tile_frame: new THREE.MeshStandardMaterial({
-          color: 0x9aa1aa,
+          color: 0xa3a9b1,
           metalness: 1,
-          roughness: 0.28,
+          roughness: 0.22,
+          envMapIntensity: 1.15,
         }),
         monogram_P: new THREE.MeshStandardMaterial({
-          color: 0xf2f4f6,
-          metalness: 0.85,
-          roughness: 0.16,
+          color: 0xf4f2ee,
+          metalness: 1,
+          roughness: 0.1,
+          envMapIntensity: 1.2,
         }),
         monogram_backfill: new THREE.MeshStandardMaterial({
           color: 0x14171b,
@@ -178,7 +188,7 @@ export default function LogoScene() {
     <div
       ref={host}
       aria-hidden="true"
-      className="pointer-events-none mx-auto h-[280px] w-full max-w-[380px] sm:h-[340px] lg:h-[420px] lg:max-w-none"
+      className={`pointer-events-none ${className}`}
     />
   );
 }

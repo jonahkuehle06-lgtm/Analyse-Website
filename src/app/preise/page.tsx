@@ -40,30 +40,32 @@ export default async function PreisePage() {
     <>
       <PricingSection currentPlan={user?.plan ?? null} />
 
-      <section className="border-t border-[var(--color-line)] bg-[var(--color-void)]">
-        <div className="mx-auto max-w-3xl px-5 py-24 sm:px-8">
-          <p className="mono-label">Häufige Fragen</p>
-          <h2 className="display mt-4 text-3xl text-[var(--color-platinum)] sm:text-4xl">
-            Gut zu wissen
-          </h2>
+      <section>
+        <div className="frame frame-lines section">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+            <div>
+              <span className="tag">Häufige Fragen</span>
+              <h2 className="display mt-6 text-[length:var(--step-h2)] text-[var(--color-platinum)]">
+                Gut zu wissen
+              </h2>
+            </div>
 
-          <div className="mt-10 divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
-            {FAQ.map((item) => (
-              <details key={item.q} className="group py-6">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-[0.9375rem] font-medium text-[var(--color-platinum)]">
-                  {item.q}
-                  <span
-                    className="shrink-0 text-[var(--color-mist)] transition-transform group-open:rotate-45"
-                    aria-hidden="true"
-                  >
-                    +
-                  </span>
-                </summary>
-                <p className="mt-4 text-sm leading-relaxed text-[var(--color-mist)]">
-                  {item.a}
-                </p>
-              </details>
-            ))}
+            <div className="divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
+              {FAQ.map((item) => (
+                <details key={item.q} className="group">
+                  <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-6 py-5 text-base font-medium text-[var(--color-platinum)] transition-colors hover:text-[var(--color-mist-2)] [&::-webkit-details-marker]:hidden">
+                    {item.q}
+                    <span
+                      className="relative h-3.5 w-3.5 shrink-0 text-[var(--color-mist)] before:absolute before:top-1/2 before:left-0 before:h-px before:w-3.5 before:bg-current after:absolute after:top-0 after:left-1/2 after:h-3.5 after:w-px after:bg-current after:transition-transform after:duration-300 group-open:after:scale-y-0"
+                      aria-hidden="true"
+                    />
+                  </summary>
+                  <p className="max-w-[62ch] pb-6 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
+                    {item.a}
+                  </p>
+                </details>
+              ))}
+            </div>
           </div>
         </div>
       </section>

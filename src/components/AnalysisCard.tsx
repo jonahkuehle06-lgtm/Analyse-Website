@@ -28,73 +28,68 @@ export default function AnalysisCard({ analysis }: { analysis: Analysis }) {
   return (
     <Link
       href={`/analysen/${analysis.id}`}
-      className="group block rounded-[var(--radius-card)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-silver)]"
+      className="group block h-full"
       aria-label={`${analysis.title} — Analyse öffnen`}
     >
-    <article
-      className="surface surface-hover relative flex h-full flex-col overflow-hidden p-6"
-      style={{ borderRadius: "var(--radius-card)" }}
-    >
-      {/* Farbakzent oben, passend zur Signalstärke */}
-      <span
-        aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-px"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${meta.color}, transparent)`,
-          opacity: 0.65,
-        }}
-      />
+      <article className="surface surface-hover relative flex h-full flex-col p-6 sm:p-7">
+        {/* Kurzer Akzentstrich in der Farbe der Signalstärke */}
+        <span
+          aria-hidden="true"
+          className="absolute -top-px left-6 h-0.5 w-12 sm:left-7"
+          style={{ backgroundColor: meta.color }}
+        />
 
-      <header className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <p className="mono-label">{analysis.ticker || "—"}</p>
-          <h3 className="display mt-1.5 truncate text-2xl text-[var(--color-platinum)]">
-            {analysis.title}
-          </h3>
-        </div>
-        <div className="shrink-0 text-right">
-          <p className="mono-label">Kurs</p>
-          <p className="mt-1.5 text-base font-medium tabular-nums text-[var(--color-platinum)]">
-            {formatPrice(analysis.price, analysis.currency)}
-          </p>
-        </div>
-      </header>
-
-      <div className="mt-6">
-        <SignalIndicator level={analysis.signal} />
-      </div>
-
-      <p className="mt-5 flex-1 text-sm leading-relaxed text-[var(--color-mist-2)]">
-        {analysis.reason}
-      </p>
-
-      {(analysis.targetPrice !== null || analysis.horizon) && (
-        <dl className="mt-6 grid grid-cols-2 gap-4 border-t border-[var(--color-line)] pt-5">
-          <div>
-            <dt className="mono-label">Kursziel</dt>
-            <dd className="mt-1.5 text-sm tabular-nums text-[var(--color-platinum)]">
-              {formatPrice(analysis.targetPrice, analysis.currency)}
-            </dd>
+        <header className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <p className="mono-label">{analysis.ticker || "—"}</p>
+            <h3 className="display mt-2 truncate text-[length:var(--step-h4)] font-normal text-[var(--color-platinum)]">
+              {analysis.title}
+            </h3>
           </div>
-          <div>
-            <dt className="mono-label">Horizont</dt>
-            <dd className="mt-1.5 text-sm text-[var(--color-platinum)]">
-              {analysis.horizon || "—"}
-            </dd>
+          <div className="shrink-0 text-right">
+            <p className="mono-label">Kurs</p>
+            <p className="tabular mt-2 text-[1.0625rem] font-medium text-[var(--color-platinum)]">
+              {formatPrice(analysis.price, analysis.currency)}
+            </p>
           </div>
-        </dl>
-      )}
+        </header>
 
-      <footer className="mt-5 flex items-end justify-between gap-4 border-t border-[var(--color-line)] pt-4">
-        <p className="text-[0.6875rem] leading-relaxed text-[#6b7179]">
-          Ersteller: {analysis.author || "—"} · Erstellt am{" "}
-          {formatDate(analysis.publishedAt)}
+        <div className="mt-6">
+          <SignalIndicator level={analysis.signal} />
+        </div>
+
+        <p className="mt-5 flex-1 text-[0.9375rem] leading-relaxed text-[var(--color-mist-2)]">
+          {analysis.reason}
         </p>
-        <span className="shrink-0 text-[0.6875rem] whitespace-nowrap text-[var(--color-mist)] transition-colors group-hover:text-[var(--color-platinum)]">
-          Öffnen →
-        </span>
-      </footer>
-    </article>
+
+        {(analysis.targetPrice !== null || analysis.horizon) && (
+          <dl className="mt-6 grid grid-cols-2 gap-4 border-t border-[var(--color-line)] pt-5">
+            <div>
+              <dt className="mono-label">Kursziel</dt>
+              <dd className="tabular mt-1.5 text-base text-[var(--color-platinum)]">
+                {formatPrice(analysis.targetPrice, analysis.currency)}
+              </dd>
+            </div>
+            <div>
+              <dt className="mono-label">Horizont</dt>
+              <dd className="mt-1.5 text-base text-[var(--color-platinum)]">
+                {analysis.horizon || "—"}
+              </dd>
+            </div>
+          </dl>
+        )}
+
+        <footer className="mt-5 flex items-end justify-between gap-4 border-t border-[var(--color-line)] pt-4">
+          <p className="text-xs leading-relaxed text-[var(--color-muted)]">
+            Ersteller: {analysis.author || "—"} · Erstellt am{" "}
+            {formatDate(analysis.publishedAt)}
+          </p>
+          <span className="flex shrink-0 items-center gap-1.5 text-sm whitespace-nowrap text-[var(--color-mist)] transition-colors group-hover:text-[var(--color-platinum)]">
+            Öffnen
+            <span className="pfeil transition-transform duration-300 group-hover:translate-x-[3px]" aria-hidden="true">→</span>
+          </span>
+        </footer>
+      </article>
     </Link>
   );
 }
@@ -107,58 +102,43 @@ export default function AnalysisCard({ analysis }: { analysis: Analysis }) {
 export function LockedAnalysisCard({ analysis }: { analysis: Analysis }) {
   return (
     <article
-      className="surface relative flex min-h-[220px] flex-col overflow-hidden p-6"
-      style={{ borderRadius: "var(--radius-card)" }}
+      className="surface relative flex min-h-[240px] flex-col p-6 sm:p-7"
       aria-label={`${analysis.title} — nicht im Paketumfang enthalten`}
     >
       <header className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="mono-label">{analysis.ticker || "—"}</p>
-          <h3 className="display mt-1.5 truncate text-2xl text-[var(--color-mist-2)]">
+          <h3 className="display mt-2 truncate text-[length:var(--step-h4)] font-normal text-[var(--color-mist-2)]">
             {analysis.title}
           </h3>
         </div>
         <svg
-          width="17"
-          height="17"
+          width="18"
+          height="18"
           viewBox="0 0 24 24"
           fill="none"
           aria-hidden="true"
-          className="mt-1 shrink-0"
+          className="mt-0.5 shrink-0 text-[var(--color-muted)]"
         >
-          <rect
-            x="4.5"
-            y="10.5"
-            width="15"
-            height="10"
-            rx="2"
-            stroke="#5d636b"
-            strokeWidth="1.4"
-          />
-          <path d="M8 10.5V7.5a4 4 0 1 1 8 0v3" stroke="#5d636b" strokeWidth="1.4" />
+          <rect x="4.5" y="10.5" width="15" height="10" rx="1" stroke="currentColor" strokeWidth="1.4" />
+          <path d="M8 10.5V7.5a4 4 0 1 1 8 0v3" stroke="currentColor" strokeWidth="1.4" />
         </svg>
       </header>
 
       <div className="locked-blur mt-6 select-none" aria-hidden="true">
         <div className="flex gap-1">
           {[0, 1, 2, 3, 4].map((i) => (
-            <span
-              key={i}
-              className="h-1.5 flex-1 rounded-full"
-              style={{ backgroundColor: "rgba(255,255,255,0.13)" }}
-            />
+            <span key={i} className="h-1.5 flex-1 bg-[var(--color-line-strong)]" />
           ))}
         </div>
         <div className="mt-5 space-y-2.5">
-          <span className="block h-2 w-full rounded-full bg-[rgba(255,255,255,0.07)]" />
-          <span className="block h-2 w-[92%] rounded-full bg-[rgba(255,255,255,0.07)]" />
-          <span className="block h-2 w-[64%] rounded-full bg-[rgba(255,255,255,0.07)]" />
+          <span className="block h-2 w-full bg-[var(--color-line)]" />
+          <span className="block h-2 w-[92%] bg-[var(--color-line)]" />
+          <span className="block h-2 w-[64%] bg-[var(--color-line)]" />
         </div>
       </div>
 
-      <p className="mt-auto pt-6 text-[0.8125rem] text-[#6b7179]">
-        Nicht im Paketumfang
-      </p>
+      <p className="mt-auto pt-6 text-xs text-[var(--color-muted)]">Nicht im Paketumfang</p>
     </article>
   );
 }

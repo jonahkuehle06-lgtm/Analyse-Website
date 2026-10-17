@@ -44,7 +44,7 @@ export default async function AnalyseBearbeitenPage({
           <input type="hidden" name="id" value={analysis.id} />
           <button
             type="submit"
-            className="rounded-full border border-[rgba(240,139,139,0.3)] px-5 py-2.5 text-sm text-[#F08B8B] transition-colors hover:bg-[rgba(240,139,139,0.08)]"
+            className="min-h-11 border border-[rgba(240,139,139,0.35)] px-5 text-[0.9375rem] text-[var(--color-danger)] transition-colors hover:border-[var(--color-danger)] hover:bg-[rgba(240,139,139,0.08)]"
           >
             Löschen
           </button>

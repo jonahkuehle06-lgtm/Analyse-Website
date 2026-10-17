@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageHeader from "@/components/PageHeader";
 import { redirect } from "next/navigation";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { logoutAction } from "@/lib/actions/auth";
@@ -37,23 +38,18 @@ export default async function KontoPage({
   const total = (await listAnalyses()).length;
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
-      <p className="mono-label">Kundenbereich</p>
-      <h1 className="display mt-4 text-4xl sm:text-5xl">
-        <span className="platinum-text">Mein Konto</span>
-      </h1>
+    <div className="frame frame-lines">
+    <div className="mx-auto max-w-4xl py-14 sm:py-20">
+      <PageHeader label="Kundenbereich" title="Mein Konto" />
 
       {fehler === "kein-kunde" && (
-        <p className="mt-6 text-sm text-[#F08B8B]" role="alert">
+        <p className="mt-8 text-[0.9375rem] text-[var(--color-danger)]" role="alert">
           Zu diesem Konto ist noch kein Stripe-Kunde hinterlegt. Bitte zunächst ein Paket
           buchen.
         </p>
       )}
 
-      <div
-        className="surface mt-10 divide-y divide-[var(--color-line)]"
-        style={{ borderRadius: "var(--radius-card)" }}
-      >
+      <dl className="divide-y divide-[var(--color-line)] border-b border-[var(--color-line)]">
         {[
           ["E-Mail-Adresse", user.email],
           ["Paket", plan ? plan.name : "—"],
@@ -73,19 +69,20 @@ export default async function KontoPage({
         ].map(([label, value]) => (
           <div
             key={label}
-            className="flex flex-wrap items-center justify-between gap-3 px-6 py-5"
+            className="grid gap-1 py-5 sm:grid-cols-[16rem_minmax(0,1fr)] sm:items-baseline sm:gap-10"
           >
-            <span className="text-sm text-[var(--color-mist)]">{label}</span>
-            <span className="text-sm font-medium text-[var(--color-platinum)]">
+            <dt className="mono-label">{label}</dt>
+            <dd className="break-words text-base font-medium text-[var(--color-platinum)]">
               {value}
-            </span>
+            </dd>
           </div>
         ))}
-      </div>
+      </dl>
 
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
         <Link href="/analysen" className="btn-platinum w-full sm:w-auto">
           Zu den Analysen
+          <span className="pfeil" aria-hidden="true">→</span>
         </Link>
 
         {user.stripeCustomerId ? (
@@ -103,18 +100,19 @@ export default async function KontoPage({
         <form action={logoutAction} className="w-full sm:ml-auto sm:w-auto">
           <button
             type="submit"
-            className="w-full rounded-full px-6 py-3.5 text-sm text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)]"
+            className="min-h-12 w-full px-6 text-[0.9375rem] text-[var(--color-mist)] underline decoration-transparent underline-offset-4 transition-colors hover:text-[var(--color-platinum)] hover:decoration-current"
           >
             Abmelden
           </button>
         </form>
       </div>
 
-      <p className="mt-12 text-xs leading-relaxed text-[#6b7179]">
+      <p className="mt-12 max-w-[70ch] text-xs leading-relaxed text-[var(--color-muted)]">
         Über „Abo verwalten“ öffnet sich das Stripe-Kundenportal. Dort lassen sich
         Zahlungsmittel ändern, Rechnungen herunterladen und das Abonnement zum Ende der
         laufenden Periode kündigen.
       </p>
+    </div>
     </div>
   );
 }

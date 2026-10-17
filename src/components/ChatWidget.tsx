@@ -97,7 +97,7 @@ export default function ChatWidget() {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Assistent schließen" : "Assistent öffnen"}
         aria-expanded={open}
-        className="fixed bottom-5 right-5 z-[70] flex h-14 w-14 items-center justify-center rounded-full border border-[var(--color-line-strong)] bg-[#14171b] shadow-[0_10px_40px_rgba(0,0,0,0.6)] transition-transform hover:scale-105 active:scale-95 sm:bottom-6 sm:right-6"
+        className="fixed right-4 bottom-4 z-[70] flex h-14 w-14 items-center justify-center border border-[var(--color-line-strong)] bg-[var(--color-anthracite-2)] shadow-[var(--shadow-overlay)] transition-colors duration-200 hover:border-[var(--color-platinum)] hover:bg-[var(--color-anthracite-3)] sm:right-6 sm:bottom-6"
       >
         {open ? (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -125,13 +125,12 @@ export default function ChatWidget() {
         <div
           role="dialog"
           aria-label="Assistent"
-          className="surface fixed inset-x-3 bottom-24 z-[69] flex max-h-[min(70vh,560px)] flex-col overflow-hidden shadow-[0_24px_70px_rgba(0,0,0,0.7)] sm:inset-x-auto sm:right-6 sm:w-[400px]"
-          style={{ borderRadius: "var(--radius-card)" }}
+          className="surface fixed inset-x-3 bottom-22 z-[69] flex max-h-[min(72vh,580px)] flex-col overflow-hidden shadow-[var(--shadow-overlay)] sm:inset-x-auto sm:right-6 sm:bottom-24 sm:w-[410px]"
         >
           <header className="flex items-center justify-between border-b border-[var(--color-line)] px-5 py-4">
             <div>
-              <p className="text-sm font-medium text-[var(--color-platinum)]">Assistent</p>
-              <p className="mt-0.5 text-[0.6875rem] text-[#6b7179]">
+              <p className="display text-lg font-normal text-[var(--color-platinum)]">Assistent</p>
+              <p className="mt-0.5 text-xs text-[var(--color-muted)]">
                 Fragen zu Paketen und Funktionen
               </p>
             </div>
@@ -139,7 +138,7 @@ export default function ChatWidget() {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Schließen"
-              className="text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)]"
+              className="-mr-2 flex h-10 w-10 items-center justify-center text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)]"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -148,7 +147,7 @@ export default function ChatWidget() {
           </header>
 
           <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
-            <p className="text-sm leading-relaxed text-[var(--color-mist-2)]">{GREETING}</p>
+            <p className="text-[0.9375rem] leading-relaxed text-[var(--color-mist-2)]">{GREETING}</p>
 
             {messages.length === 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
@@ -157,7 +156,7 @@ export default function ChatWidget() {
                     key={s}
                     type="button"
                     onClick={() => send(s)}
-                    className="rounded-full border border-[var(--color-line)] px-3.5 py-1.5 text-left text-[0.8125rem] text-[var(--color-mist)] transition-colors hover:border-[var(--color-line-strong)] hover:text-[var(--color-platinum)]"
+                    className="min-h-10 border border-[var(--color-line-strong)] px-3.5 py-2 text-left text-sm text-[var(--color-mist)] transition-colors hover:border-[var(--color-platinum)] hover:text-[var(--color-platinum)]"
                   >
                     {s}
                   </button>
@@ -170,8 +169,8 @@ export default function ChatWidget() {
                 <div
                   className={
                     m.role === "user"
-                      ? "max-w-[85%] rounded-2xl rounded-br-sm bg-[rgba(255,255,255,0.08)] px-3.5 py-2.5 text-sm text-[var(--color-platinum)]"
-                      : "text-sm leading-relaxed whitespace-pre-wrap text-[var(--color-mist-2)]"
+                      ? "max-w-[85%] bg-[var(--color-anthracite-3)] px-4 py-2.5 text-[0.9375rem] text-[var(--color-platinum)]"
+                      : "text-[0.9375rem] leading-relaxed whitespace-pre-wrap text-[var(--color-mist-2)]"
                   }
                 >
                   {m.content || (busy && i === messages.length - 1 ? "…" : "")}
@@ -180,11 +179,11 @@ export default function ChatWidget() {
             ))}
 
             {busy && messages[messages.length - 1]?.role === "user" && (
-              <p className="text-sm text-[#6b7179]">…</p>
+              <p className="text-sm text-[var(--color-muted)]">…</p>
             )}
 
             {error && (
-              <p className="text-sm text-[#F08B8B]" role="alert">
+              <p className="text-sm text-[var(--color-danger)]" role="alert">
                 {error}
               </p>
             )}
@@ -211,18 +210,18 @@ export default function ChatWidget() {
                 rows={1}
                 maxLength={1200}
                 placeholder="Frage zum Angebot …"
-                className="field max-h-28 min-h-[42px] flex-1 resize-none !py-2.5"
+                className="field max-h-28 !min-h-[46px] flex-1 resize-none !py-2.5"
               />
               <button
                 type="submit"
                 disabled={busy || !input.trim()}
                 aria-label="Senden"
-                className="btn-platinum !h-[42px] !w-[42px] !p-0"
+                className="btn-platinum !min-h-0 !h-[46px] !w-[46px] !p-0"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path
                     d="M5 12h13M12 5l7 7-7 7"
-                    stroke="#07080a"
+                    stroke="var(--color-ink)"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -230,7 +229,7 @@ export default function ChatWidget() {
                 </svg>
               </button>
             </div>
-            <p className="mt-2 text-[0.6875rem] leading-relaxed text-[#6b7179]">
+            <p className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">
               Automatisierte Antworten zum Angebot. Keine Anlageberatung, keine Auskunft zu
               einzelnen Wertpapieren.
             </p>

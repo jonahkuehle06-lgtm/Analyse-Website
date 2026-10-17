@@ -60,12 +60,12 @@ export default function AuthForm({
       ))}
 
       {state?.error && (
-        <p className="text-sm text-[#F08B8B]" role="alert">
+        <p className="text-sm text-[var(--color-danger)]" role="alert">
           {state.error}
         </p>
       )}
       {state?.success && (
-        <p className="text-sm text-[#7BE3A1]" role="status">
+        <p className="text-sm text-[var(--color-success)]" role="status">
           {state.success}
         </p>
       )}

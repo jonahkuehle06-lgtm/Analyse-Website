@@ -2,8 +2,8 @@ import { SIGNALS } from "@/lib/config";
 import type { SignalLevel } from "@/lib/types";
 
 /**
- * Signalstärke-Anzeige: fünf Segmente, das aktive Segment leuchtet im
- * jeweiligen Farbcode (leuchtendes Grün bis leuchtendes Rot).
+ * Signalstärke-Anzeige: fünf Segmente, das aktive Segment in der
+ * jeweiligen Signalfarbe (leuchtendes Grün bis leuchtendes Rot).
  */
 export default function SignalIndicator({
   level,
@@ -23,18 +23,14 @@ export default function SignalIndicator({
         <span
           className="signal-dot inline-block rounded-full"
           style={{
-            width: size === "sm" ? 7 : 9,
-            height: size === "sm" ? 7 : 9,
+            width: size === "sm" ? 7 : 8,
+            height: size === "sm" ? 7 : 8,
             backgroundColor: meta.color,
-            boxShadow: `0 0 12px ${meta.glow}`,
           }}
           aria-hidden="true"
         />
         {showLabel && (
-          <span
-            className="text-[0.8125rem] font-medium tracking-tight"
-            style={{ color: meta.color }}
-          >
+          <span className="text-sm font-medium" style={{ color: meta.color }}>
             {meta.label}
           </span>
         )}
@@ -50,10 +46,9 @@ export default function SignalIndicator({
           return (
             <span
               key={step}
-              className={`${barHeight} flex-1 rounded-full transition-all duration-300`}
+              className={`${barHeight} flex-1 transition-colors duration-300`}
               style={{
-                backgroundColor: active ? meta.color : "rgba(255,255,255,0.09)",
-                boxShadow: active ? `0 0 10px ${meta.glow}` : "none",
+                backgroundColor: active ? meta.color : "var(--color-line-strong)",
               }}
             />
           );

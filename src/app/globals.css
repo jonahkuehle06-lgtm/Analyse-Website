@@ -1,38 +1,112 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   PAX Solutions · Designsystem "Noir Editorial"
+
+   Alle Farben, Schriftgroessen, Abstaende, Radien, Schatten und Bewegungen
+   der Seite kommen aus diesem Block. Komponenten greifen nur auf diese
+   Variablen zu - wer hier etwas aendert, aendert es ueberall.
+
+   Kontraste (WCAG) gegen den Seitengrund #070707 / Karte #0F0F0F:
+     platinum 16,8 : 1 · mist-2 11,7 : 1 · mist 8,2 : 1 · muted 6,1 : 1
+   und auf Papier #EFEBE4: graphite 15,5 : 1 · graphite-2 7,8 · graphite-3 5,7
+   ========================================================================== */
+
 @theme {
-  --color-void: #000000;
-  --color-ink: #050506;
-  --color-anthracite: #0e1013;
-  --color-anthracite-2: #15181c;
-  --color-anthracite-3: #1c2026;
-  --color-line: rgba(255, 255, 255, 0.08);
-  --color-line-strong: rgba(255, 255, 255, 0.18);
-  --color-mist: #8d939c;
-  --color-mist-2: #b9bfc7;
-  --color-platinum: #e6e8eb;
-  --color-silver: #a8aeb7;
+  /* Flaechen, dunkel - von tief nach hell */
+  --color-void: #050505;
+  --color-ink: #070707;
+  --color-anthracite: #0f0f0f;
+  --color-anthracite-2: #151515;
+  --color-anthracite-3: #1c1c1c;
 
-  --font-display: var(--font-serif-display), "Iowan Old Style", "Palatino Linotype",
-    Palatino, Georgia, serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
+  /* Haarlinien */
+  --color-line: rgba(239, 234, 225, 0.1);
+  --color-line-strong: rgba(239, 234, 225, 0.2);
 
-  --radius-card: 18px;
+  /* Text - Elfenbein-Platin und drei Abstufungen */
+  --color-platinum: #efeae1;
+  --color-mist-2: #cbc5ba;
+  --color-mist: #aba59b;
+  --color-muted: #928d84;
+  --color-silver: #c9c3b8;
+
+  /* Papier - die hellen Abschnitte */
+  --color-paper: #efebe4;
+  --color-paper-2: #e6e1d8;
+  --color-graphite: #141414;
+  --color-graphite-2: #4a4741;
+  --color-graphite-3: #5f5b54;
+
+  /* Zustaende (Meldungen, nicht Signale) */
+  --color-success: #7be3a1;
+  --color-warning: #e8c64b;
+  --color-danger: #f08b8b;
+
+  /* Schriften: genau zwei */
+  --font-display: var(--font-serif-display), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-sans-text), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+
+  /* Schriftgroessen - nichts unter 13 px, Fliesstext 17 px */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.55;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.6;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.65;
+  --text-lg: 1.1875rem;
+  --text-lg--line-height: 1.6;
+
+  /* Radien: eckig und ruhig */
+  --radius-card: 2px;
+  --radius-control: 2px;
+
+  /* Bewegung */
+  --ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 :root {
   color-scheme: dark;
-  --platinum-gradient: linear-gradient(
-    118deg,
-    #ffffff 0%,
-    #d9dde2 28%,
-    #8f959e 52%,
-    #e8ebee 78%,
-    #b6bcc4 100%
-  );
+
+  /* Raster und Abstaende */
+  --frame: 75rem;
+  --gutter: 1.25rem;
+  --section-y: clamp(4.5rem, 9vw, 8rem);
+
+  /* Ueberschriften, fliessend skaliert */
+  --step-display: clamp(2.875rem, 1.6rem + 5.2vw, 5.25rem);
+  --step-h1: clamp(2.125rem, 1.4rem + 3.6vw, 4.25rem);
+  --step-h2: clamp(2.125rem, 1.5rem + 2.6vw, 3.5rem);
+  --step-h3: clamp(1.625rem, 1.3rem + 1.1vw, 2.125rem);
+  --step-h4: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+
+  /* Schatten nur fuer Ebenen, die schweben (Menue, Chat, Banner) */
+  --shadow-overlay: 0 28px 70px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+
+  /* Dauer der Uebergaenge */
+  --dur-1: 160ms;
+  --dur-2: 280ms;
+  --dur-3: 600ms;
+
+  --focus: var(--color-platinum);
+
+  /* Feines Pluszeichen-Raster (nach gauss.ag) */
+  --plus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 19v10M19 24h10' stroke='%23EFEAE1' stroke-opacity='0.1' stroke-width='1'/%3E%3C/svg%3E");
+
+  /* Nur noch fuer feine Platin-Haarlinien; Text bekommt keinen Verlauf mehr */
+  --platinum-gradient: linear-gradient(118deg, #f6f2ea 0%, #d9d3c7 40%, #a9a296 62%, #efeae1 100%);
 }
 
+@media (min-width: 640px) {
+  :root { --gutter: 2rem; }
+}
+@media (min-width: 1024px) {
+  :root { --gutter: 2.5rem; }
+}
+
+/* Grundlagen: nach dem Tailwind-Preflight, vor allen Bausteinen */
+@layer base {
 * {
   -webkit-tap-highlight-color: transparent;
 }
@@ -45,158 +119,365 @@ body {
   background-color: var(--color-ink);
   color: var(--color-platinum);
   font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: rgba(230, 232, 235, 0.22);
+  background: rgba(239, 234, 225, 0.85);
+  color: #070707;
 }
 
-/* ----------------------------- Bausteine ---------------------------------- */
+/* Fokus: fuer alles Klickbare sichtbar, nur bei Tastaturbedienung */
+:where(a, button, [role="button"], summary, select, input, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+}
+
+/* Bausteine in der Komponenten-Ebene: Tailwind-Klassen am selben Element
+   (z.B. font-normal, flex, leading-tight) duerfen sie gezielt ueberstimmen. */
+@layer components {
+/* ------------------------------ Typografie ------------------------------- */
 
 .display {
   font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  line-height: 1.04;
+  font-weight: 300;
+  font-optical-sizing: auto;
+  letter-spacing: -0.022em;
+  line-height: 1.03;
+  text-wrap: balance;
 }
 
+/* Lange deutsche Woerter ("Geschaeftsbedingungen") duerfen auf dem
+   Telefon getrennt werden, statt aus der Spalte zu laufen. */
+@media (max-width: 640px) {
+  .display {
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphenate-limit-chars: 10 4 4;
+    overflow-wrap: break-word;
+  }
+}
+
+.display em,
+.display-italic {
+  font-style: italic;
+}
+
+/* Das eine hervorgehobene Wort einer Ueberschrift: kursiv im hellen Block */
+.em-block {
+  font-style: italic;
+  background: var(--color-platinum);
+  color: var(--color-ink);
+  padding: 0 0.12em 0.02em;
+  margin: 0 0.03em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Frueher Verlaufstext - jetzt ruhiges Platin, damit nichts flackert */
 .platinum-text {
-  background: var(--platinum-gradient);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--color-platinum);
 }
 
-.mono-label {
-  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.6875rem;
-  letter-spacing: 0.18em;
+/* Etiketten (Klassenname historisch; Schrift ist Hanken Grotesk) */
+.mono-label,
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--color-line-strong);
+  padding: 0.4375rem 0.6875rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
   text-transform: uppercase;
   color: var(--color-mist);
 }
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.lead {
+  font-size: var(--text-lg);
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--color-mist);
+}
+
+/* Textlinks im Fliesstext */
+.text-link {
+  text-decoration: underline;
+  text-decoration-color: var(--color-line-strong);
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--dur-1) var(--ease-soft), color var(--dur-1);
+}
+.text-link:hover {
+  text-decoration-color: currentColor;
+  color: var(--color-platinum);
+}
+
+/* --------------------------------- Raster -------------------------------- */
+
+.frame {
+  position: relative;
+  width: 100%;
+  max-width: var(--frame);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@media (min-width: 1024px) {
+  .frame-lines {
+    border-inline: 1px solid var(--color-line);
+  }
+}
+
+.plus-grid {
+  background-image: var(--plus);
+  background-size: 48px 48px;
+  background-position: center top;
+}
+
+/* Fadenkreuz an den Kreuzungspunkten der Rahmenlinien */
+.cross {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  color: var(--color-muted);
+  pointer-events: none;
+}
+.cross::before,
+.cross::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+}
+.cross::before { left: 7px; top: 0; width: 1px; height: 15px; }
+.cross::after { top: 7px; left: 0; width: 15px; height: 1px; }
+
+.section {
+  padding-block: var(--section-y);
+}
+
+/* Helle Abschnitte: dieselben Komponenten, umgekehrte Farben */
+.section-paper {
+  background: var(--color-paper);
+  color: var(--color-graphite);
+  --color-ink: #efebe4;
+  --color-platinum: #141414;
+  --color-mist-2: #34322e;
+  --color-mist: #4a4741;
+  --color-muted: #5f5b54;
+  --color-line: rgba(20, 20, 20, 0.13);
+  --color-line-strong: rgba(20, 20, 20, 0.26);
+  --color-anthracite: #e6e1d8;
+  --color-anthracite-2: #ddd7cc;
+  --focus: #141414;
+  --plus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 19v10M19 24h10' stroke='%23141414' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+/* Dunkle Insel innerhalb eines hellen Abschnitts */
+.section-noir {
+  background: #0f0f0f;
+  color: #efeae1;
+  --color-ink: #070707;
+  --color-platinum: #efeae1;
+  --color-mist-2: #cbc5ba;
+  --color-mist: #aba59b;
+  --color-muted: #928d84;
+  --color-line: rgba(239, 234, 225, 0.1);
+  --color-line-strong: rgba(239, 234, 225, 0.2);
+  --focus: #efeae1;
+}
+
+/* -------------------------------- Flaechen ------------------------------- */
 
 .hairline {
   border: 1px solid var(--color-line);
 }
 
 .surface {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0) 55%),
-    var(--color-anthracite);
+  background: var(--color-anthracite);
   border: 1px solid var(--color-line);
 }
 
 .surface-hover {
   transition:
-    border-color 0.35s ease,
-    background-color 0.35s ease,
-    transform 0.35s ease;
+    background-color var(--dur-2) var(--ease-soft),
+    border-color var(--dur-2) var(--ease-soft);
 }
 
 .surface-hover:hover {
+  background-color: var(--color-anthracite-2);
   border-color: var(--color-line-strong);
-  transform: translateY(-2px);
 }
 
-/* Platin-Button */
-.btn-platinum {
+/* -------------------------------- Knoepfe -------------------------------- */
+
+.btn-platinum,
+.btn-ghost {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  border-radius: 999px;
-  padding: 0.875rem 1.75rem;
-  font-size: 0.9375rem;
+  gap: 0.625rem;
+  min-height: 3rem;
+  border-radius: var(--radius-control);
+  padding: 0.8125rem 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  color: #07080a;
-  background: var(--platinum-gradient);
-  background-size: 180% 180%;
-  background-position: 0% 50%;
-  border: none;
+  line-height: 1.2;
+  letter-spacing: 0.005em;
   cursor: pointer;
-  transition: background-position 0.6s ease, box-shadow 0.4s ease, opacity 0.2s ease;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 10px 30px rgba(0, 0, 0, 0.55);
+  transition:
+    background-color var(--dur-1) var(--ease-soft),
+    border-color var(--dur-1) var(--ease-soft),
+    color var(--dur-1) var(--ease-soft),
+    transform var(--dur-1) var(--ease-soft);
+}
+
+.btn-platinum {
+  color: var(--color-ink);
+  background: var(--color-platinum);
+  border: 1px solid var(--color-platinum);
 }
 
 .btn-platinum:hover {
-  background-position: 100% 50%;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 14px 40px rgba(0, 0, 0, 0.6);
-}
-
-.btn-platinum:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
+  background: color-mix(in srgb, var(--color-platinum) 86%, var(--color-ink));
 }
 
 .btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: 999px;
-  padding: 0.875rem 1.75rem;
-  font-size: 0.9375rem;
-  font-weight: 500;
   color: var(--color-platinum);
+  background: transparent;
   border: 1px solid var(--color-line-strong);
-  background: rgba(255, 255, 255, 0.02);
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  font-weight: 500;
 }
 
 .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: var(--color-platinum);
+  background: color-mix(in srgb, var(--color-platinum) 5%, transparent);
 }
 
-/* Formulare */
+.btn-platinum:active,
+.btn-ghost:active {
+  transform: translateY(1px);
+}
+
+.btn-platinum:disabled,
+.btn-ghost:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Unterstrichener Textlink mit Pfeil - die leise Alternative zum Knopf */
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.25rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-platinum);
+  border-bottom: 1px solid var(--color-mist);
+  transition: border-color var(--dur-1) var(--ease-soft);
+}
+
+.btn-link:hover {
+  border-color: var(--color-platinum);
+}
+
+.pfeil {
+  display: inline-block;
+  transition: transform var(--dur-2) var(--ease-soft);
+}
+
+:is(.btn-platinum, .btn-ghost, .btn-link, a, button):hover > .pfeil {
+  transform: translateX(3px);
+}
+
+/* ------------------------------- Formulare ------------------------------- */
+
 .field {
   width: 100%;
-  border-radius: 12px;
-  border: 1px solid var(--color-line);
-  background: rgba(255, 255, 255, 0.025);
-  padding: 0.75rem 0.9rem;
-  font-size: 0.9375rem;
+  min-height: 3rem;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--color-line-strong);
+  background: color-mix(in srgb, var(--color-platinum) 3%, transparent);
+  padding: 0.75rem 0.9375rem;
+  font-size: 1rem;
   color: var(--color-platinum);
-  transition: border-color 0.25s ease, background-color 0.25s ease;
+  transition:
+    border-color var(--dur-1) var(--ease-soft),
+    background-color var(--dur-1) var(--ease-soft),
+    box-shadow var(--dur-1) var(--ease-soft);
 }
 
 .field::placeholder {
-  color: #666c75;
+  color: var(--color-muted);
 }
 
-.field:focus {
+.field:hover {
+  border-color: color-mix(in srgb, var(--color-platinum) 34%, transparent);
+}
+
+.field:focus,
+.field:focus-visible {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.34);
-  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-platinum);
+  background: color-mix(in srgb, var(--color-platinum) 5%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-platinum) 14%, transparent);
+}
+
+textarea.field {
+  min-height: 6rem;
+  line-height: 1.6;
 }
 
 .field-label {
   display: block;
-  margin-bottom: 0.4rem;
-  font-size: 0.8125rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-mist-2);
 }
 
 select.field option {
-  background: #15181c;
-  color: #e6e8eb;
+  background: #151515;
+  color: #efeae1;
 }
 
-/* Hintergrund-Effekte */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--color-platinum);
+}
+
+/* ------------------------------- Effekte -------------------------------- */
+
 .grain::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.028;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -207,14 +488,6 @@ select.field option {
   pointer-events: none;
 }
 
-.grid-lines {
-  background-image:
-    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
-  background-size: 84px 84px;
-}
-
-/* Locked-Cards */
 .locked-blur {
   filter: blur(7px);
   user-select: none;
@@ -230,17 +503,45 @@ select.field option {
   animation: pulse-soft 2.6s ease-in-out infinite;
 }
 
+@keyframes einblenden {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Dezentes Einblenden beim Laden - nur oberhalb der Falz verwendet */
+.fade-up {
+  animation: einblenden 0.9s var(--ease-soft) both;
+}
+.fade-up-2 { animation-delay: 0.08s; }
+.fade-up-3 { animation-delay: 0.16s; }
+.fade-up-4 { animation-delay: 0.24s; }
+
 @media (prefers-reduced-motion: reduce) {
-  .signal-dot { animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
   html { scroll-behavior: auto; }
 }
 
-/* Scrollbar */
+/* Scrollleiste */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: #0a0b0d; }
+::-webkit-scrollbar-track { background: #070707; }
 ::-webkit-scrollbar-thumb {
-  background: #262b31;
+  background: #2a2826;
   border-radius: 999px;
-  border: 2px solid #0a0b0d;
+  border: 2px solid #070707;
 }
-::-webkit-scrollbar-thumb:hover { background: #363c44; }
+::-webkit-scrollbar-thumb:hover { background: #3a3733; }
+
+/* Kammlinie der Halbton-Kurve zeichnet sich beim Laden einmal nach */
+@keyframes ridge-draw {
+  to { stroke-dashoffset: 0; }
+}
+.ridge-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: ridge-draw 2.4s var(--ease-soft) 0.35s forwards;
+}
+}

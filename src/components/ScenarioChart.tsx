@@ -9,7 +9,7 @@ import type { Analysis } from "@/lib/types";
  * Reise in drei Faellen endet.
  *
  * Farbwahl: divergierend um den Base Case. Die beiden Pole sind gegen die
- * Kartenflaeche (#0e1013) geprueft - Helligkeitsband, Chroma, Kontrast und
+ * Kartenflaeche (#0F0F0F) geprueft - Helligkeitsband, Chroma, Kontrast und
  * Farbfehlsichtigkeit bestehen alle Pruefungen (ΔE 9,9 bei Deuteranopie).
  * Zusaetzlich traegt jede Linie eine eigene Beschriftung, damit die
  * Zuordnung nie allein an der Farbe haengt.
@@ -17,7 +17,7 @@ import type { Analysis } from "@/lib/types";
 
 const FARBE = {
   best: "#1baf7a",
-  base: "#a8aeb7",
+  base: "#aba59b",
   worst: "#d03b3b",
 } as const;
 
@@ -84,11 +84,10 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
   return (
     <section
       className="surface p-6 sm:p-8"
-      style={{ borderRadius: "var(--radius-card)" }}
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <p className="mono-label">Szenarien</p>
-        <p className="text-xs text-[#6b7179]">
+        <p className="text-xs text-[var(--color-muted)]">
           {analysis.scenarioHorizon
             ? `Horizont: ${analysis.scenarioHorizon}`
             : "Angaben in " + analysis.currency}
@@ -113,7 +112,7 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
           {/* Hilfslinie auf Höhe des heutigen Kurses */}
           <line
             x1="0" x2="100" y1={y(start) * 100} y2={y(start) * 100}
-            stroke="rgba(255,255,255,0.14)" strokeWidth="0.3" strokeDasharray="1.5 1.5"
+            stroke="var(--color-line-strong)" strokeWidth="0.3" strokeDasharray="1.5 1.5"
             vectorEffect="non-scaling-stroke"
           />
           {szenarien.map((s) => (
@@ -136,7 +135,7 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
           aria-hidden="true"
         />
         <span
-          className="absolute -translate-x-1/2 translate-y-2 text-[0.6875rem] whitespace-nowrap tabular-nums text-[var(--color-mist)]"
+          className="absolute -translate-x-1/2 translate-y-2 text-xs whitespace-nowrap tabular-nums text-[var(--color-mist)]"
           style={{ left: `${X0 + 3}%`, top: `${y(start) * 100}%` }}
         >
           heute {geld(start)}
@@ -156,12 +155,12 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
             />
             <span className="absolute left-0 top-1/2 -translate-y-1/2 pl-4 text-left whitespace-nowrap">
               <span
-                className="block text-[0.8125rem] font-medium tabular-nums"
+                className="block text-sm font-medium tabular-nums"
                 style={{ color: FARBE[s.fall] }}
               >
                 {geld(s.kurs)}
               </span>
-              <span className="block text-[0.6875rem] tabular-nums text-[var(--color-mist)]">
+              <span className="block text-xs tabular-nums text-[var(--color-mist)]">
                 {abweichung(s.kurs)}
               </span>
             </span>
@@ -170,11 +169,11 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
       </div>
 
       {/* Die drei Fälle im Einzelnen */}
-      <ul className="mt-6 space-y-px overflow-hidden rounded-xl border border-[var(--color-line)]">
+      <ul className="mt-6 divide-y divide-[var(--color-line)] border border-[var(--color-line)]">
         {szenarien.map((s) => (
           <li
             key={s.fall}
-            className="bg-[rgba(255,255,255,0.02)] px-5 py-4"
+            className="px-5 py-4"
           >
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
               <span className="flex items-center gap-2.5">
@@ -197,7 +196,7 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
               </span>
             </div>
             {s.notiz && (
-              <p className="mt-2 text-[0.8125rem] leading-relaxed text-[var(--color-mist)]">
+              <p className="mt-2 text-sm leading-relaxed text-[var(--color-mist)]">
                 {s.notiz}
               </p>
             )}
@@ -205,7 +204,7 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
         ))}
       </ul>
 
-      <p className="mt-5 text-xs leading-relaxed text-[#6b7179]">
+      <p className="mt-5 text-xs leading-relaxed text-[var(--color-muted)]">
         Die Linien verbinden den heutigen Kurs mit dem jeweiligen Kursziel und stellen
         keinen prognostizierten Kursverlauf dar. Szenarien und Wahrscheinlichkeiten geben
         die Einschätzung zum Erstellungszeitpunkt wieder und sind keine Zusage über

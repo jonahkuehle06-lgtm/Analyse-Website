@@ -2,6 +2,7 @@ import Link from "next/link";
 import PricingSection from "@/components/PricingSection";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import LogoScene from "@/components/LogoScene";
+import HalftoneCurve from "@/components/HalftoneCurve";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { PLANS } from "@/lib/config";
@@ -24,6 +25,25 @@ const PRINCIPLES = [
   },
 ];
 
+/** Die bisherige Info-Leiste - wortgleich, jetzt direkt unter dem Hero. */
+const KENNZAHLEN = [
+  {
+    label: "Inhalt je Analyse",
+    title: "Titel, Kurs, Begründung",
+    body: "Kein Fließtext über Seiten — eine Karte, die in zehn Sekunden gelesen ist.",
+  },
+  {
+    label: "Aktualisierung",
+    title: "Sofort live",
+    body: "Neue und geänderte Analysen erscheinen unmittelbar nach Freigabe im Kundenbereich.",
+  },
+  {
+    label: "Paketumfang",
+    title: `${PLANS.basic.limit} bis ${PLANS.platin.limit} Analysen`,
+    body: "Freigeschaltet werden immer die aktuellsten Analysen des Bestands.",
+  },
+];
+
 export default async function HomePage() {
   const [analyses, user] = await Promise.all([listAnalyses(), currentUser()]);
   const preview = analyses.slice(0, 3);
@@ -32,179 +52,148 @@ export default async function HomePage() {
   return (
     <>
       {/* ------------------------------- Hero ------------------------------- */}
-      <section className="relative overflow-hidden">
-        <div
-          className="aura"
-          style={{
-            width: 640,
-            height: 640,
-            top: -300,
-            left: "50%",
-            transform: "translateX(-50%)",
-            background:
-              "radial-gradient(circle, rgba(180,188,198,0.16) 0%, rgba(0,0,0,0) 70%)",
-          }}
-          aria-hidden="true"
-        />
-        <div
-          className="grid-lines absolute inset-0 opacity-40"
-          style={{
-            maskImage: "radial-gradient(ellipse at 50% 0%, black 0%, transparent 72%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse at 50% 0%, black 0%, transparent 72%)",
-          }}
-          aria-hidden="true"
-        />
+      {/* Aussen das feine Pluszeichen-Raster, innen die gerahmte Spalte. */}
+      <section className="plus-grid border-b border-[var(--color-line)]">
+        <div className="frame frame-lines bg-[var(--color-ink)]">
+          <div className="relative grid lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="relative z-10 pt-16 pb-10 sm:pt-20 lg:pt-28 lg:pb-24">
+              <span className="tag fade-up">
+                <span
+                  className="signal-dot inline-block h-1.5 w-1.5 rounded-full bg-[#00E56A]"
+                  aria-hidden="true"
+                />
+                {analyses.length > 0
+                  ? `${analyses.length} Analysen aktuell veröffentlicht`
+                  : "Neue Analysen jede Woche"}
+              </span>
 
-        <div className="relative mx-auto max-w-5xl px-5 pb-24 pt-20 text-center sm:px-8 sm:pt-28">
-          <span className="hairline inline-flex items-center gap-2.5 rounded-full bg-[rgba(255,255,255,0.03)] px-4 py-1.5">
-            <span
-              className="signal-dot inline-block h-1.5 w-1.5 rounded-full"
-              style={{ backgroundColor: "#00E56A", boxShadow: "0 0 10px rgba(0,229,106,.6)" }}
-              aria-hidden="true"
-            />
-            <span className="text-[0.75rem] tracking-[0.08em] text-[var(--color-mist-2)]">
-              {analyses.length > 0
-                ? `${analyses.length} Analysen aktuell veröffentlicht`
-                : "Neue Analysen jede Woche"}
-            </span>
-          </span>
+              <h1 className="display fade-up fade-up-2 mt-8 text-[length:var(--step-display)] text-[var(--color-platinum)]">
+                Fundierte Analysen, die über das{" "}
+                <span className="em-block">Investieren</span> hinausgehen.
+              </h1>
 
-          <h1 className="display mt-8 text-[2.5rem] leading-[1.08] sm:text-5xl lg:text-6xl">
-            <span className="platinum-text">Fundierte Analysen,</span>
-            <br />
-            <span className="text-[var(--color-platinum)]">
-              die über das Investieren hinausgehen.
-            </span>
-          </h1>
+              <p className="lead fade-up fade-up-3 mt-8 max-w-[36ch]">
+                Klarheit am Markt schaffen, um finanzielle Freiheit zu erreichen. Analysen auf
+                Basis fundamentaler und technischer Methoden – mit langfristigem Value-Ansatz.
+              </p>
 
-          <p className="mx-auto mt-7 max-w-2xl text-[1.0625rem] leading-relaxed text-[var(--color-mist)]">
-            Klarheit am Markt schaffen, um finanzielle Freiheit zu erreichen. Analysen auf
-            Basis fundamentaler und technischer Methoden – mit langfristigem Value-Ansatz.
-          </p>
-
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/preise" className="btn-platinum w-full sm:w-auto">
-              Zugang sichern
-            </Link>
-            <Link href="/methodik" className="btn-ghost w-full sm:w-auto">
-              Methodik ansehen
-            </Link>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ------------------------------ Grundsätze --------------------------- */}
-      {/* Karten linksbuendig in einer breiten Spalte, rechts die Bildmarke. */}
-      <section className="border-y border-[var(--color-line)] bg-[var(--color-void)]">
-        <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-14">
-            <div className="space-y-3.5">
-              {PRINCIPLES.map((item) => (
-                <article
-                  key={item.title}
-                  className="surface surface-hover relative overflow-hidden px-7 py-6 sm:px-8 sm:py-7"
-                  style={{ borderRadius: "16px" }}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-y-0 left-0 w-px"
-                    style={{ background: "var(--platinum-gradient)", opacity: 0.45 }}
-                  />
-                  <h2 className="display text-[1.375rem] text-[var(--color-platinum)] sm:text-2xl">
-                    {item.title}
-                  </h2>
-                  <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
-                    {item.body}
-                  </p>
-                </article>
-              ))}
+              <div className="fade-up fade-up-4 mt-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-8">
+                <Link href="/preise" className="btn-platinum w-full sm:w-auto">
+                  Zugang sichern
+                  <span className="pfeil" aria-hidden="true">→</span>
+                </Link>
+                <Link href="/methodik" className="btn-link self-start sm:self-auto">
+                  Methodik ansehen
+                  <span className="pfeil" aria-hidden="true">→</span>
+                </Link>
+              </div>
             </div>
 
-            <LogoScene />
-          </div>
-        </div>
-      </section>
-
-      {/* --------------------------- Analysen-Vorschau ---------------------- */}
-      {preview.length > 0 && (
-        <section className="mx-auto max-w-6xl px-5 py-24 sm:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <p className="mono-label">Aktuell</p>
-              <h2 className="display mt-4 text-3xl sm:text-4xl text-[var(--color-platinum)]">
-                Zuletzt veröffentlicht
-              </h2>
-            </div>
-            <Link
-              href="/analysen"
-              className="text-sm text-[var(--color-mist)] underline underline-offset-4 transition-colors hover:text-[var(--color-platinum)]"
-            >
-              Alle Analysen ansehen
-            </Link>
+            <HalftoneCurve className="fade-up fade-up-3 -mx-[var(--gutter)] h-[220px] w-[calc(100%+2*var(--gutter))] text-[var(--color-platinum)] sm:h-[280px] lg:absolute lg:right-0 lg:bottom-0 lg:mx-0 lg:h-[74%] lg:w-[50%]" />
           </div>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {preview.map((analysis, index) =>
-              unlocked || index === 0 ? (
-                <AnalysisCard key={analysis.id} analysis={analysis} />
-              ) : (
-                <LockedAnalysisCard key={analysis.id} analysis={analysis} />
-              ),
-            )}
-          </div>
-
-          {!unlocked && (
-            <p className="mt-8 text-center text-sm text-[var(--color-mist)]">
-              Die erste Analyse ist frei einsehbar. Alle weiteren schaltest du mit einem
-              Paket frei.
-            </p>
-          )}
-        </section>
-      )}
-
-      {/* ------------------------------ Umfang ------------------------------ */}
-      <section className="border-y border-[var(--color-line)] bg-[var(--color-void)]">
-        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
-          <div className="grid gap-px overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)] md:grid-cols-3"
-               style={{ borderRadius: "var(--radius-card)" }}>
-            {[
-              {
-                label: "Inhalt je Analyse",
-                title: "Titel, Kurs, Begründung",
-                body: "Kein Fließtext über Seiten — eine Karte, die in zehn Sekunden gelesen ist.",
-              },
-              {
-                label: "Aktualisierung",
-                title: "Sofort live",
-                body: "Neue und geänderte Analysen erscheinen unmittelbar nach Freigabe im Kundenbereich.",
-              },
-              {
-                label: "Paketumfang",
-                title: `${PLANS.basic.limit} bis ${PLANS.platin.limit} Analysen`,
-                body: "Freigeschaltet werden immer die aktuellsten Analysen des Bestands.",
-              },
-            ].map((item) => (
-              <div key={item.title} className="bg-[var(--color-anthracite)] p-8">
+          {/* Kennzahlen-Leiste */}
+          <div className="relative grid border-t border-[var(--color-line)] md:grid-cols-3">
+            <span className="cross -top-2 -left-[calc(var(--gutter)+8px)] hidden lg:block" aria-hidden="true" />
+            <span className="cross -top-2 -right-[calc(var(--gutter)+8px)] hidden lg:block" aria-hidden="true" />
+            {KENNZAHLEN.map((item, i) => (
+              <div
+                key={item.label}
+                className={`py-7 md:px-8 md:py-9 ${
+                  i > 0 ? "border-t border-[var(--color-line)] md:border-t-0 md:border-l" : ""
+                } ${i === 0 ? "md:pl-0" : ""}`}
+              >
                 <p className="mono-label">{item.label}</p>
-                <h3 className="display mt-4 text-2xl text-[var(--color-platinum)]">
+                <p className="display mt-3 text-[length:var(--step-h4)] text-[var(--color-platinum)]">
                   {item.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--color-mist)]">
-                  {item.body}
                 </p>
+                <p className="mt-2 text-sm text-[var(--color-mist)]">{item.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* ------------------------------ Grundsätze --------------------------- */}
+      <section className="section-paper">
+        <div className="frame frame-lines section">
+          <span className="tag">Grundsätze</span>
+          <h2 className="display mt-6 max-w-[16ch] text-[length:var(--step-h2)]">
+            Worauf sich unsere <em>Analysen</em> stützen
+          </h2>
+
+          <div className="mt-14 grid border border-[var(--color-line)] lg:grid-cols-[1.25fr_1fr] lg:grid-rows-2">
+            {/* Die erste Kachel dunkel - darauf schwebt die Bildmarke */}
+            <article className="section-noir relative flex flex-col overflow-hidden p-7 sm:p-9 lg:row-span-2 lg:min-h-[560px]">
+              <span className="mono-label tabular">01</span>
+              <h3 className="display mt-3 text-[length:var(--step-h3)] font-normal lg:max-w-[55%]">
+                {PRINCIPLES[0].title}
+              </h3>
+              <LogoScene className="mx-auto my-6 h-[240px] w-full max-w-[320px] sm:h-[280px] lg:absolute lg:top-1/2 lg:right-6 lg:my-0 lg:h-[58%] lg:w-[42%] lg:max-w-none lg:-translate-y-1/2" />
+              <p className="mt-auto text-[0.9375rem] leading-relaxed text-[var(--color-mist)] lg:max-w-[50%]">
+                {PRINCIPLES[0].body}
+              </p>
+            </article>
+
+            {PRINCIPLES.slice(1).map((item, i) => (
+              <article
+                key={item.title}
+                className={`flex flex-col border-t border-[var(--color-line)] p-7 sm:p-9 lg:border-l ${
+                  i === 0 ? "lg:border-t-0" : ""
+                }`}
+              >
+                <span className="mono-label tabular">{String(i + 2).padStart(2, "0")}</span>
+                <h3 className="display mt-3 text-[length:var(--step-h3)] font-normal">
+                  {item.title}
+                </h3>
+                <p className="mt-auto pt-8 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
+                  {item.body}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --------------------------- Analysen-Vorschau ---------------------- */}
+      {preview.length > 0 && (
+        <section className="border-b border-[var(--color-line)]">
+          <div className="frame frame-lines section">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <span className="tag">Aktuell</span>
+                <h2 className="display mt-6 text-[length:var(--step-h2)] text-[var(--color-platinum)]">
+                  Zuletzt veröffentlicht
+                </h2>
+              </div>
+              <Link href="/analysen" className="btn-link">
+                Alle Analysen ansehen
+                <span className="pfeil" aria-hidden="true">→</span>
+              </Link>
+            </div>
+
+            <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {preview.map((analysis, index) =>
+                unlocked || index === 0 ? (
+                  <AnalysisCard key={analysis.id} analysis={analysis} />
+                ) : (
+                  <LockedAnalysisCard key={analysis.id} analysis={analysis} />
+                ),
+              )}
+            </div>
+
+            {!unlocked && (
+              <p className="mt-8 text-sm text-[var(--color-mist)]">
+                Die erste Analyse ist frei einsehbar. Alle weiteren schaltest du mit einem
+                Paket frei.
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ------------------------------ Pakete ------------------------------ */}
-      <div className="border-t border-[var(--color-line)] bg-[var(--color-void)]">
-        <PricingSection currentPlan={user?.plan ?? null} />
-      </div>
+      <PricingSection currentPlan={user?.plan ?? null} />
     </>
   );
 }

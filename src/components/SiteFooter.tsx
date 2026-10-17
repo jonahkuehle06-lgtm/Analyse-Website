@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Wordmark from "./Wordmark";
+import DoveMark from "./DoveMark";
 import ConsentSettingsLink from "./ConsentSettingsLink";
 import { gtmId } from "./GoogleTagManager";
 import { BRAND, COMPANY } from "@/lib/config";
@@ -21,14 +22,17 @@ const PRODUCT = [
   { href: "/konto", label: "Mein Konto" },
 ];
 
+const linkClass =
+  "text-[0.9375rem] text-[var(--color-mist)] underline decoration-transparent underline-offset-4 transition-colors duration-200 hover:text-[var(--color-platinum)] hover:decoration-[var(--color-line-strong)]";
+
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-[var(--color-line)] bg-[var(--color-void)]">
-      <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
-        <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
+    <footer className="relative overflow-hidden border-t border-[var(--color-line)] bg-[var(--color-void)]">
+      <div className="frame frame-lines">
+        <div className="grid gap-12 pt-16 pb-12 md:grid-cols-[1.6fr_1fr_1fr] md:pt-20">
           <div>
             <Wordmark />
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-[var(--color-mist)]">
+            <p className="mt-6 max-w-[30ch] text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
               {BRAND.claim}
             </p>
           </div>
@@ -38,10 +42,7 @@ export default function SiteFooter() {
             <ul className="mt-5 space-y-3">
               {PRODUCT.map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)]"
-                  >
+                  <Link href={item.href} className={linkClass}>
                     {item.label}
                   </Link>
                 </li>
@@ -54,10 +55,7 @@ export default function SiteFooter() {
             <ul className="mt-5 space-y-3">
               {LEGAL.map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)]"
-                  >
+                  <Link href={item.href} className={linkClass}>
                     {item.label}
                   </Link>
                 </li>
@@ -72,8 +70,8 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 border-t border-[var(--color-line)] pt-8">
-          <p className="text-xs leading-relaxed text-[#6b7179]">
+        <div className="border-t border-[var(--color-line)] py-8">
+          <p className="max-w-4xl text-xs leading-relaxed text-[var(--color-muted)]">
             <strong className="font-semibold text-[var(--color-mist)]">
               Risikohinweis:
             </strong>{" "}
@@ -84,17 +82,25 @@ export default function SiteFooter() {
             berücksichtigen weder persönliche Verhältnisse noch Anlageziele einzelner
             Nutzer. {COMPANY.name} und ihre Mitarbeiter können Anteile an besprochenen
             Unternehmen halten. Ausführliche Hinweise im{" "}
-            <Link href="/haftungsausschluss" className="underline underline-offset-2">
+            <Link href="/haftungsausschluss" className="text-link">
               Haftungsausschluss
             </Link>
             .
           </p>
-          <div className="mt-6 flex flex-col gap-2 text-xs text-[#6b7179] sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-6 flex flex-col gap-2 text-xs text-[var(--color-muted)] sm:flex-row sm:items-center sm:justify-between">
             <span>
               © {new Date().getFullYear()} {COMPANY.name}. Alle Rechte vorbehalten.
             </span>
             <span>{COMPANY.street}, {COMPANY.city}</span>
           </div>
+        </div>
+
+        {/* Die Taube als grosses, angeschnittenes Wasserzeichen */}
+        <div aria-hidden="true" className="relative h-[clamp(120px,20vw,260px)] overflow-hidden">
+          <DoveMark
+            solid
+            className="absolute top-2 left-1/2 w-[min(720px,92vw)] -translate-x-1/2 text-[var(--color-platinum)] opacity-[0.06]"
+          />
         </div>
       </div>
     </footer>

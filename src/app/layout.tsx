@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Instrument_Serif } from "next/font/google";
+import { Fraunces, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -15,15 +15,23 @@ import ConsentBanner from "@/components/ConsentBanner";
 import { BRAND, siteUrl } from "@/lib/config";
 import { currentUser } from "@/lib/auth";
 
-const inter = Inter({
+/*
+ * Zwei Schriften, mehr nicht:
+ *  - Fraunces fuer Ueberschriften. Variable Schrift mit optischer Groesse -
+ *    in grossen Graden fein und kontrastreich, in kleinen kraeftiger.
+ *  - Hanken Grotesk fuer Fliesstext, Etiketten und Zahlen.
+ */
+const sans = Hanken_Grotesk({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-sans-text",
   display: "swap",
 });
 
-const serifDisplay = Instrument_Serif({
+const serifDisplay = Fraunces({
   subsets: ["latin"],
-  weight: "400",
+  style: ["normal", "italic"],
+  axes: ["opsz"],
   variable: "--font-serif-display",
   display: "swap",
 });
@@ -40,7 +48,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050506",
+  themeColor: "#070707",
   width: "device-width",
   initialScale: 1,
 };
@@ -50,7 +58,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const chatEnabled = Boolean(process.env.ANTHROPIC_API_KEY);
 
   return (
-    <html lang="de" className={`${inter.variable} ${serifDisplay.variable}`}>
+    <html lang="de" className={`${sans.variable} ${serifDisplay.variable}`}>
       <head>
         {/* Muss vor dem GTM-Container laufen: setzt alle einwilligungs-
             pflichtigen Zwecke zunaechst auf "denied". */}

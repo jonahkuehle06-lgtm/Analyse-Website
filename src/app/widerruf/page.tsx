@@ -60,7 +60,7 @@ export default function WiderrufPage() {
       </LegalSection>
 
       <LegalSection title="Muster-Widerrufsformular">
-        <p className="whitespace-pre-line rounded-xl border border-[var(--color-line)] bg-[rgba(255,255,255,0.02)] p-5 text-[0.8125rem]">
+        <p className="whitespace-pre-line border border-[var(--color-line)] bg-[var(--color-anthracite)] p-6 text-sm">
 {`An ${COMPANY.name}, ${COMPANY.street}, ${COMPANY.city}, E-Mail: ${COMPANY.email}
 
 Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den Kauf
