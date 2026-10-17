@@ -27,7 +27,8 @@ function arg(name) {
 async function hashPassword(password) {
   const salt = randomBytes(16);
   const derived = await scrypt(password, salt, 64);
-  return `scrypt$${salt.toString("hex")}$${derived.toString("hex")}`;
+  // Trennzeichen ":" - ein "$" wuerde in .env-Dateien als Variable gelesen.
+  return `scrypt:${salt.toString("hex")}:${derived.toString("hex")}`;
 }
 
 const password = arg("--admin-password");

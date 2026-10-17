@@ -175,6 +175,8 @@ Felder je Analyse:
 - Signalstärke in fünf Stufen mit Farbcode
 - Anlagehorizont, Erstellungsdatum
 - Kurszonen: vier Kursgrenzen, die die fünf Signalbereiche trennen
+- Szenarien: Best / Base / Worst Case mit Kursziel, Wahrscheinlichkeit
+  und kurzer Begründung, dazu ein gemeinsamer Zeithorizont
 - Ersteller und Offenlegung möglicher Interessenkonflikte (Pflichtangaben)
 
 ---
@@ -270,7 +272,7 @@ der vor dem Livegang zu fuellen ist.
 Jede freigeschaltete Analyse laesst sich anklicken und oeffnet unter
 `/analysen/<id>` eine eigene Seite: Kurs, Kursziel, Horizont, Datum,
 Signalstaerke mit Erlaeuterung, die Begruendung und - sofern gepflegt -
-der Kurszonen-Balken.
+das Szenario-Diagramm und der Kurszonen-Balken.
 
 **Die Paywall gilt dort genauso.** Die Detailseite prueft serverseitig
 dieselbe Regel wie die Uebersicht: freigeschaltet sind die N aktuellsten
@@ -296,6 +298,33 @@ Erstellers; aus Kurs und Kursziel liesse sich so etwas nicht seriöes
 ableiten. Bleiben die Felder leer oder sind sie nicht aufsteigend, zeigt
 die Detailansicht schlicht keinen Balken - alles andere bleibt sichtbar.
 
+### Szenarien (Best / Base / Worst Case)
+
+Darueber steht auf der Detailseite ein Szenario-Diagramm: drei Linien, die
+vom heutigen Kurs zu den drei Kurszielen laufen, darunter die drei Faelle
+im Einzelnen mit Wahrscheinlichkeit und Begruendung.
+
+Im Admin-Formular ist das ein eigener Block mit drei Spalten:
+
+| Spalte | Felder |
+|---|---|
+| Best Case | Kursziel, Wahrsch. %, kurze Begruendung |
+| Base Case | Kursziel, Wahrsch. %, kurze Begruendung |
+| Worst Case | Kursziel, Wahrsch. %, kurze Begruendung |
+
+Dazu ein Feld fuer den gemeinsamen Zeithorizont (z.B. "12 Monate").
+Zahlen aendern, speichern, fertig - das Diagramm zeichnet sich neu.
+
+Auch diese Werte werden **nicht berechnet**, sondern eingetragen. Das
+Diagramm erscheint nur, wenn alle drei Kursziele gefuellt sind; sonst
+waere die Projektion unvollstaendig. Die Wahrscheinlichkeiten sind
+optional, sollten zusammen aber 100 ergeben.
+
+Die geraden Linien sind Absicht: ein geschwungener Verlauf wuerde einen
+Kursweg behaupten, den niemand prognostiziert hat. Dargestellt ist nur,
+wo die Reise in drei Faellen endet. Ein entsprechender Hinweis steht
+unter dem Diagramm.
+
 ### Datenbank nachziehen
 
 Bei einer bereits angelegten Supabase-Datenbank einmalig im SQL Editor
@@ -307,6 +336,18 @@ alter table public.analyses
   add column if not exists zone_entry_to        numeric(14,4),
   add column if not exists zone_neutral_to      numeric(14,4),
   add column if not exists zone_exit_to         numeric(14,4);
+
+alter table public.analyses
+  add column if not exists scenario_horizon           text default '',
+  add column if not exists scenario_best_price        numeric(14,4),
+  add column if not exists scenario_best_probability  numeric(5,2),
+  add column if not exists scenario_best_note         text default '',
+  add column if not exists scenario_base_price        numeric(14,4),
+  add column if not exists scenario_base_probability  numeric(5,2),
+  add column if not exists scenario_base_note         text default '',
+  add column if not exists scenario_worst_price       numeric(14,4),
+  add column if not exists scenario_worst_probability numeric(5,2),
+  add column if not exists scenario_worst_note        text default '';
 ```
 
 ---

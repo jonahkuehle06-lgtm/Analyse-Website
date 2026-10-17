@@ -65,3 +65,24 @@ alter table public.analyses
   add column if not exists zone_entry_to        numeric(14,4),
   add column if not exists zone_neutral_to      numeric(14,4),
   add column if not exists zone_exit_to         numeric(14,4);
+
+-- ---------------------------------------------------------------------------
+-- Nachtrag: Szenarien je Analyse (Best / Base / Worst Case)
+--
+-- Drei Kursziele mit Eintrittswahrscheinlichkeit und kurzer Begruendung,
+-- dazu der gemeinsame Zeithorizont. Das Szenario-Diagramm auf der
+-- Detailseite erscheint nur, wenn alle drei Kurse gepflegt sind.
+--
+-- Bei einer bestehenden Datenbank einmalig im SQL Editor ausfuehren.
+-- ---------------------------------------------------------------------------
+alter table public.analyses
+  add column if not exists scenario_horizon           text default '',
+  add column if not exists scenario_best_price        numeric(14,4),
+  add column if not exists scenario_best_probability  numeric(5,2),
+  add column if not exists scenario_best_note         text default '',
+  add column if not exists scenario_base_price        numeric(14,4),
+  add column if not exists scenario_base_probability  numeric(5,2),
+  add column if not exists scenario_base_note         text default '',
+  add column if not exists scenario_worst_price       numeric(14,4),
+  add column if not exists scenario_worst_probability numeric(5,2),
+  add column if not exists scenario_worst_note        text default '';

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import SignalIndicator from "@/components/SignalIndicator";
 import PriceZones from "@/components/PriceZones";
+import ScenarioChart from "@/components/ScenarioChart";
 import { getAnalysis, listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { PLANS, SIGNALS, planLimit } from "@/lib/config";
@@ -136,7 +137,10 @@ export default async function AnalyseDetail({
         </p>
       </section>
 
-      {/* Kurszonen — nur wenn gepflegt */}
+      {/* Szenarien und Kurszonen — jeweils nur, wenn gepflegt */}
+      <div className="mt-5">
+        <ScenarioChart analysis={analysis} />
+      </div>
       <div className="mt-5">
         <PriceZones analysis={analysis} />
       </div>

@@ -33,6 +33,21 @@ export interface Analysis {
   zoneEntryTo: number | null;
   zoneNeutralTo: number | null;
   zoneExitTo: number | null;
+  /**
+   * Szenarien: drei Kursziele mit Eintrittswahrscheinlichkeit und kurzer
+   * Begruendung. Das Diagramm erscheint nur, wenn alle drei Kurse gepflegt
+   * sind - sonst waere die Projektion unvollstaendig.
+   */
+  scenarioHorizon: string;
+  scenarioBestPrice: number | null;
+  scenarioBestProbability: number | null;
+  scenarioBestNote: string;
+  scenarioBasePrice: number | null;
+  scenarioBaseProbability: number | null;
+  scenarioBaseNote: string;
+  scenarioWorstPrice: number | null;
+  scenarioWorstProbability: number | null;
+  scenarioWorstNote: string;
   /** ISO-Datum der Erstellung/Veroeffentlichung */
   publishedAt: string;
   createdAt: string;

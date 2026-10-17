@@ -30,6 +30,60 @@ const rows = [
   ["Novo Nordisk A/S","NOVO B",412,"EUR",470,1,"12 Monate","Die Kapazitätserweiterungen in der Adipositas-Sparte greifen und die Nachfrage übersteigt weiterhin das Angebot.",NONE],
 ];
 
+// Szenarien: erfundene Demowerte fuer die ersten drei Beispiele, damit auf der
+// Detailseite beide Faelle sichtbar sind - mit Szenario-Diagramm und ohne.
+// Je Fall: [Kursziel, Eintrittswahrscheinlichkeit in Prozent, Begruendung].
+const SZENARIEN = {
+  SIE: {
+    horizon: "12 Monate",
+    best: [252, 25, "Digital Industries kehrt früher als erwartet zum Wachstum zurück und die angekündigte Portfoliobereinigung hebt die Bewertung in Richtung vergleichbarer US-Industriewerte."],
+    base: [228, 55, "Der Rekordauftragsbestand wird planmäßig abgearbeitet, die Marge bleibt im oberen Zielkorridor und der Bewertungsabschlag zum europäischen Sektor schließt sich teilweise."],
+    worst: [158, 20, "Eine längere Investitionszurückhaltung in der Automatisierung verzögert den Lagerabbau und drückt die Marge an das untere Ende der Zielspanne."],
+  },
+  SAP: {
+    horizon: "12 Monate",
+    best: [320, 30, "Die Cloud-Marge steigt schneller als geplant und zusätzlich gebuchte KI-Module erhöhen den Umsatz je Bestandskunde spürbar."],
+    base: [285, 50, "Der Cloud-Auftragsbestand wächst weiter zweistellig, die Transformation bleibt im Zeitplan und das Margenziel für das Folgejahr wird bestätigt."],
+    worst: [205, 20, "Ein längerer Investitionsstopp bei Großkunden verlangsamt die Migration, womit die hohe Bewertung ihre wesentliche Stütze verliert."],
+  },
+  ALV: {
+    horizon: "12 Monate",
+    best: [385, 25, "Ein weiterhin festes Preisumfeld in der Industrieversicherung und ein zusätzliches Rückkaufprogramm heben Ergebnis und Ausschüttung über die Planung."],
+    base: [350, 55, "Das Schaden- und Unfallgeschäft wächst im mittleren einstelligen Bereich, die Solvenzquote bleibt komfortabel und die Dividende steigt planmäßig."],
+    worst: [268, 20, "Eine Häufung von Naturkatastrophenschäden trifft auf fallende Zinsen und belastet das versicherungstechnische Ergebnis wie auch das Kapitalanlageergebnis."],
+  },
+};
+
+const OHNE_SZENARIO = {
+  scenarioHorizon: "",
+  scenarioBestPrice: null,
+  scenarioBestProbability: null,
+  scenarioBestNote: "",
+  scenarioBasePrice: null,
+  scenarioBaseProbability: null,
+  scenarioBaseNote: "",
+  scenarioWorstPrice: null,
+  scenarioWorstProbability: null,
+  scenarioWorstNote: "",
+};
+
+function szenarioFelder(ticker) {
+  const s = SZENARIEN[ticker];
+  if (!s) return OHNE_SZENARIO;
+  return {
+    scenarioHorizon: s.horizon,
+    scenarioBestPrice: s.best[0],
+    scenarioBestProbability: s.best[1],
+    scenarioBestNote: s.best[2],
+    scenarioBasePrice: s.base[0],
+    scenarioBaseProbability: s.base[1],
+    scenarioBaseNote: s.base[2],
+    scenarioWorstPrice: s.worst[0],
+    scenarioWorstProbability: s.worst[1],
+    scenarioWorstNote: s.worst[2],
+  };
+}
+
 const analyses = rows.map(
   ([title, ticker, price, currency, targetPrice, signal, horizon, reason, conflict], i) => {
     const date = new Date(Date.UTC(2026, 7, 28 - i, 12));
@@ -59,6 +113,7 @@ const analyses = rows.map(
       currency,
       targetPrice,
       ...zonen,
+      ...szenarioFelder(ticker),
       reason,
       signal,
       horizon,

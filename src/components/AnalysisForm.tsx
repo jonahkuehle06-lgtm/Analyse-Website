@@ -255,6 +255,110 @@ export default function AnalysisForm({
         </div>
       </fieldset>
 
+      {/* --------------------------- Szenarien --------------------------- */}
+      <fieldset
+        className="surface p-6 sm:p-7"
+        style={{ borderRadius: "var(--radius-card)" }}
+      >
+        <legend className="mono-label px-2">Szenarien</legend>
+        <p className="mt-3 text-xs leading-relaxed text-[#6b7179]">
+          Drei Kursziele mit Eintrittswahrscheinlichkeit. Die Detailansicht zeichnet
+          daraus einen Fächer vom heutigen Kurs zu den drei Zielen. Das Diagramm
+          erscheint nur, wenn alle drei Kurse ausgefüllt sind. Die
+          Wahrscheinlichkeiten sollten zusammen 100 ergeben.
+        </p>
+
+        <div className="mt-5">
+          <label className="field-label" htmlFor="scenarioHorizon">
+            Zeithorizont der Szenarien
+          </label>
+          <input
+            id="scenarioHorizon"
+            name="scenarioHorizon"
+            className="field sm:max-w-xs"
+            placeholder="12 Monate"
+            defaultValue={analysis?.scenarioHorizon}
+          />
+        </div>
+
+        <div className="mt-6 grid gap-5 lg:grid-cols-3">
+          {[
+            ["Best", "Best Case", "#1baf7a"],
+            ["Base", "Base Case", "#a8aeb7"],
+            ["Worst", "Worst Case", "#d03b3b"],
+          ].map(([schluessel, titel, farbe]) => (
+            <div
+              key={schluessel}
+              className="rounded-xl border border-[var(--color-line)] bg-[rgba(255,255,255,0.02)] p-4"
+            >
+              <p className="flex items-center gap-2.5 text-sm font-medium text-[var(--color-platinum)]">
+                <span
+                  aria-hidden="true"
+                  className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: farbe }}
+                />
+                {titel}
+              </p>
+
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div>
+                  <label className="field-label" htmlFor={`scenario${schluessel}Price`}>
+                    Kursziel
+                  </label>
+                  <input
+                    id={`scenario${schluessel}Price`}
+                    name={`scenario${schluessel}Price`}
+                    className="field"
+                    inputMode="decimal"
+                    defaultValue={
+                      (analysis?.[
+                        `scenario${schluessel}Price` as keyof Analysis
+                      ] as number | null | undefined) ?? ""
+                    }
+                  />
+                </div>
+                <div>
+                  <label
+                    className="field-label"
+                    htmlFor={`scenario${schluessel}Probability`}
+                  >
+                    Wahrsch. %
+                  </label>
+                  <input
+                    id={`scenario${schluessel}Probability`}
+                    name={`scenario${schluessel}Probability`}
+                    className="field"
+                    inputMode="decimal"
+                    defaultValue={
+                      (analysis?.[
+                        `scenario${schluessel}Probability` as keyof Analysis
+                      ] as number | null | undefined) ?? ""
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="mt-3">
+                <label className="field-label" htmlFor={`scenario${schluessel}Note`}>
+                  Kurze Begründung
+                </label>
+                <textarea
+                  id={`scenario${schluessel}Note`}
+                  name={`scenario${schluessel}Note`}
+                  className="field min-h-[72px] resize-y"
+                  maxLength={240}
+                  defaultValue={
+                    (analysis?.[
+                      `scenario${schluessel}Note` as keyof Analysis
+                    ] as string | undefined) ?? ""
+                  }
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </fieldset>
+
       {/* ------------------------ Pflichtangaben ------------------------- */}
       <fieldset
         className="surface p-6 sm:p-7"
