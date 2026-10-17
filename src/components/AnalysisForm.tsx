@@ -217,7 +217,7 @@ export default function AnalysisForm({
         className="surface p-6 sm:p-7"
         style={{ borderRadius: "var(--radius-card)" }}
       >
-        <legend className="mono-label px-2">Pflichtangaben (Art. 20 MAR)</legend>
+        <legend className="mono-label px-2">Pflichtangabe (Art. 20 MAR)</legend>
 
         <div className="mt-4 grid gap-5">
           <div>
@@ -231,22 +231,6 @@ export default function AnalysisForm({
               placeholder="Vor- und Nachname, Funktion"
               defaultValue={analysis?.author ?? defaultAuthor}
             />
-          </div>
-          <div>
-            <label className="field-label" htmlFor="conflictDisclosure">
-              Offenlegung möglicher Interessenkonflikte
-            </label>
-            <textarea
-              id="conflictDisclosure"
-              name="conflictDisclosure"
-              className="field min-h-[80px] resize-y"
-              placeholder="z. B. „Der Ersteller hält zum Zeitpunkt der Veröffentlichung keine Position in diesem Wert.“"
-              defaultValue={analysis?.conflictDisclosure}
-            />
-            <p className="mt-1.5 text-xs text-[#6b7179]">
-              Wird unter jeder Analyse angezeigt. Bleibt das Feld leer, entfällt der
-              Hinweis auf der Karte — prüfe in diesem Fall deine Offenlegungspflichten.
-            </p>
           </div>
         </div>
       </fieldset>

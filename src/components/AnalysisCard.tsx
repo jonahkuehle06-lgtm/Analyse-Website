@@ -84,11 +84,6 @@ export default function AnalysisCard({ analysis }: { analysis: Analysis }) {
           Anlageempfehlung · Ersteller: {analysis.author || "—"} · Erstellt am{" "}
           {formatDate(analysis.publishedAt)}
         </p>
-        {analysis.conflictDisclosure && (
-          <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-[#6b7179]">
-            Interessenkonflikte: {analysis.conflictDisclosure}
-          </p>
-        )}
       </footer>
     </article>
   );

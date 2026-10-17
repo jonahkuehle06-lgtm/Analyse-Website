@@ -141,14 +141,13 @@ export default function MethodikPage() {
           <p className="mt-5 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
             Jede Karte enthält den Aktientitel mit Kürzel, den Kurs zum Zeitpunkt der
             Analyse, die Signalstärke als Farbbalken, die Kurzbegründung sowie die nach
-            Art. 20 MAR erforderlichen Angaben zu Ersteller, Datum und möglichen
-            Interessenkonflikten.
+            Art. 20 MAR erforderlichen Angaben zu Ersteller und Erstellungsdatum.
           </p>
           <ul className="mt-8 space-y-5">
             {[
               ["Signalstärke", "Fünfstufige Skala mit eindeutigem Farbcode."],
               ["Kurzbegründung", "Ein bis zwei Sätze — der Kern der Einschätzung."],
-              ["Pflichtangaben", "Ersteller, Erstellungsdatum, Interessenkonflikte."],
+              ["Pflichtangaben", "Ersteller und Erstellungsdatum der Empfehlung."],
             ].map(([title, body]) => (
               <li key={title} className="border-l border-[var(--color-line-strong)] pl-5">
                 <p className="text-sm font-medium text-[var(--color-platinum)]">{title}</p>

@@ -46,7 +46,7 @@ Jede Analyse trägt eine von fünf Signalstufen mit Farbcode:
 ${signals}
 
 ## Inhalt einer Analyse
-Aktientitel mit Kürzel, Kurs zum Zeitpunkt der Analyse, eine Kurzbegründung in ein bis zwei Sätzen, die Signalstärke, Kursziel und Anlagehorizont sowie die Pflichtangaben zu Ersteller, Erstellungsdatum und möglichen Interessenkonflikten.
+Aktientitel mit Kürzel, Kurs zum Zeitpunkt der Analyse, eine Kurzbegründung in ein bis zwei Sätzen, die Signalstärke, Kursziel und Anlagehorizont sowie die Pflichtangaben zu Ersteller und Erstellungsdatum. Hinweise zu möglichen Interessenkonflikten stehen gesammelt im Haftungsausschluss: PAX Solutions und ihre Mitarbeiter können Anteile an besprochenen Unternehmen halten.
 
 ## Zahlung und Konto
 Die Abwicklung läuft über Stripe: Kredit- und Debitkarte, PayPal und SEPA-Lastschrift. Nach dem Bezahlvorgang vergibt man unter /willkommen ein Passwort und meldet sich danach unter /login an. Im Kundenkonto unter /konto lässt sich über "Abo verwalten" das Stripe-Kundenportal öffnen – dort ändert man Zahlungsmittel, lädt Rechnungen herunter und kündigt zum Ende der laufenden Periode.

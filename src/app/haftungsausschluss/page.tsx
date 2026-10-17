@@ -70,18 +70,28 @@ const PARAGRAPHS: { heading?: string; body: React.ReactNode }[] = [
     heading: "Offenlegung möglicher Interessenkonflikte",
     body: (
       <>
+        <strong>
+          {COMPANY.name}, ihre Geschäftsführung und ihre Mitarbeiter können zum Zeitpunkt
+          der Veröffentlichung einer Analyse selbst Anteile, Aktien oder sonstige
+          Finanzinstrumente der besprochenen Unternehmen halten, erwerben oder veräußern.
+        </strong>{" "}
+        Das gilt auch für Werte, zu denen zeitgleich eine Einschätzung veröffentlicht
+        wird, und unabhängig davon, in welche Richtung diese Einschätzung weist. Eigene
+        Positionen werden weder laufend offengelegt noch angekündigt.
+      </>
+    ),
+  },
+  {
+    heading: "Weitere Umstände, die Interessenkonflikte begründen können",
+    body: (
+      <>
         [Platzhalter — bitte vor dem Livegang durch die tatsächlichen Verhältnisse
-        ersetzen und anwaltlich prüfen lassen:] Geschäftsführung und Mitarbeiter von{" "}
-        {COMPANY.name} können zum Zeitpunkt der Veröffentlichung Anteile an
-        Finanzinstrumenten bzw. Kryptowerten halten, welche auf dieser Website und in den
-        Publikationen im Rahmen einer Chart- oder Marktanalyse besprochen werden. Etwaige
-        Beteiligungen, Vergütungen durch Emittenten, Auftragsverhältnisse oder sonstige
-        Umstände, die einen Interessenkonflikt begründen können, werden{" "}
-        <strong>bei der jeweiligen Analyse gesondert ausgewiesen</strong>. Bestehen im
-        Einzelfall keine Interessenkonflikte, wird dies dort ebenfalls angegeben. Darüber
-        hinaus bestehen zum Zeitpunkt der Veröffentlichung folgende allgemeine
-        Interessenkonflikte: [Platzhalter — z. B. Eigenpositionen, Market-Making,
-        Beteiligungen &gt; 0,5 %, Vergütungsvereinbarungen, sonstige Geschäftsbeziehungen].
+        ersetzen und anwaltlich prüfen lassen:] Über eigene Positionen hinaus können
+        Interessenkonflikte etwa aus Vergütungen durch Emittenten, Auftrags- oder
+        Beratungsverhältnissen, Beteiligungen von mehr als 0,5 % am Kapital eines
+        besprochenen Unternehmens, Market-Making-Tätigkeiten oder sonstigen
+        Geschäftsbeziehungen entstehen. Hier sind die tatsächlich bestehenden Umstände
+        aufzuführen; bestehen keine, ist auch das anzugeben.
       </>
     ),
   },
