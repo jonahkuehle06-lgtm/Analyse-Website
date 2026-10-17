@@ -1,6 +1,7 @@
 import Link from "next/link";
 import PricingSection from "@/components/PricingSection";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
+import LogoScene from "@/components/LogoScene";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { BRAND, PLANS } from "@/lib/config";
@@ -98,35 +99,33 @@ export default async function HomePage() {
       </section>
 
       {/* ------------------------------ Grundsätze --------------------------- */}
-      {/* Die Karten stehen linksbuendig in einer schmalen Spalte; rechts bleibt
-          Platz fuer die Bildmarke. */}
+      {/* Karten linksbuendig in einer breiten Spalte, rechts die Bildmarke. */}
       <section className="border-y border-[var(--color-line)] bg-[var(--color-void)]">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.75fr)]">
-            <div className="space-y-3">
+          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)] lg:gap-14">
+            <div className="space-y-3.5">
               {PRINCIPLES.map((item) => (
                 <article
                   key={item.title}
-                  className="surface surface-hover relative overflow-hidden px-6 py-5"
-                  style={{ borderRadius: "14px" }}
+                  className="surface surface-hover relative overflow-hidden px-7 py-6 sm:px-8 sm:py-7"
+                  style={{ borderRadius: "16px" }}
                 >
                   <span
                     aria-hidden="true"
                     className="absolute inset-y-0 left-0 w-px"
                     style={{ background: "var(--platinum-gradient)", opacity: 0.45 }}
                   />
-                  <h2 className="display text-xl text-[var(--color-platinum)]">
+                  <h2 className="display text-[1.375rem] text-[var(--color-platinum)] sm:text-2xl">
                     {item.title}
                   </h2>
-                  <p className="mt-2 text-[0.875rem] leading-relaxed text-[var(--color-mist)]">
+                  <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
                     {item.body}
                   </p>
                 </article>
               ))}
             </div>
 
-            {/* Rechte Spalte: hier kommt die PAX-Bildmarke hin. */}
-            <div aria-hidden="true" className="hidden lg:block" />
+            <LogoScene />
           </div>
         </div>
       </section>
