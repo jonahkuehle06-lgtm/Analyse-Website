@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/analysen`, lastModified: now, priority: 0.9 },
     { url: `${base}/preise`, lastModified: now, priority: 0.9 },
     { url: `${base}/methodik`, lastModified: now, priority: 0.7 },
+    { url: `${base}/ueber-uns`, lastModified: now, priority: 0.6 },
     { url: `${base}/impressum`, lastModified: now, priority: 0.3 },
     { url: `${base}/haftungsausschluss`, lastModified: now, priority: 0.4 },
     { url: `${base}/datenschutz`, lastModified: now, priority: 0.3 },

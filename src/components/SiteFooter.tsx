@@ -17,6 +17,7 @@ const PRODUCT = [
   { href: "/analysen", label: "Analysen" },
   { href: "/preise", label: "Pakete" },
   { href: "/methodik", label: "Methodik" },
+  { href: "/ueber-uns", label: "Über uns" },
   { href: "/konto", label: "Mein Konto" },
 ];
 
