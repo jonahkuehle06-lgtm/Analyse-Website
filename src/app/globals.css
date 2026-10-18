@@ -258,14 +258,19 @@ body {
   transform: none;
 }
 
-/* Wischleiste fuer Filter am Telefon: ohne sichtbare Scrollleiste,
-   rechts sanft auslaufend als Hinweis, dass es weitergeht */
+/* Wischleiste fuer Filter am Telefon: ohne sichtbare Scrollleiste, an
+   den Seiten sanft auslaufend als Hinweis, dass es weitergeht. Die
+   Kanten setzt SignalFilter je nach Scrollstand (data-links/data-ende). */
 .filter-leiste {
+  --kante-l: 0px;
+  --kante-r: 3.5rem;
   scrollbar-width: none;
   scroll-snap-type: x proximity;
-  -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
-  mask-image: linear-gradient(to right, #000 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--kante-l), #000 calc(100% - var(--kante-r)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--kante-l), #000 calc(100% - var(--kante-r)), transparent);
 }
+.filter-leiste[data-links] { --kante-l: 3.5rem; }
+.filter-leiste[data-ende] { --kante-r: 0px; }
 .filter-leiste::-webkit-scrollbar { display: none; }
 .filter-leiste > * { scroll-snap-align: start; }
 @media (min-width: 640px) {

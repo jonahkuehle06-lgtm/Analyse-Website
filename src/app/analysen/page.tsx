@@ -5,7 +5,7 @@ import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import SignalFilter from "@/components/SignalFilter";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
-import { PLANS, PLAN_ORDER, planLimit } from "@/lib/config";
+import { PLANS, PLAN_ORDER, SIGNAL_LEVELS, planLimit } from "@/lib/config";
 import type { SignalLevel } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -33,15 +33,20 @@ export default async function AnalysenPage({
   /** Freigeschaltet sind immer die N aktuellsten Analysen. */
   const unlockedIds = new Set(all.slice(0, limit).map((a) => a.id));
 
-  const selected = params.signal ? (Number(params.signal) as SignalLevel) : null;
-  const visible =
-    selected && selected >= 1 && selected <= 5
-      ? all.filter((a) => a.signal === selected)
-      : all;
+  const wunsch = Number(params.signal) as SignalLevel;
+  const selected = SIGNAL_LEVELS.includes(wunsch) ? wunsch : null;
 
-  const frei = visible.filter((a) => unlockedIds.has(a.id));
-  const gesperrt = visible.filter((a) => !unlockedIds.has(a.id));
-  const hinweis = visible.length > 0 && all.length > limit;
+  /* Der Filter wirkt nur auf freigeschaltete Analysen. Gesperrte Titel
+     bleiben beim Filtern ausgeblendet - sonst liesse sich ihre
+     Signalstaerke ueber den Filter ablesen. Aus demselben Grund haengen
+     Leerhinweis und Paket-Hinweis nie von gesperrten Analysen ab. */
+  const freigeschaltet = all.filter((a) => unlockedIds.has(a.id));
+  const frei = selected
+    ? freigeschaltet.filter((a) => a.signal === selected)
+    : freigeschaltet;
+  const gesperrt = selected ? [] : all.filter((a) => !unlockedIds.has(a.id));
+  const hinweis = all.length > limit;
+  const leer = all.length === 0 || (selected !== null && frei.length === 0);
 
   return (
     <div className="frame frame-lines">
@@ -89,13 +94,17 @@ export default async function AnalysenPage({
 
         <SignalFilter active={selected} />
 
-        {visible.length === 0 ? (
+        {leer && (
           <p className="mt-16 text-center text-[0.9375rem] text-[var(--color-mist)]">
             {all.length === 0
               ? "Es wurden noch keine Analysen veröffentlicht."
-              : "Für diese Signalstufe liegt aktuell keine Analyse vor."}
+              : hinweis
+                ? "Unter den freigeschalteten Analysen ist aktuell keine mit dieser Signalstufe."
+                : "Für diese Signalstufe liegt aktuell keine Analyse vor."}
           </p>
-        ) : (
+        )}
+
+        {(frei.length > 0 || hinweis) && (
           /* Freigeschaltete Karten. Sind es weniger als drei (etwa die
              Leseprobe), fuellt der Paket-Hinweis die freie Flaeche daneben;
              sonst steht er als eigene Zeile darunter. */

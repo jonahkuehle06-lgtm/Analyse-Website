@@ -1,12 +1,44 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { SIGNALS, SIGNAL_LEVELS } from "@/lib/config";
 import type { SignalLevel } from "@/lib/types";
 
 export default function SignalFilter({ active }: { active: SignalLevel | null }) {
+  const leiste = useRef<HTMLDivElement>(null);
+
+  // Am Handy ist die Leiste eine Wischzeile. Ohne Nachhilfe laege ein
+  // weiter rechts gewaehlter Filter ausserhalb des Bildschirms.
+  useEffect(() => {
+    const el = leiste.current;
+    const chip = el?.querySelector<HTMLElement>('[aria-current="true"]');
+    if (!el || !chip || el.scrollWidth <= el.clientWidth) return;
+    const box = el.getBoundingClientRect();
+    const c = chip.getBoundingClientRect();
+    el.scrollLeft += c.left - box.left - (box.width - c.width) / 2;
+  }, [active]);
+
+  // Ausblendkanten nur dort, wo noch Filter verborgen sind
+  useEffect(() => {
+    const el = leiste.current;
+    if (!el) return;
+    const pruefen = () => {
+      el.toggleAttribute("data-links", el.scrollLeft > 4);
+      el.toggleAttribute("data-ende", el.scrollLeft >= el.scrollWidth - el.clientWidth - 4);
+    };
+    pruefen();
+    el.addEventListener("scroll", pruefen, { passive: true });
+    window.addEventListener("resize", pruefen);
+    return () => {
+      el.removeEventListener("scroll", pruefen);
+      window.removeEventListener("resize", pruefen);
+    };
+  }, []);
+
   return (
     <div
+      ref={leiste}
       className="filter-leiste -mx-[var(--gutter)] mt-8 flex gap-2 overflow-x-auto px-[var(--gutter)] pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0"
       role="group"
       aria-label="Nach Signalstärke filtern"

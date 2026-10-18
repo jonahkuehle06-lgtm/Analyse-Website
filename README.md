@@ -125,6 +125,10 @@ Abrechnung**; bei jährlicher Zahlung entfallen zwei Monatsbeiträge.
 Freigeschaltet werden immer die **aktuellsten** Analysen des Bestands. Erscheint
 eine neue Analyse, rückt sie automatisch in den Zugang aller Kunden nach.
 
+Der Signal-Filter der Übersicht durchsucht nur freigeschaltete Analysen.
+Gesperrte Titel blendet er aus, sonst ließe sich ihre Signalstärke über den
+Filter ablesen.
+
 Preise, Namen und Umfang stehen in `src/lib/config.ts`. Nach einer Änderung dort
 müssen die Stripe-Preise angepasst werden (`npm run stripe:setup` legt bei
 geänderten Beträgen neue Preise an).
@@ -298,8 +302,9 @@ das Szenario-Diagramm und der Kurszonen-Balken.
 dieselbe Regel wie die Uebersicht: freigeschaltet sind die N aktuellsten
 Analysen des gebuchten Pakets, ohne Abo nur die neueste als Leseprobe.
 Wer eine gesperrte Kennung direkt aufruft, landet auf `/preise`. Gesperrte
-Karten sind nicht verlinkt. Die Seiten sind zudem auf `noindex` gesetzt -
-bezahlte Inhalte gehoeren nicht in den Suchindex.
+Karten fuehren ebenfalls nur zu den Paketen, nie auf die Detailseite. Die
+Seiten sind zudem auf `noindex` gesetzt - bezahlte Inhalte gehoeren nicht in
+den Suchindex.
 
 ### Kurszonen
 
