@@ -48,8 +48,9 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
   if (!zonen) return null;
 
   const { grenzen } = zonen;
+  // Kurse immer mit zwei Nachkommastellen - wie auf Karte und Detailseite
   const zahl = (v: number) =>
-    new Intl.NumberFormat("de-DE", { maximumFractionDigits: 2 }).format(v);
+    new Intl.NumberFormat("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
 
   // Die fuenf Abschnitte als Anteile der Gesamtbreite
   const kanten = [zonen.von, ...grenzen, zonen.bis];
@@ -66,7 +67,7 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
 
   return (
     <section
-      className="surface p-6 sm:p-8"
+      className="surface @container p-6 sm:p-8"
     >
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <p className="mono-label">Kurszonen</p>
@@ -137,7 +138,7 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
       </div>
 
       {/* Legende */}
-      <ul className="mt-6 grid gap-x-6 gap-y-2.5 border-t border-[var(--color-line)] pt-5 sm:grid-cols-2">
+      <ul className="mt-6 grid gap-x-6 gap-y-2.5 border-t border-[var(--color-line)] pt-5 @xl:grid-cols-2">
         {([1, 2, 3, 4, 5] as SignalLevel[]).map((stufe) => {
           const bereich =
             stufe === 1

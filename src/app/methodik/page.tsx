@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import SignalIndicator from "@/components/SignalIndicator";
+import AnalysisCard from "@/components/AnalysisCard";
+import ScenarioChart from "@/components/ScenarioChart";
+import PriceZones from "@/components/PriceZones";
+import { BEISPIEL_ANALYSE } from "@/lib/beispiel";
 import { SIGNALS, SIGNAL_LEVELS } from "@/lib/config";
 
 export const metadata: Metadata = {
@@ -57,9 +61,11 @@ export default function MethodikPage() {
         {/* Die sechs Saeulen als nummerierte Zeilen. Ab Tablet stehen Nummer,
             Titel und Text nebeneinander, am Telefon untereinander. */}
         <ol className="border-b border-[var(--color-line)]">
-          {PILLARS.map((item) => (
+          {PILLARS.map((item, i) => (
             <li
               key={item.step}
+              data-reveal
+              style={{ ["--reveal-delay" as string]: `${(i % 3) * 70}ms` }}
               className="group grid gap-3 border-t border-[var(--color-line)] py-8 transition-colors duration-300 first:border-t-0 sm:grid-cols-[4.5rem_minmax(0,1fr)] md:grid-cols-[4.5rem_minmax(0,0.9fr)_minmax(0,1.3fr)] md:gap-10 md:py-10"
             >
               <span className="display tabular text-[1.375rem] leading-none text-[var(--color-muted)] transition-colors duration-300 group-hover:text-[var(--color-platinum)]">
@@ -75,7 +81,7 @@ export default function MethodikPage() {
           ))}
         </ol>
 
-        <section className="mt-20 sm:mt-24">
+        <section data-reveal className="mt-20 sm:mt-24">
           <h2 className="display text-[length:var(--step-h2)] text-[var(--color-platinum)]">
             Bedeutung der Signalstufen
           </h2>
@@ -83,16 +89,9 @@ export default function MethodikPage() {
             {SIGNAL_LEVELS.map((level) => {
               const meta = SIGNALS[level];
               return (
-                <div key={level} className="grid gap-3 py-6 sm:grid-cols-[16rem_minmax(0,1fr)] sm:gap-10">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: meta.color }}
-                      aria-hidden="true"
-                    />
-                    <span className="text-[0.9375rem] font-semibold" style={{ color: meta.color }}>
-                      {meta.label}
-                    </span>
+                <div key={level} className="grid items-center gap-4 py-6 sm:grid-cols-[17rem_minmax(0,1fr)] sm:gap-12">
+                  <div className="max-w-[17rem]">
+                    <SignalIndicator level={level} />
                   </div>
                   <p className="text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
                     {meta.description}
@@ -104,8 +103,9 @@ export default function MethodikPage() {
         </section>
 
         {/* Von der Startseite hierher verschoben - erklaert, was auf einer
-            Analyse-Karte steht. Steht bewusst hinter den Signalstufen. */}
-        <section className="mt-20 grid items-center gap-12 sm:mt-24 lg:grid-cols-2 lg:gap-16">
+            Analyse-Karte steht. Rechts dieselbe Karte als Beispiel, die
+            Nummern verweisen auf die Erklaerungen links. */}
+        <section data-reveal className="mt-20 grid items-center gap-12 sm:mt-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-20">
           <div>
             <span className="tag">Aufbau</span>
             <h2 className="display mt-6 text-[length:var(--step-h2)] text-[var(--color-platinum)]">
@@ -116,34 +116,59 @@ export default function MethodikPage() {
               Analyse, die Signalstärke als Farbbalken, die Kurzbegründung sowie Ersteller
               und Erstellungsdatum.
             </p>
-            <ul className="mt-8 space-y-5">
+            <ol className="mt-8 space-y-5">
               {[
                 ["Signalstärke", "Fünfstufige Skala mit eindeutigem Farbcode."],
                 ["Kurzbegründung", "Ein bis zwei Sätze — der Kern der Einschätzung."],
                 ["Ersteller & Datum", "Wer die Analyse erstellt hat und wann."],
-              ].map(([title, body]) => (
-                <li key={title} className="border-l border-[var(--color-line-strong)] pl-5">
-                  <p className="text-[0.9375rem] font-medium text-[var(--color-platinum)]">{title}</p>
-                  <p className="mt-1 text-[0.9375rem] text-[var(--color-mist)]">{body}</p>
+              ].map(([title, body], i) => (
+                <li key={title} className="flex gap-4">
+                  <span
+                    aria-hidden="true"
+                    className="tabular mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-[var(--color-platinum)] text-xs font-semibold text-[var(--color-platinum)]"
+                  >
+                    {i + 1}
+                  </span>
+                  <div>
+                    <p className="text-[0.9375rem] font-medium text-[var(--color-platinum)]">{title}</p>
+                    <p className="mt-1 text-[0.9375rem] text-[var(--color-mist)]">{body}</p>
+                  </div>
                 </li>
               ))}
-            </ul>
+            </ol>
           </div>
 
-          <div className="surface p-8 sm:p-10">
-            <p className="mono-label">Beispielhafte Darstellung</p>
-            <div className="mt-6 space-y-6">
-              {SIGNAL_LEVELS.slice(0, 3).map((level) => (
-                <div key={level}>
-                  <SignalIndicator level={level} size="sm" />
-                </div>
-              ))}
-            </div>
-            <p className="mt-8 border-t border-[var(--color-line)] pt-5 text-xs leading-relaxed text-[var(--color-muted)]">
+          <figure className="mr-10 sm:mr-11">
+            <p className="mono-label mb-4">Beispielhafte Darstellung</p>
+            <AnalysisCard analysis={BEISPIEL_ANALYSE} interaktiv={false} annotiert />
+            <figcaption className="mt-5 text-xs leading-relaxed text-[var(--color-muted)]">
               Darstellung dient ausschließlich der Illustration des Signalcodes und stellt
               keine Empfehlung für einen konkreten Wert dar.
-            </p>
+            </figcaption>
+          </figure>
+        </section>
+
+        {/* Die Detailansicht mit fiktiven Werten - zeigt vor dem Kauf, was
+            hinter jeder Karte steht. */}
+        <section data-reveal className="mt-20 sm:mt-24">
+          <span className="tag">Detailansicht</span>
+          <h2 className="display mt-6 max-w-[18ch] text-[length:var(--step-h2)] text-[var(--color-platinum)]">
+            Szenarien und Kurszonen
+          </h2>
+          <p className="lead mt-5 max-w-[60ch]">
+            Ein Klick auf eine Karte öffnet die Detailansicht: drei Szenarien mit Kurszielen
+            und Wahrscheinlichkeiten sowie die Kurszonen vom starken Einstieg bis zum starken
+            Ausstieg.
+          </p>
+
+          <div className="mt-10 grid gap-5 lg:grid-cols-2">
+            <ScenarioChart analysis={BEISPIEL_ANALYSE} />
+            <PriceZones analysis={BEISPIEL_ANALYSE} />
           </div>
+          <p className="mt-5 text-xs leading-relaxed text-[var(--color-muted)]">
+            Beispielhafte Darstellung mit fiktiven Werten. Darstellung dient ausschließlich der
+            Illustration und stellt keine Empfehlung für einen konkreten Wert dar.
+          </p>
         </section>
 
         <section className="section-paper mt-20 p-8 sm:mt-24 sm:p-10">

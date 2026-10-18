@@ -44,7 +44,7 @@ export default function PricingSection({
   return (
     <section id="pakete" className="border-b border-[var(--color-line)]">
       <div className="frame frame-lines section">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div data-reveal className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           {heading ? (
             <div className="max-w-2xl">
               <span className="tag">Pakete</span>
@@ -104,7 +104,7 @@ export default function PricingSection({
           </div>
         </div>
 
-        <div className="mt-12 grid border border-[var(--color-line)] md:grid-cols-3">
+        <div data-reveal className="mt-12 grid border border-[var(--color-line)] md:grid-cols-3">
           {PLAN_ORDER.map((planId, index) => {
             const plan = PLANS[planId];
             const price = interval === "monthly" ? plan.priceMonthly : plan.priceYearly;

@@ -12,6 +12,7 @@ import {
   gtmId,
 } from "@/components/GoogleTagManager";
 import ConsentBanner from "@/components/ConsentBanner";
+import RevealObserver from "@/components/RevealObserver";
 import { BRAND, siteUrl } from "@/lib/config";
 import { currentUser } from "@/lib/auth";
 
@@ -66,13 +67,21 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className="grain min-h-screen antialiased">
         <GoogleTagManagerNoScript />
+        {/* Fuer Tastatur und Screenreader: direkt zum Inhalt, ohne sich
+            durch die Navigation zu tabben. Erscheint nur bei Fokus. */}
+        <a href="#inhalt" className="skip-link">
+          Zum Inhalt springen
+        </a>
         <SiteHeader loggedIn={Boolean(user)} />
-        <main className="min-h-[60vh]">{children}</main>
+        <main id="inhalt" tabIndex={-1} className="min-h-[60vh] outline-none">
+          {children}
+        </main>
         <SiteChrome>
           <SiteFooter />
         </SiteChrome>
         {chatEnabled && <ChatWidget />}
         {gtmId() && <ConsentBanner />}
+        <RevealObserver />
         <GoogleTagManagerScript />
       </body>
     </html>

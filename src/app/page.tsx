@@ -3,6 +3,7 @@ import PricingSection from "@/components/PricingSection";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import LogoScene from "@/components/LogoScene";
 import HalftoneCurve from "@/components/HalftoneCurve";
+import PlusPattern from "@/components/PlusPattern";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { PLANS } from "@/lib/config";
@@ -53,7 +54,8 @@ export default async function HomePage() {
     <>
       {/* ------------------------------- Hero ------------------------------- */}
       {/* Aussen das feine Pluszeichen-Raster, innen die gerahmte Spalte. */}
-      <section className="plus-grid border-b border-[var(--color-line)]">
+      <section className="relative border-b border-[var(--color-line)]">
+        <PlusPattern />
         <div className="frame frame-lines bg-[var(--color-ink)]">
           <div className="relative grid lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr]">
             <div className="relative z-10 pt-16 pb-10 sm:pt-20 lg:pt-28 lg:pb-24">
@@ -67,12 +69,12 @@ export default async function HomePage() {
                   : "Neue Analysen jede Woche"}
               </span>
 
-              <h1 className="display fade-up fade-up-2 mt-8 text-[length:var(--step-display)] text-[var(--color-platinum)]">
+              <h1 className="display rise fade-up-2 mt-8 text-[length:var(--step-display)] text-[var(--color-platinum)]">
                 Fundierte Analysen, die über das{" "}
                 <span className="em-block">Investieren</span> hinausgehen.
               </h1>
 
-              <p className="lead fade-up fade-up-3 mt-8 max-w-[36ch]">
+              <p className="lead rise fade-up-3 mt-8 max-w-[36ch]">
                 Klarheit am Markt schaffen, um finanzielle Freiheit zu erreichen. Analysen auf
                 Basis fundamentaler und technischer Methoden – mit langfristigem Value-Ansatz.
               </p>
@@ -115,14 +117,14 @@ export default async function HomePage() {
       </section>
 
       {/* ------------------------------ Grundsätze --------------------------- */}
-      <section className="section-paper">
+      <section className="section-paper cv-auto">
         <div className="frame frame-lines section">
-          <span className="tag">Grundsätze</span>
-          <h2 className="display mt-6 max-w-[16ch] text-[length:var(--step-h2)]">
+          <span className="tag" data-reveal>Grundsätze</span>
+          <h2 data-reveal className="display mt-6 max-w-[16ch] text-[length:var(--step-h2)]">
             Worauf sich unsere <em>Analysen</em> stützen
           </h2>
 
-          <div className="mt-14 grid border border-[var(--color-line)] lg:grid-cols-[1.25fr_1fr] lg:grid-rows-2">
+          <div data-reveal className="mt-14 grid border border-[var(--color-line)] lg:grid-cols-[1.25fr_1fr] lg:grid-rows-2">
             {/* Die erste Kachel dunkel - darauf schwebt die Bildmarke */}
             <article className="section-noir relative flex flex-col overflow-hidden p-7 sm:p-9 lg:row-span-2 lg:min-h-[560px]">
               <span className="mono-label tabular">01</span>
@@ -157,9 +159,9 @@ export default async function HomePage() {
 
       {/* --------------------------- Analysen-Vorschau ---------------------- */}
       {preview.length > 0 && (
-        <section className="border-b border-[var(--color-line)]">
+        <section className="cv-auto border-b border-[var(--color-line)]">
           <div className="frame frame-lines section">
-            <div className="flex flex-wrap items-end justify-between gap-6">
+            <div data-reveal className="flex flex-wrap items-end justify-between gap-6">
               <div>
                 <span className="tag">Aktuell</span>
                 <h2 className="display mt-6 text-[length:var(--step-h2)] text-[var(--color-platinum)]">
@@ -172,7 +174,7 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <div data-reveal className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
               {preview.map((analysis, index) =>
                 unlocked || index === 0 ? (
                   <AnalysisCard key={analysis.id} analysis={analysis} />
@@ -193,7 +195,9 @@ export default async function HomePage() {
       )}
 
       {/* ------------------------------ Pakete ------------------------------ */}
-      <PricingSection currentPlan={user?.plan ?? null} />
+      <div className="cv-auto">
+        <PricingSection currentPlan={user?.plan ?? null} />
+      </div>
     </>
   );
 }

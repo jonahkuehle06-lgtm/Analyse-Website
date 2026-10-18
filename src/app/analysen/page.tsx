@@ -5,7 +5,7 @@ import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import SignalFilter from "@/components/SignalFilter";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
-import { PLANS, planLimit } from "@/lib/config";
+import { PLANS, PLAN_ORDER, planLimit } from "@/lib/config";
 import type { SignalLevel } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -38,6 +38,10 @@ export default async function AnalysenPage({
     selected && selected >= 1 && selected <= 5
       ? all.filter((a) => a.signal === selected)
       : all;
+
+  const frei = visible.filter((a) => unlockedIds.has(a.id));
+  const gesperrt = visible.filter((a) => !unlockedIds.has(a.id));
+  const hinweis = visible.length > 0 && all.length > limit;
 
   return (
     <div className="frame frame-lines">
@@ -92,33 +96,68 @@ export default async function AnalysenPage({
               : "Für diese Signalstufe liegt aktuell keine Analyse vor."}
           </p>
         ) : (
+          /* Freigeschaltete Karten. Sind es weniger als drei (etwa die
+             Leseprobe), fuellt der Paket-Hinweis die freie Flaeche daneben;
+             sonst steht er als eigene Zeile darunter. */
           <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {visible.map((analysis) =>
-              unlockedIds.has(analysis.id) ? (
-                <AnalysisCard key={analysis.id} analysis={analysis} />
-              ) : (
-                <LockedAnalysisCard key={analysis.id} analysis={analysis} />
-              ),
+            {frei.map((analysis) => (
+              <AnalysisCard key={analysis.id} analysis={analysis} headingLevel={2} />
+            ))}
+            {hinweis && (
+              <div
+                className={`section-paper flex flex-col justify-between gap-8 p-8 sm:p-10 ${
+                  frei.length === 0
+                    ? "md:col-span-2 lg:col-span-3"
+                    : frei.length % 3 === 1
+                      ? "md:col-span-1 lg:col-span-2"
+                      : frei.length % 3 === 2
+                        ? "md:col-span-2 lg:col-span-1"
+                        : "md:col-span-2 lg:col-span-3"
+                }`}
+              >
+                <div>
+                  <span className="tag">Pakete</span>
+                  <h2 className="display mt-6 text-[length:var(--step-h3)] text-[var(--color-platinum)]">
+                    {all.length - Math.min(limit, all.length)} weitere Analysen freischalten
+                  </h2>
+                  <p className="mt-3 max-w-xl text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
+                    {active
+                      ? "Mit einem größeren Paket erweiterst du deinen Zugang auf bis zu 50 Analysen."
+                      : "Basic, Black oder Platin — Zugriff auf 10, 25 oder 50 Analysen, monatlich kündbar."}
+                  </p>
+                </div>
+                {/* Die drei Pakete auf einen Blick - aus denselben Daten wie die Paketseite */}
+                <dl className="grid grid-cols-3 border-y border-[var(--color-line)]">
+                  {PLAN_ORDER.map((id, i) => (
+                    <div
+                      key={id}
+                      className={`py-4 ${i > 0 ? "border-l border-[var(--color-line)] pl-4 sm:pl-5" : ""}`}
+                    >
+                      <dt className="mono-label">{PLANS[id].name}</dt>
+                      <dd className="display tabular mt-1.5 text-[1.5rem] leading-none font-normal text-[var(--color-platinum)]">
+                        {PLANS[id].limit}
+                      </dd>
+                      <dd className="mt-1 text-sm text-[var(--color-mist-2)]">Analysen</dd>
+                      <dd className="tabular mt-2 text-sm text-[var(--color-mist)]">
+                        {PLANS[id].priceMonthly} €/Monat
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <Link href="/preise" className="btn-platinum self-start">
+                  {active ? "Paket erweitern" : "Paket wählen"}
+                  <span className="pfeil" aria-hidden="true">→</span>
+                </Link>
+              </div>
             )}
           </div>
         )}
 
-        {visible.length > 0 && all.length > limit && (
-          <div className="section-paper mt-14 flex flex-col gap-6 p-8 sm:p-10 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="display text-[length:var(--step-h3)] text-[var(--color-platinum)]">
-                {all.length - Math.min(limit, all.length)} weitere Analysen freischalten
-              </h2>
-              <p className="mt-3 max-w-xl text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
-                {active
-                  ? "Mit einem größeren Paket erweiterst du deinen Zugang auf bis zu 50 Analysen."
-                  : "Basic, Black oder Platin — Zugriff auf 10, 25 oder 50 Analysen, monatlich kündbar."}
-              </p>
-            </div>
-            <Link href="/preise" className="btn-platinum shrink-0">
-              {active ? "Paket erweitern" : "Paket wählen"}
-              <span className="pfeil" aria-hidden="true">→</span>
-            </Link>
+        {gesperrt.length > 0 && (
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {gesperrt.map((analysis) => (
+              <LockedAnalysisCard key={analysis.id} analysis={analysis} headingLevel={2} />
+            ))}
           </div>
         )}
       </div>

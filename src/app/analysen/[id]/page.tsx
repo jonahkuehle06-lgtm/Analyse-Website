@@ -139,6 +139,11 @@ export default async function AnalyseDetail({
             Ersteller: {analysis.author || "—"} · Erstellt am {datum(analysis.publishedAt)}
           </p>
         </footer>
+
+        <Link href="/analysen" className="btn-ghost mt-10 w-full sm:w-auto">
+          <span aria-hidden="true">←</span>
+          Alle Analysen
+        </Link>
       </div>
     </div>
   );

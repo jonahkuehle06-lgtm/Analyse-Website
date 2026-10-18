@@ -82,56 +82,79 @@ export default function HalftoneCurve({ className = "" }: { className?: string }
   const p = kamm(18);
   const id = "ht";
 
-  return (
-    <svg
-      viewBox={`0 0 ${B} ${H}`}
-      preserveAspectRatio="xMaxYMax slice"
-      className={className}
-      aria-hidden="true"
-      focusable="false"
-    >
-      <defs>
-        <pattern id={`${id}-a`} width="8" height="8" patternUnits="userSpaceOnUse">
-          <circle cx="4" cy="4" r="1.75" fill="currentColor" />
-        </pattern>
-        <pattern id={`${id}-b`} width="8" height="8" patternUnits="userSpaceOnUse">
-          <circle cx="4" cy="4" r="1.2" fill="currentColor" />
-        </pattern>
-        <pattern id={`${id}-c`} width="8" height="8" patternUnits="userSpaceOnUse">
-          <circle cx="4" cy="4" r="0.75" fill="currentColor" />
-        </pattern>
-        {/* Links und unten sanft auslaufen lassen */}
-        <linearGradient id={`${id}-x`} x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0" stopColor="#fff" stopOpacity="0" />
-          <stop offset="0.32" stopColor="#fff" stopOpacity="1" />
-        </linearGradient>
-        <linearGradient id={`${id}-y`} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0.55" stopColor="#fff" stopOpacity="1" />
-          <stop offset="1" stopColor="#fff" stopOpacity="0" />
-        </linearGradient>
-        <mask id={`${id}-m`} maskContentUnits="userSpaceOnUse">
-          <rect width={B} height={H} fill={`url(#${id}-x)`} />
-        </mask>
-        <mask id={`${id}-m2`} maskContentUnits="userSpaceOnUse">
-          <rect width={B} height={H} fill={`url(#${id}-y)`} />
-        </mask>
-      </defs>
+  // Zwei deckungsgleiche Ebenen: unten die maskierten Punktflaechen, die
+  // nur einmal gezeichnet werden; oben die Kammlinie, die sich beim Laden
+  // nachzeichnet. Laege die Linie in der maskierten Gruppe, muesste der
+  // Browser bei jedem Animationsschritt alle Masken neu berechnen - auf
+  // schwachen Telefonen blockierte das die Seite fuer Sekunden.
+  const ebene = "absolute inset-0 h-full w-full";
 
-      <g mask={`url(#${id}-m)`}>
-        <g mask={`url(#${id}-m2)`}>
-          <path d={band(p, 0, 70)} fill={`url(#${id}-a)`} opacity="0.85" />
-          <path d={band(p, 70, 170)} fill={`url(#${id}-b)`} opacity="0.55" />
-          <path d={band(p, 170, H)} fill={`url(#${id}-c)`} opacity="0.32" />
+  return (
+    <div className={`relative ${className}`} aria-hidden="true">
+      <svg
+        viewBox={`0 0 ${B} ${H}`}
+        preserveAspectRatio="xMaxYMax slice"
+        className={ebene}
+        focusable="false"
+      >
+        <defs>
+          <pattern id={`${id}-a`} width="8" height="8" patternUnits="userSpaceOnUse">
+            <circle cx="4" cy="4" r="1.75" fill="currentColor" />
+          </pattern>
+          <pattern id={`${id}-b`} width="8" height="8" patternUnits="userSpaceOnUse">
+            <circle cx="4" cy="4" r="1.2" fill="currentColor" />
+          </pattern>
+          <pattern id={`${id}-c`} width="8" height="8" patternUnits="userSpaceOnUse">
+            <circle cx="4" cy="4" r="0.75" fill="currentColor" />
+          </pattern>
+          {/* Links und unten sanft auslaufen lassen */}
+          <linearGradient id={`${id}-x`} x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stopColor="#fff" stopOpacity="0" />
+            <stop offset="0.32" stopColor="#fff" stopOpacity="1" />
+          </linearGradient>
+          <linearGradient id={`${id}-y`} x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0.55" stopColor="#fff" stopOpacity="1" />
+            <stop offset="1" stopColor="#fff" stopOpacity="0" />
+          </linearGradient>
+          <mask id={`${id}-m`} maskContentUnits="userSpaceOnUse">
+            <rect width={B} height={H} fill={`url(#${id}-x)`} />
+          </mask>
+          <mask id={`${id}-m2`} maskContentUnits="userSpaceOnUse">
+            <rect width={B} height={H} fill={`url(#${id}-y)`} />
+          </mask>
+        </defs>
+
+        <g mask={`url(#${id}-m)`}>
+          <g mask={`url(#${id}-m2)`}>
+            <path d={band(p, 0, 70)} fill={`url(#${id}-a)`} opacity="0.85" />
+            <path d={band(p, 70, 170)} fill={`url(#${id}-b)`} opacity="0.55" />
+            <path d={band(p, 170, H)} fill={`url(#${id}-c)`} opacity="0.32" />
+          </g>
         </g>
+      </svg>
+
+      <svg
+        viewBox={`0 0 ${B} ${H}`}
+        preserveAspectRatio="xMaxYMax slice"
+        className={`${ebene} [will-change:transform]`}
+        focusable="false"
+      >
+        <defs>
+          {/* Statt Maske: ein Verlauf im Strich selbst blendet links aus */}
+          <linearGradient id={`${id}-r`} gradientUnits="userSpaceOnUse" x1="0" x2={B} y1="0" y2="0">
+            <stop offset="0" stopColor="currentColor" stopOpacity="0" />
+            <stop offset="0.32" stopColor="currentColor" stopOpacity="1" />
+          </linearGradient>
+        </defs>
         <path
           d={pfad(p)}
           pathLength={1}
           fill="none"
-          stroke="currentColor"
+          stroke={`url(#${id}-r)`}
           strokeWidth="1.25"
           className="ridge-draw"
         />
-      </g>
-    </svg>
+      </svg>
+    </div>
   );
 }

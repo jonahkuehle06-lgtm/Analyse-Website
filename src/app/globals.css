@@ -241,6 +241,53 @@ body {
   color: var(--color-platinum);
 }
 
+/* Sprungmarke zum Inhalt - unsichtbar, bis sie den Fokus bekommt */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.75rem 1.125rem;
+  background: var(--color-platinum);
+  color: var(--color-ink);
+  font-weight: 600;
+  transform: translateY(-150%);
+  transition: transform var(--dur-2) var(--ease-soft);
+}
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* Wischleiste fuer Filter am Telefon: ohne sichtbare Scrollleiste,
+   rechts sanft auslaufend als Hinweis, dass es weitergeht */
+.filter-leiste {
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
+  mask-image: linear-gradient(to right, #000 85%, transparent);
+}
+.filter-leiste::-webkit-scrollbar { display: none; }
+.filter-leiste > * { scroll-snap-align: start; }
+@media (min-width: 640px) {
+  .filter-leiste {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* Einblenden beim Scrollen (siehe RevealObserver). Versteckt wird nur,
+   solange <html class="reveal-on"> gesetzt ist. */
+.reveal-on [data-reveal] {
+  transition:
+    opacity 0.9s var(--ease-soft),
+    transform 0.9s var(--ease-soft);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.reveal-on [data-reveal]:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
 /* --------------------------------- Raster -------------------------------- */
 
 .frame {
@@ -282,6 +329,14 @@ body {
 
 .section {
   padding-block: var(--section-y);
+}
+
+/* Bereiche unterhalb der Falz erst rendern, wenn sie in die Naehe des
+   Bildschirms kommen - spart beim Laden viel Rechenzeit. Die geschaetzte
+   Hoehe verhindert Spruenge der Scrollleiste. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 960px;
 }
 
 /* Helle Abschnitte: dieselben Komponenten, umgekehrte Farben */
@@ -516,10 +571,23 @@ input[type="radio"] {
   to { opacity: 1; transform: none; }
 }
 
+@keyframes aufsteigen {
+  from { transform: translateY(14px); }
+  to { transform: none; }
+}
+
+/* Ueberschriften und Einleitungen: ab dem ersten Bild sichtbar, sie
+   gleiten nur in Position. So erscheint die wichtigste Aussage sofort -
+   und der Browser zaehlt sie als Hauptinhalt der Seite. */
+.rise {
+  animation: aufsteigen 0.9s var(--ease-soft) both;
+}
+
 /* Dezentes Einblenden beim Laden - nur oberhalb der Falz verwendet */
 .fade-up {
   animation: einblenden 0.9s var(--ease-soft) both;
 }
+/* Verzoegerungen - gelten fuer fade-up und rise */
 .fade-up-2 { animation-delay: 0.08s; }
 .fade-up-3 { animation-delay: 0.16s; }
 .fade-up-4 { animation-delay: 0.24s; }

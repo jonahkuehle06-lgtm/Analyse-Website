@@ -12,7 +12,8 @@ import type { Analysis } from "@/lib/types";
  * Kartenflaeche (#0F0F0F) geprueft - Helligkeitsband, Chroma, Kontrast und
  * Farbfehlsichtigkeit bestehen alle Pruefungen (ΔE 9,9 bei Deuteranopie).
  * Zusaetzlich traegt jede Linie eine eigene Beschriftung, damit die
- * Zuordnung nie allein an der Farbe haengt.
+ * Zuordnung nie allein an der Farbe haengt. Zahlen stehen in Textfarbe -
+ * die Farbe traegt der Punkt daneben, so bleibt jede Zahl gut lesbar.
  */
 
 const FARBE = {
@@ -63,8 +64,11 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
   /** Kurs -> Anteil von oben (0 = oben, 1 = unten). */
   const y = (kurs: number) => (max - kurs) / (max - min);
 
+  // Kurse immer mit zwei Nachkommastellen - wie auf Karte und Detailseite
   const geld = (v: number) =>
-    new Intl.NumberFormat("de-DE", { maximumFractionDigits: 2 }).format(v);
+    new Intl.NumberFormat("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
+  const anteil = (v: number) =>
+    new Intl.NumberFormat("de-DE", { maximumFractionDigits: 1 }).format(v);
   const abweichung = (v: number) => {
     const p = ((v - start) / start) * 100;
     return `${p >= 0 ? "+" : "−"}${new Intl.NumberFormat("de-DE", {
@@ -155,8 +159,7 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
             />
             <span className="absolute left-0 top-1/2 -translate-y-1/2 pl-4 text-left whitespace-nowrap">
               <span
-                className="block text-sm font-medium tabular-nums"
-                style={{ color: FARBE[s.fall] }}
+                className="block text-sm font-medium tabular-nums text-[var(--color-platinum)]"
               >
                 {geld(s.kurs)}
               </span>
@@ -187,10 +190,10 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
                 </span>
               </span>
               <span className="flex items-baseline gap-3 text-sm tabular-nums">
-                <span style={{ color: FARBE[s.fall] }}>{geld(s.kurs)} {analysis.currency}</span>
+                <span className="font-medium text-[var(--color-platinum)]">{geld(s.kurs)} {analysis.currency}</span>
                 {s.wahrscheinlichkeit !== null && (
                   <span className="text-[var(--color-mist)]">
-                    {geld(s.wahrscheinlichkeit)} %
+                    {anteil(s.wahrscheinlichkeit)} %
                   </span>
                 )}
               </span>
