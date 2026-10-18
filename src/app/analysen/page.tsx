@@ -114,7 +114,7 @@ export default async function AnalysenPage({
             ))}
             {hinweis && (
               <div
-                className={`section-paper flex flex-col justify-between gap-8 p-8 sm:p-10 ${
+                className={`section-paper @container flex flex-col justify-between gap-8 p-8 sm:p-10 ${
                   frei.length === 0
                     ? "md:col-span-2 lg:col-span-3"
                     : frei.length % 3 === 1
@@ -127,7 +127,7 @@ export default async function AnalysenPage({
                 <div>
                   <span className="tag">Pakete</span>
                   <h2 className="display mt-6 text-[length:var(--step-h3)] text-[var(--color-platinum)]">
-                    {all.length - Math.min(limit, all.length)} weitere Analysen freischalten
+                    Weitere Analysen freischalten
                   </h2>
                   <p className="mt-3 max-w-xl text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
                     {active
@@ -135,19 +135,26 @@ export default async function AnalysenPage({
                       : "Basic, Black oder Platin — Zugriff auf 10, 25 oder 50 Analysen, monatlich kündbar."}
                   </p>
                 </div>
-                {/* Die drei Pakete auf einen Blick - aus denselben Daten wie die Paketseite */}
-                <dl className="grid grid-cols-3 border-y border-[var(--color-line)]">
+                {/* Die drei Pakete auf einen Blick - aus denselben Daten wie die
+                    Paketseite. Die Box ist je nach Raster halb oder ganz breit;
+                    ist sie schmal, stehen die Pakete als Zeilen untereinander,
+                    sonst als drei Spalten. */}
+                <dl className="grid border-y border-[var(--color-line)] @sm:grid-cols-3">
                   {PLAN_ORDER.map((id, i) => (
                     <div
                       key={id}
-                      className={`py-4 ${i > 0 ? "border-l border-[var(--color-line)] pl-4 sm:pl-5" : ""}`}
+                      className={`grid grid-cols-[auto_1fr_auto] items-baseline gap-x-2 gap-y-1.5 py-3.5 @sm:block @sm:py-4 ${
+                        i > 0
+                          ? "border-t border-[var(--color-line)] @sm:border-t-0 @sm:border-l @sm:pl-5"
+                          : ""
+                      }`}
                     >
-                      <dt className="mono-label">{PLANS[id].name}</dt>
-                      <dd className="display tabular mt-1.5 text-[1.5rem] leading-none font-normal text-[var(--color-platinum)]">
+                      <dt className="mono-label col-span-3">{PLANS[id].name}</dt>
+                      <dd className="display tabular text-[1.5rem] leading-none font-normal text-[var(--color-platinum)] @sm:mt-1.5">
                         {PLANS[id].limit}
                       </dd>
-                      <dd className="mt-1 text-sm text-[var(--color-mist-2)]">Analysen</dd>
-                      <dd className="tabular mt-2 text-sm text-[var(--color-mist)]">
+                      <dd className="text-sm text-[var(--color-mist-2)] @sm:mt-1">Analysen</dd>
+                      <dd className="tabular text-sm whitespace-nowrap text-[var(--color-mist)] @sm:mt-2">
                         {PLANS[id].priceMonthly} €/Monat
                       </dd>
                     </div>
