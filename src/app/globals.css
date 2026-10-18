@@ -611,13 +611,178 @@ input[type="radio"] {
 }
 ::-webkit-scrollbar-thumb:hover { background: #3a3733; }
 
-/* Kammlinie der Halbton-Kurve zeichnet sich beim Laden einmal nach */
-@keyframes ridge-draw {
-  to { stroke-dashoffset: 0; }
+/* --------------------------- Kerzenchart (Hero) --------------------------- */
+/* Drei deckungsgleiche Ebenen je Fassung (siehe CandleChart): blasse
+   Kerzen, kraeftige Kerzen in Weiss und Platin, lebende letzte Kerze.
+   Aufbau und Freilegen verschieben nur Ebenen - das erledigt die
+   Grafikkarte, die Kerzen werden dabei nie neu gezeichnet.
+   CandleChartMotion setzt die Lage des Lichtfensters sowie .voll,
+   .abtasten, .aufbau-wartet und --dy. */
+.kz-fassung {
+  --kante: 44px;
+  --live: cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+  /* Links weich einsetzen - am Desktop ist nur der rechte Teil zu sehen */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 16%);
+  mask-image: linear-gradient(to right, transparent, #000 16%);
 }
-.ridge-draw {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: ridge-draw 2.4s var(--ease-soft) 0.35s forwards;
+.kz-ebene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Fenster: eine Kante breiter als der Chart und rechts weich auslaufend.
+   Das Fenster wandert nach rechts, sein Inhalt gleich weit zurueck - so
+   bleiben die Kerzen stehen und nur die weiche Kante laeuft ueber sie. */
+.kz-fenster {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: calc(-1 * var(--kante));
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to left, transparent, #000 var(--kante));
+  mask-image: linear-gradient(to left, transparent, #000 var(--kante));
+}
+/* Das Lichtfenster sitzt im schon verbreiterten Aufbaufenster */
+.kz-fenster .kz-fenster { right: 0; }
+.kz-innen {
+  position: absolute;
+  inset: 0;
+}
+.kz-innen > .kz-ebene { width: calc(100% - var(--kante)); }
+
+/* 1: blasse Kerzen - bauen sich beim Laden von links nach rechts auf */
+.kerzen-raster {
+  fill: none;
+  stroke-opacity: 0.05;
+}
+.kerzen-blass { opacity: 0.22; }
+
+@keyframes kz-auf-fenster { from { transform: translateX(-100%); } }
+@keyframes kz-auf-innen { from { transform: translateX(100%); } }
+.kz-aufbau { animation: kz-auf-fenster 2s var(--ease-soft) 0.2s both; }
+.kz-aufbau > .kz-innen { animation: kz-auf-innen 2s var(--ease-soft) 0.2s both; }
+
+/* 2: kraeftige Kerzen - ohne JavaScript bleibt alles blass */
+.kz-licht {
+  transform: translateX(-100%);
+  will-change: transform;
+}
+.kz-licht > .kz-innen {
+  transform: translateX(100%);
+  will-change: transform;
+}
+
+/* 3: lebende letzte Kerze und Kurslinie, erscheinen nach dem Aufbau */
+@keyframes kz-ein { from { opacity: 0; } }
+.kz-live { animation: kz-ein 0.8s var(--ease-soft) 1.7s both; }
+
+/* Liegt der Chart beim Laden unter der Falz (Telefon), wartet der Aufbau,
+   bis er ins Bild gewischt wird */
+.aufbau-wartet .kz-aufbau {
+  animation: none;
+  transform: translateX(-100%);
+}
+.aufbau-wartet .kz-aufbau > .kz-innen {
+  animation: none;
+  transform: translateX(100%);
+}
+.aufbau-wartet .kz-live {
+  animation: none;
+  opacity: 0;
+}
+
+/* Lebende Kerze: blass wie die anderen, bis das Licht sie erreicht;
+   Koerper, oberer Docht und Kurslinie folgen --dy */
+.kerze-live .koerper {
+  fill-opacity: 0.22;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transform: scaleY(calc(1 - var(--dy, 0) / var(--kh, 1)));
+  transition:
+    fill-opacity 0.7s var(--ease-soft),
+    transform 0.6s var(--live);
+}
+.kerze-live .docht {
+  fill: none;
+  stroke-opacity: 0.22;
+  transition:
+    stroke-opacity 0.7s var(--ease-soft),
+    transform 0.6s var(--live);
+}
+.kerze-live .docht-oben { transform: translateY(calc(var(--dy, 0) * 1px)); }
+.voll .kerze-live .koerper { fill-opacity: 1; }
+.voll .kerze-live .docht { stroke-opacity: 0.95; }
+
+.kurslinie {
+  transform: translateY(calc(var(--dy, 0) * 1px));
+  transition: transform 0.6s var(--live);
+}
+.kurslinie line {
+  stroke-opacity: 0.2;
+  transition: stroke-opacity 0.8s var(--ease-soft);
+}
+.kurspunkt {
+  fill: #ffffff;
+  fill-opacity: 0.3;
+  transition: fill-opacity 0.8s var(--ease-soft);
+}
+.kurspunkt-ring {
+  fill: #ffffff;
+  fill-opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.voll .kurslinie line { stroke-opacity: 0.55; }
+.voll .kurspunkt { fill-opacity: 1; }
+
+/* Ein Puls je Kursbewegung - zwei gleiche Animationen, damit ein Wechsel
+   der Klasse sie neu startet */
+@keyframes kurs-puls-a {
+  from { transform: scale(1); fill-opacity: 0.5; }
+  to { transform: scale(3.4); fill-opacity: 0; }
+}
+@keyframes kurs-puls-b {
+  from { transform: scale(1); fill-opacity: 0.5; }
+  to { transform: scale(3.4); fill-opacity: 0; }
+}
+.voll .kurspunkt-ring.puls-a { animation: kurs-puls-a 1.5s ease-out; }
+.voll .kurspunkt-ring.puls-b { animation: kurs-puls-b 1.5s ease-out; }
+
+/* Abtastlinie an der Lichtkante - eine eigene Ebene, die nur verschoben wird */
+.abtaster {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -0.5px;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.5) 50%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s var(--ease-soft);
+  will-change: transform;
+}
+.abtasten > .abtaster { opacity: 1; }
+.abtaster-punkt {
+  position: absolute;
+  top: -3px;
+  left: -2.5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  transition: transform 0.3s var(--ease-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kz-aufbau,
+  .kz-aufbau > .kz-innen,
+  .kz-live { animation: none; }
+  .abtaster { display: none; }
 }
 }

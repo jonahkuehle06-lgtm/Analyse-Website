@@ -2,7 +2,7 @@ import Link from "next/link";
 import PricingSection from "@/components/PricingSection";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import LogoScene from "@/components/LogoScene";
-import HalftoneCurve from "@/components/HalftoneCurve";
+import CandleChart from "@/components/CandleChart";
 import PlusPattern from "@/components/PlusPattern";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
@@ -91,7 +91,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <HalftoneCurve className="fade-up fade-up-3 -mx-[var(--gutter)] h-[220px] w-[calc(100%+2*var(--gutter))] text-[var(--color-platinum)] sm:h-[280px] lg:absolute lg:right-0 lg:bottom-0 lg:mx-0 lg:h-[74%] lg:w-[50%]" />
+            <CandleChart className="-mx-[var(--gutter)] w-[calc(100%+2*var(--gutter))] lg:absolute lg:right-0 lg:bottom-0 lg:mx-0 lg:h-[74%] lg:w-[50%]" />
           </div>
 
           {/* Kennzahlen-Leiste */}
