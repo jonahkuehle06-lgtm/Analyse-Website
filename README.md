@@ -105,9 +105,19 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 
 ### 3.4 Kundenportal
 
-Unter *Einstellungen → Billing → Kundenportal* aktivieren. Darüber kündigen
-Kunden ihr Abo selbst und laden Rechnungen herunter — die Seite verlinkt es im
-Kundenkonto.
+Unter *Einstellungen → Billing → Kundenportal* aktivieren. Darüber ändern
+Kunden ihr Zahlungsmittel und laden Rechnungen herunter — die Seite verlinkt es
+im Kundenkonto („Abo verwalten“).
+
+Empfohlene Einstellungen:
+
+- **Abos kündigen:** erlaubt, aber nur **zum Ende des Abrechnungszeitraums**
+  (nicht „sofort“). Der Webhook bestätigt solche Kündigungen per E-Mail und
+  setzt beim Jahresabo nach der Mindestlaufzeit das Ende auf einen Monat (siehe
+  Abschnitt 6d). Die gesetzlich vorgeschriebene Kündigung läuft ohnehin über
+  die Schaltfläche „Verträge hier kündigen“.
+- **Abos aktualisieren (Paketwechsel):** aus. Die AGB regeln keinen
+  Paketwechsel; wer wechseln will, kündigt und bucht neu.
 
 ---
 
@@ -124,6 +134,15 @@ Abrechnung**; bei jährlicher Zahlung entfallen zwei Monatsbeiträge.
 
 Freigeschaltet werden immer die **aktuellsten** Analysen des Bestands. Erscheint
 eine neue Analyse, rückt sie automatisch in den Zugang aller Kunden nach.
+
+Laufzeit und Kündigung (§ 6 AGB, ausgelegt auf § 309 Nr. 9 BGB):
+
+- **Monatsabo:** unbefristet, jederzeit zum Ende des Abrechnungsmonats kündbar.
+- **Jahresabo:** Mindestlaufzeit zwölf Monate, zum Ende der Mindestlaufzeit
+  kündbar. Danach läuft es unbefristet weiter und wird weiter jährlich im Voraus
+  abgerechnet, ist aber jederzeit mit einer Frist von einem Monat kündbar. Den
+  bezahlten Anteil für die Zeit nach dem Vertragsende erstattet die Seite
+  automatisch (taggenau anteilig, über Stripe).
 
 Der Signal-Filter der Übersicht durchsucht nur freigeschaltete Analysen.
 Gesperrte Titel blendet er aus, sonst ließe sich ihre Signalstärke über den
@@ -377,6 +396,76 @@ alter table public.analyses
 
 ---
 
+## 6d. Bestellung, Vertrags-E-Mails, Kündigung und Widerruf
+
+### Ablauf
+
+1. **Bestellübersicht** (`/bestellen`): Paket, Preis, Laufzeit und Kündigung
+   stehen direkt über dem Knopf. Der Kunde gibt Name und E-Mail-Adresse an und
+   setzt das Pflicht-Häkchen zum sofortigen Beginn (§ 356 Abs. 5 BGB). Der
+   Knopf heißt „Zahlungspflichtig bestellen“ (§ 312j Abs. 3 BGB).
+2. **Eingangsbestätigung** per E-Mail, sofort nach dem Klick (§ 312i BGB) —
+   noch keine Annahme. AGB und Widerrufsbelehrung hängen als PDF an.
+3. Weiterleitung zu **Stripe**; dort hinterlegt der Kunde das Zahlungsmittel.
+4. Nach erfolgreicher Zahlung: Freischaltung und **Vertragsbestätigung** per
+   E-Mail (Webhook `checkout.session.completed`) mit allen Vertragsdaten, der
+   Dokumentation der Zustimmung (§ 312f Abs. 3 BGB) und beiden PDFs. Erst mit
+   dieser Bestätigung erlischt das Widerrufsrecht. **Ohne funktionierenden
+   Webhook und Mailversand bleibt es bestehen** — beides muss eingerichtet sein.
+
+Bestellnummer, Zustimmungszeitpunkt und Stand der Rechtstexte stehen als
+Metadaten an der Zahlung und am Abo in Stripe.
+
+### Kündigung und Widerruf
+
+- **„Verträge hier kündigen“** (`/kuendigen`, Pflicht nach § 312k BGB) und
+  **„Vertrag hier widerrufen“** (`/widerrufen`, elektronische Widerrufsfunktion)
+  stehen im Fuß jeder Seite und im Kundenkonto — beide ohne Anmeldung.
+- Nach dem Absenden sieht der Kunde eine Bestätigung zum Drucken bzw.
+  Speichern und erhält sofort eine E-Mail mit Inhalt, Datum und Uhrzeit des
+  Eingangs und dem Vertragsende.
+- Ordentliche Kündigungen zum nächstmöglichen Termin trägt die Seite selbst bei
+  Stripe ein. Außerordentliche Kündigungen, spätere Wunschtermine und Fälle
+  ohne zuordenbares Abo gehen als Meldung an `MAIL_NOTIFY` zur Bearbeitung.
+- Widerrufe bestätigt die Seite sofort; entschieden wird von Hand. Die Meldung
+  an `MAIL_NOTIFY` nennt, ob Zustimmung und Vertragsbestätigung dokumentiert
+  sind.
+- Kündigungen aus dem Stripe-Kundenportal bestätigt der Webhook ebenfalls.
+
+### E-Mail-Versand einrichten
+
+Die Mails gehen per **SMTP** raus — über den Mail-Anbieter der eigenen Domain
+(z. B. IONOS, Strato, Google Workspace) oder einen Versanddienst (Brevo,
+Postmark, Amazon SES, Resend). Variablen in Vercel setzen:
+
+| Variable | Bedeutung |
+|---|---|
+| `SMTP_HOST`, `SMTP_PORT` | Server und Port (meist 587, bei SSL 465) |
+| `SMTP_USER`, `SMTP_PASS` | Zugangsdaten |
+| `MAIL_FROM` | Absender, z. B. `PAX Solutions <kontakt@deine-domain.de>` |
+| `MAIL_REPLY_TO` | Antwortadresse (Standard: Firmen-E-Mail) |
+| `MAIL_NOTIFY` | Postfach für interne Meldungen (Standard: Firmen-E-Mail) |
+| `MAIL_BCC` | optional: Archiv-Postfach, erhält eine Kopie jeder Kundenmail |
+
+Für gute Zustellbarkeit beim Anbieter SPF und DKIM für die Absenderdomain
+einrichten. Ohne `SMTP_HOST` landen die Mails lokal als `.eml` und `.html` in
+`data/outbox/` (zum Ansehen); auf dem Server wird dann nur gewarnt.
+
+### Texte ändern
+
+| Was | Wo |
+|---|---|
+| AGB | `src/lib/legal/agb.ts` |
+| Widerrufsbelehrung, Muster-Formular | `src/lib/legal/widerruf.ts` (Muster-Wortlaut nicht umformulieren) |
+| Zustimmungstext, Laufzeiten, Stand | `src/lib/legal/vertrag.ts` |
+| E-Mails | `src/lib/mail/vorlagen.ts` |
+
+Website, PDFs und E-Mails lesen aus diesen Dateien — sie können nicht
+auseinanderlaufen. Bei inhaltlichen Änderungen `RECHTSTEXTE_STAND` anpassen.
+Die PDFs gibt es auch unter `/agb/pdf` und `/widerruf/pdf`.
+
+---
+
 ## 7. Rechtliches — bitte lesen
 
 Die Seite enthält Entwürfe für Impressum, Haftungsausschluss,
@@ -392,6 +481,12 @@ enthält:
 
 Der kurze Risikohinweis steht zusätzlich in der Fußzeile jeder Seite. Jede
 Analyse nennt Ersteller und Erstellungsdatum.
+
+AGB, Widerrufsbelehrung und die Vertrags-E-Mails sind auf ein Abonnement
+digitaler Inhalte für Verbraucher ausgelegt (Abschnitt 6d). Für korrekte
+Pflichtangaben müssen die Firmendaten (`NEXT_PUBLIC_COMPANY_…`) stimmen;
+`NEXT_PUBLIC_COMPANY_NAME` muss die vollständige Firma samt Rechtsform enthalten
+(z. B. „PAX Solutions GmbH“).
 
 **Diese Texte sind Vorlagen und keine Rechtsberatung.** Sie müssen vor dem
 Livegang anwaltlich geprüft und an den tatsächlichen Geschäftsbetrieb angepasst
@@ -412,17 +507,23 @@ src/
     preise/                   Pakete + FAQ
     methodik/                 Beschreibung des Vorgehens
     login/ willkommen/ konto/ Kundenbereich
+    bestellen/                Bestellübersicht (Button-Lösung, Zustimmung)
+    kuendigen/ widerrufen/    Kündigungs- und Widerrufsschaltfläche
     admin/                    Verwaltung (Login, Liste, Anlegen, Bearbeiten)
-    api/checkout/             Stripe-Checkout starten
-    api/stripe/webhook/       Abo-Status synchronisieren
+    api/stripe/webhook/       Abo-Status, Vertragsbestätigung, Erstattung
     impressum/ haftungsausschluss/ datenschutz/ agb/ widerruf/
+    agb/pdf/ widerruf/pdf/    Rechtstexte als PDF
   components/                 Karten, Formulare, Navigation
   lib/
     config.ts                 Pakete, Preise, Signalstufen, Firmendaten
     db.ts                     Datenschicht (Supabase oder lokale JSON-Datei)
     auth.ts                   Passwort-Hashing und Sitzungen
     stripe.ts                 Stripe-Hilfsfunktionen
-    actions/                  Server Actions (Auth, Analysen, Abrechnung)
+    abo.ts                    Vertragsbestätigung, Kündigung, Widerruf, Erstattung
+    legal/                    AGB, Widerrufsbelehrung, Vertragsbausteine
+    mail/                     SMTP-Versand und E-Mail-Vorlagen
+    pdf/                      PDF-Satz der Rechtstexte (mit Markenschriften)
+    actions/                  Server Actions (Auth, Analysen, Abrechnung, Bestellung, Vertrag)
 data/seed.json                Beispielanalysen
 supabase-schema.sql           Datenbankschema
 ```

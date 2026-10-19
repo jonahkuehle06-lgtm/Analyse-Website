@@ -97,7 +97,7 @@ export default function ChatWidget() {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Assistent schließen" : "Assistent öffnen"}
         aria-expanded={open}
-        className="fixed right-4 bottom-4 z-[70] flex h-14 w-14 items-center justify-center border border-[var(--color-line-strong)] bg-[var(--color-anthracite-2)] shadow-[var(--shadow-overlay)] transition-colors duration-200 hover:border-[var(--color-platinum)] hover:bg-[var(--color-anthracite-3)] sm:right-6 sm:bottom-6"
+        className="fixed right-4 bottom-4 z-[70] flex print:hidden h-14 w-14 items-center justify-center border border-[var(--color-line-strong)] bg-[var(--color-anthracite-2)] shadow-[var(--shadow-overlay)] transition-colors duration-200 hover:border-[var(--color-platinum)] hover:bg-[var(--color-anthracite-3)] sm:right-6 sm:bottom-6"
       >
         {open ? (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -125,7 +125,7 @@ export default function ChatWidget() {
         <div
           role="dialog"
           aria-label="Assistent"
-          className="surface fixed inset-x-3 bottom-22 z-[69] flex max-h-[min(72vh,580px)] flex-col overflow-hidden shadow-[var(--shadow-overlay)] sm:inset-x-auto sm:right-6 sm:bottom-24 sm:w-[410px]"
+          className="surface fixed inset-x-3 bottom-22 z-[69] flex print:hidden max-h-[min(72vh,580px)] flex-col overflow-hidden shadow-[var(--shadow-overlay)] sm:inset-x-auto sm:right-6 sm:bottom-24 sm:w-[410px]"
         >
           <header className="flex items-center justify-between border-b border-[var(--color-line)] px-5 py-4">
             <div>

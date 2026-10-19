@@ -86,11 +86,16 @@ export default async function KontoPage({
         </Link>
 
         {user.stripeCustomerId ? (
-          <form action={openPortalAction} className="w-full sm:w-auto">
-            <button type="submit" className="btn-ghost w-full">
-              Abo verwalten
-            </button>
-          </form>
+          <>
+            <form action={openPortalAction} className="w-full sm:w-auto">
+              <button type="submit" className="btn-ghost w-full">
+                Abo verwalten
+              </button>
+            </form>
+            <Link href="/kuendigen" className="btn-ghost w-full sm:w-auto">
+              Verträge hier kündigen
+            </Link>
+          </>
         ) : (
           <Link href="/preise" className="btn-ghost w-full sm:w-auto">
             Paket buchen
@@ -108,9 +113,14 @@ export default async function KontoPage({
       </div>
 
       <p className="mt-12 max-w-[70ch] text-xs leading-relaxed text-[var(--color-muted)]">
-        Über „Abo verwalten“ öffnet sich das Stripe-Kundenportal. Dort lassen sich
-        Zahlungsmittel ändern, Rechnungen herunterladen und das Abonnement zum Ende der
-        laufenden Periode kündigen.
+        Über „Abo verwalten“ öffnet sich das Stripe-Kundenportal. Dort änderst du
+        Zahlungsmittel und lädst Rechnungen herunter. Kündigen kannst du jederzeit über
+        „Verträge hier kündigen“; den Eingang bestätigen wir dir sofort per E-Mail. Deinen
+        Vertrag widerrufen kannst du{" "}
+        <Link href="/widerrufen" className="text-link">
+          hier
+        </Link>
+        .
       </p>
     </div>
     </div>

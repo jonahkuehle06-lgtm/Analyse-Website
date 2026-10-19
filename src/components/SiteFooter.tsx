@@ -27,7 +27,7 @@ const linkClass =
 
 export default function SiteFooter() {
   return (
-    <footer className="cv-auto relative overflow-hidden border-t border-[var(--color-line)] bg-[var(--color-void)]">
+    <footer className="cv-auto print:hidden relative overflow-hidden border-t border-[var(--color-line)] bg-[var(--color-void)]">
       <div className="frame frame-lines">
         <div className="grid gap-12 pt-16 pb-12 md:grid-cols-[1.6fr_1fr_1fr] md:pt-20">
           <div>
@@ -68,6 +68,17 @@ export default function SiteFooter() {
               )}
             </ul>
           </div>
+        </div>
+
+        {/* Gesetzliche Schaltflächen auf jeder Seite: Kündigung (§ 312k BGB)
+            und elektronischer Widerruf - beide ohne Anmeldung nutzbar */}
+        <div className="flex flex-col gap-3 border-t border-[var(--color-line)] py-6 sm:flex-row sm:items-center">
+          <Link href="/kuendigen" className="btn-ghost">
+            Verträge hier kündigen
+          </Link>
+          <Link href="/widerrufen" className="btn-ghost">
+            Vertrag hier widerrufen
+          </Link>
         </div>
 
         <div className="border-t border-[var(--color-line)] py-8">

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const FAQ = [
   {
     q: "Monatlich oder jährlich — was empfehlen wir?",
-    a: `Monatlich zum Kennenlernen, jährlich für den dauerhaften Zugang: Bei jährlicher Zahlung entfallen ${YEARLY_DISCOUNT_MONTHS} Monatsbeiträge. Beide Varianten laufen als Abonnement und sind jederzeit zum Ende der laufenden Periode kündbar.`,
+    a: `Monatlich zum Kennenlernen, jährlich für den dauerhaften Zugang: Bei jährlicher Zahlung entfallen ${YEARLY_DISCOUNT_MONTHS} Monatsbeiträge. Das Monatsabo ist jederzeit zum Ende des Abrechnungsmonats kündbar. Das Jahresabo läuft mindestens zwölf Monate und ist danach jederzeit mit einer Frist von einem Monat kündbar – zu viel Gezahltes erstatten wir anteilig.`,
   },
   {
     q: "Welche Analysen sind in meinem Paket enthalten?",
@@ -25,7 +25,7 @@ const FAQ = [
   },
   {
     q: "Wie kündige ich?",
-    a: "Im Kundenkonto über „Abo verwalten“. Dort öffnet sich das Stripe-Kundenportal, in dem sich Zahlungsmittel ändern, Rechnungen abrufen und das Abo kündigen lassen.",
+    a: "Über die Schaltfläche „Verträge hier kündigen“ unten auf jeder Seite – ohne Anmeldung. Alternativ im Kundenkonto oder per E-Mail. Jede Kündigung bestätigen wir dir sofort per E-Mail mit dem Datum, zu dem dein Vertrag endet.",
   },
   {
     q: "Ist das eine Anlageberatung?",

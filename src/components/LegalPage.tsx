@@ -5,17 +5,34 @@ export default function LegalPage({
   eyebrow,
   title,
   intro,
+  pdfHref,
+  actions,
   children,
 }: {
   eyebrow: string;
   title: string;
   intro?: string;
+  /** Download-Link fuer dieselbe Fassung als PDF */
+  pdfHref?: string;
+  /** Weitere Schaltflaechen neben dem PDF-Link */
+  actions?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <div className="frame frame-lines">
       <div className="mx-auto max-w-4xl py-14 sm:py-20">
         <PageHeader label={eyebrow} title={title} lead={intro} />
+
+        {(pdfHref || actions) && (
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            {pdfHref && (
+              <a href={pdfHref} className="btn-ghost" download>
+                Als PDF herunterladen
+              </a>
+            )}
+            {actions}
+          </div>
+        )}
 
         <div className="mt-12 max-w-[72ch]">
           <LegalReviewNote />

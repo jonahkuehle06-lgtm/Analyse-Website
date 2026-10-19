@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { aboBeendet, aboGeaendert, sendeVertragsbestaetigung } from "@/lib/abo";
 import { findUserByStripeCustomerId, upsertUser } from "@/lib/db";
 import { mapStatus, periodEnd, planFromPriceId, stripe, stripeConfigured } from "@/lib/stripe";
 import type { PlanId } from "@/lib/types";
@@ -8,11 +9,14 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Stripe-Webhook: hält Paket und Abo-Status im Datenbestand aktuell.
+ * Stripe-Webhook: hält Paket und Abo-Status im Datenbestand aktuell und
+ * löst die Vertrags-E-Mails aus.
  *
  * Einzurichten unter  <deine-domain>/api/stripe/webhook  mit den Events
- *   checkout.session.completed
- *   customer.subscription.created | .updated | .deleted
+ *   checkout.session.completed      -> Vertragsbestätigung mit AGB und Widerrufsbelehrung
+ *   customer.subscription.created
+ *   customer.subscription.updated   -> Kündigungen aus dem Kundenportal bestätigen
+ *   customer.subscription.deleted   -> anteilige Erstattung beim Jahresabo
  */
 export async function POST(request: Request) {
   if (!stripeConfigured() || !process.env.STRIPE_WEBHOOK_SECRET) {
@@ -70,6 +74,9 @@ export async function POST(request: Request) {
           subscriptionStatus: status,
           currentPeriodEnd: end,
         });
+
+        // Annahme der Bestellung: Vertragsbestätigung (§ 312f BGB) - idempotent
+        if (subscriptionId) await sendeVertragsbestaetigung(session.id);
         break;
       }
 
@@ -102,6 +109,9 @@ export async function POST(request: Request) {
           subscriptionStatus: deleted ? "canceled" : mapStatus(subscription.status),
           currentPeriodEnd: deleted ? null : periodEnd(subscription),
         });
+
+        if (event.type === "customer.subscription.updated") await aboGeaendert(subscription.id);
+        if (deleted) await aboBeendet(subscription.id);
         break;
       }
 

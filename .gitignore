@@ -8,3 +8,6 @@ next-env.d.ts
 .DS_Store
 .vercel
 data/*.local.json
+
+# Lokaler Postausgang (E-Mails ohne SMTP)
+data/outbox/

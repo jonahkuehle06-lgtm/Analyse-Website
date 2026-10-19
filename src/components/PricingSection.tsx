@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { PLANS, PLAN_ORDER, YEARLY_DISCOUNT_MONTHS } from "@/lib/config";
+import { laufzeitKurz } from "@/lib/legal/vertrag";
 import type { BillingInterval, PlanId } from "@/lib/types";
 
 const euro = new Intl.NumberFormat("de-DE", {
@@ -18,28 +20,7 @@ export default function PricingSection({
   heading?: boolean;
 }) {
   const [interval, setInterval] = useState<BillingInterval>("monthly");
-  const [pending, setPending] = useState<PlanId | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  async function startCheckout(plan: PlanId) {
-    setPending(plan);
-    setError(null);
-    try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan, interval }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || "Checkout konnte nicht gestartet werden.");
-      }
-      window.location.href = data.url;
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Unbekannter Fehler.");
-      setPending(null);
-    }
-  }
+  const abrechnung = interval === "monthly" ? "monatlich" : "jaehrlich";
 
   return (
     <section id="pakete" className="border-b border-[var(--color-line)]">
@@ -53,7 +34,8 @@ export default function PricingSection({
               </h2>
               <p className="lead mt-5">
                 Jedes Paket schaltet eine feste Anzahl der aktuellsten Analysen frei.
-                Monatlich kündbar, jederzeit wechselbar.
+                Das Monatsabo ist monatlich kündbar, das Jahresabo nach den ersten zwölf
+                Monaten ebenfalls.
               </p>
             </div>
           ) : (
@@ -146,7 +128,11 @@ export default function PricingSection({
                     {plan.limit} Analysen freigeschaltet
                   </p>
                   <ul className="mt-4 space-y-3">
-                    {plan.features.map((feature) => (
+                    {/* Die Kündigungsregel hängt am Abrechnungszeitraum (§ 6 AGB) */}
+                    {[
+                      ...plan.features.filter((f) => !/kündbar/i.test(f)),
+                      laufzeitKurz(interval),
+                    ].map((feature) => (
                       <li
                         key={feature}
                         className="flex items-start gap-3 text-[0.9375rem] text-[var(--color-mist-2)]"
@@ -174,29 +160,27 @@ export default function PricingSection({
                 </div>
 
                 <div className="mt-auto pt-10">
-                  <button
-                    type="button"
-                    onClick={() => startCheckout(plan.id)}
-                    disabled={pending !== null || isCurrent}
-                    className={`w-full ${plan.highlight ? "btn-platinum" : "btn-ghost"}`}
-                  >
-                    {isCurrent
-                      ? "Aktuelles Paket"
-                      : pending === plan.id
-                        ? "Weiterleitung …"
-                        : `${plan.name} buchen`}
-                  </button>
+                  {isCurrent ? (
+                    <button
+                      type="button"
+                      disabled
+                      className={`w-full ${plan.highlight ? "btn-platinum" : "btn-ghost"}`}
+                    >
+                      Aktuelles Paket
+                    </button>
+                  ) : (
+                    <Link
+                      href={`/bestellen?paket=${plan.id}&abrechnung=${abrechnung}`}
+                      className={`w-full ${plan.highlight ? "btn-platinum" : "btn-ghost"}`}
+                    >
+                      {plan.name} buchen
+                    </Link>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
-
-        {error && (
-          <p className="mt-8 text-sm text-[var(--color-danger)]" role="alert">
-            {error}
-          </p>
-        )}
 
         <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-[var(--color-muted)]">
           <span>Zahlung über Stripe</span>

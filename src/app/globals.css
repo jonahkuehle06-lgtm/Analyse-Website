@@ -791,3 +791,30 @@ input[type="radio"] {
   .abtaster { display: none; }
 }
 }
+
+/* Druckfassung, etwa um eine Kündigungsbestätigung zu speichern: Dunkle
+   Flächen lassen Browser beim Drucken weg - heller Text wäre dann auf
+   weißem Papier unleserlich. Kopf, Fuß und Chat blenden die Komponenten
+   selbst aus (print:hidden). */
+@media print {
+  :root {
+    --color-void: #ffffff;
+    --color-ink: #ffffff;
+    --color-anthracite: #f3f3f3;
+    --color-anthracite-2: #ececec;
+    --color-anthracite-3: #e4e4e4;
+    --color-line: rgba(0, 0, 0, 0.18);
+    --color-line-strong: rgba(0, 0, 0, 0.32);
+    --color-platinum: #000000;
+    --color-mist-2: #222222;
+    --color-mist: #333333;
+    --color-muted: #555555;
+  }
+  body {
+    background: #ffffff;
+    color: #000000;
+  }
+  .skip-link {
+    display: none;
+  }
+}
