@@ -107,13 +107,13 @@ function bausteinHtml(b: Baustein): string {
             .join("")}
         </table>`;
     case "hinweis":
-      return `<div style="margin:22px 0;padding:16px 18px;background:${C.flaeche};border-left:3px solid ${C.tinte};font-size:15px;line-height:1.6;color:${C.text}">${mehrzeilig(b.text)}</div>`;
+      return `<div style="margin:22px 0;padding:16px 18px;background:${C.flaeche};border-left:3px solid ${C.tinte};border-radius:12px;font-size:15px;line-height:1.6;color:${C.text}">${mehrzeilig(b.text)}</div>`;
     case "zitat":
       return `
         <h2 style="margin:30px 0 10px;font-family:${SANS};font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${C.gedimmt}">${esc(b.titel)}</h2>
-        <div style="margin:0 0 18px;padding:18px 20px;background:${C.flaeche};border:1px solid ${C.linie};font-family:${SERIF};font-size:16px;line-height:1.6;color:${C.text}">${mehrzeilig(b.text)}</div>`;
+        <div style="margin:0 0 18px;padding:18px 20px;background:${C.flaeche};border:1px solid ${C.linie};border-radius:12px;font-family:${SERIF};font-size:16px;line-height:1.6;color:${C.text}">${mehrzeilig(b.text)}</div>`;
     case "knopf":
-      return `<p style="margin:26px 0"><a href="${esc(b.href)}" style="display:inline-block;padding:14px 24px;background:${C.tinte};color:${C.platin};font-size:15px;font-weight:600;text-decoration:none">${esc(b.text)} &rarr;</a></p>`;
+      return `<p style="margin:26px 0"><a href="${esc(b.href)}" style="display:inline-block;padding:14px 26px;border-radius:999px;background:${C.tinte};color:${C.platin};font-size:15px;font-weight:600;text-decoration:none">${esc(b.text)} &rarr;</a></p>`;
     case "klein":
       return `<p style="margin:14px 0 0;font-size:13px;line-height:1.55;color:${C.gedimmt}">${mehrzeilig(b.text)}</p>`;
   }
@@ -153,11 +153,11 @@ function render(i: Inhalt): FertigeMail {
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${C.papier}">
 <tr><td align="center" style="padding:28px 12px">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px">
-    <tr><td style="background:${C.tinte};padding:22px 32px">
+    <tr><td style="background:${C.tinte};padding:22px 32px;border-radius:16px 16px 0 0">
       <span style="font-family:${SANS};font-size:15px;font-weight:600;letter-spacing:0.18em;color:${C.platin}">${esc(BRAND.name)}</span>
       <span style="font-family:${SANS};font-size:11px;letter-spacing:0.22em;color:#aba59b;padding-left:6px">${esc(BRAND.suffix.toUpperCase())}</span>
     </td></tr>
-    <tr><td style="background:${C.karte};padding:36px 32px 34px">
+    <tr><td style="background:${C.karte};padding:36px 32px 34px;border-radius:0 0 16px 16px">
       <h1 style="margin:0 0 22px;font-family:${SERIF};font-size:27px;line-height:1.25;font-weight:400;color:${C.text}">${esc(i.titel)}</h1>
       <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:${C.text}">${esc(i.anrede)}</p>
       ${i.bausteine.map(bausteinHtml).join("\n")}

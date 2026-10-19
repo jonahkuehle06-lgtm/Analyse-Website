@@ -184,12 +184,12 @@ export function LockedAnalysisCard({
         <div className="locked-blur mt-5 select-none" aria-hidden="true">
           <div className="flex gap-1">
             {[0, 1, 2, 3, 4].map((i) => (
-              <span key={i} className="h-1.5 flex-1 bg-[var(--color-line-strong)]" />
+              <span key={i} className="h-1.5 flex-1 rounded-full bg-[var(--color-line-strong)]" />
             ))}
           </div>
           <div className="mt-4 space-y-2.5">
-            <span className="block h-2 w-full bg-[var(--color-line)]" />
-            <span className="block h-2 w-[72%] bg-[var(--color-line)]" />
+            <span className="block h-2 w-full rounded-full bg-[var(--color-line)]" />
+            <span className="block h-2 w-[72%] rounded-full bg-[var(--color-line)]" />
           </div>
         </div>
 

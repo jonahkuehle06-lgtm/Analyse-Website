@@ -12,7 +12,7 @@ export default function LegalReviewNote() {
 
   return (
     <aside
-      className="mb-10 border border-[rgba(232,198,75,0.32)] border-l-2 border-l-[var(--color-warning)] bg-[rgba(232,198,75,0.05)] px-6 py-5"
+      className="mb-10 rounded-[var(--radius-card)] border border-[rgba(232,198,75,0.32)] border-l-2 border-l-[var(--color-warning)] bg-[rgba(232,198,75,0.05)] px-6 py-5"
       role="note"
     >
       <p className="text-sm font-semibold text-[var(--color-warning)]">

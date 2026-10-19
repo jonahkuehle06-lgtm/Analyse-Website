@@ -172,7 +172,7 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
       </div>
 
       {/* Die drei Fälle im Einzelnen */}
-      <ul className="mt-6 divide-y divide-[var(--color-line)] border border-[var(--color-line)]">
+      <ul className="mt-6 divide-y divide-[var(--color-line)] overflow-hidden rounded-[var(--radius-field)] border border-[var(--color-line)]">
         {szenarien.map((s) => (
           <li
             key={s.fall}

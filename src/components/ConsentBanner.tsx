@@ -79,7 +79,7 @@ export default function ConsentBanner() {
         </p>
 
         {details && (
-          <div className="mt-6 divide-y divide-[var(--color-line)] border border-[var(--color-line)]">
+          <div className="mt-6 divide-y divide-[var(--color-line)] overflow-hidden rounded-[var(--radius-field)] border border-[var(--color-line)]">
             <Zweck
               titel="Technisch notwendig"
               text="Anmeldung, Sitzungsverwaltung und Sicherheit. Ohne diese Cookies funktioniert der Kundenbereich nicht."

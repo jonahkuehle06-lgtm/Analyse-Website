@@ -38,7 +38,7 @@ export default async function KontoPage({
   const total = (await listAnalyses()).length;
 
   return (
-    <div className="frame frame-lines">
+    <div className="frame">
     <div className="mx-auto max-w-4xl py-14 sm:py-20">
       <PageHeader label="Kundenbereich" title="Mein Konto" />
 

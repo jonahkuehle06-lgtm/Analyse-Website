@@ -27,7 +27,7 @@ function Platzhalter() {
 
 export default function UeberUnsPage() {
   return (
-    <div className="frame frame-lines">
+    <div className="frame">
       <div className="py-14 sm:py-20">
         <PageHeader label="Wer wir sind" title="Über uns" lead={EINLEITUNG || <Platzhalter />} />
 

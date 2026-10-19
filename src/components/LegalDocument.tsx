@@ -93,7 +93,7 @@ function Block({ block }: { block: LegalBlock }) {
       );
     case "form":
       return (
-        <div className="space-y-3 border border-[var(--color-line)] bg-[var(--color-anthracite)] p-6 text-sm sm:p-7">
+        <div className="space-y-3 rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-anthracite)] p-6 text-sm sm:p-7">
           {block.lines.map((line, i) => (
             <p key={i}>
               <Text text={line} />

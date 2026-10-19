@@ -39,7 +39,7 @@ export default async function BestellenPage({
   const aktiv = hasActiveSubscription(user);
 
   return (
-    <div className="frame frame-lines">
+    <div className="frame">
       <div className="mx-auto max-w-3xl py-14 sm:py-20">
         <PageHeader
           label="Bestellung"
@@ -49,7 +49,7 @@ export default async function BestellenPage({
 
         {abgebrochen && !aktiv && (
           <p
-            className="mt-10 border-l-2 border-[var(--color-warning)] bg-[rgba(232,198,75,0.05)] px-5 py-4 text-[0.9375rem] leading-relaxed text-[var(--color-mist-2)]"
+            className="mt-10 rounded-[var(--radius-field)] border-l-2 border-[var(--color-warning)] bg-[rgba(232,198,75,0.05)] px-5 py-4 text-[0.9375rem] leading-relaxed text-[var(--color-mist-2)]"
             role="status"
           >
             Du hast die Zahlung abgebrochen. Ohne abgeschlossene Zahlung kommt kein Vertrag

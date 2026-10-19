@@ -1,5 +1,4 @@
 import Link from "next/link";
-import PlusPattern from "@/components/PlusPattern";
 
 export const metadata = {
   title: "Seite nicht gefunden",
@@ -9,8 +8,7 @@ export const metadata = {
 export default function NotFound() {
   return (
     <section className="relative border-b border-[var(--color-line)]">
-      <PlusPattern />
-      <div className="frame frame-lines bg-[var(--color-ink)]">
+      <div className="frame bg-[var(--color-ink)]">
         <div className="flex min-h-[68vh] flex-col justify-center py-20">
           <span className="tag self-start">Fehler 404</span>
           <h1 className="display mt-6 text-[length:var(--step-h1)] text-[var(--color-platinum)]">

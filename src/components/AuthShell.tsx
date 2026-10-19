@@ -1,4 +1,3 @@
-import PlusPattern from "./PlusPattern";
 
 /**
  * Huelle fuer Anmelde- und Einrichtungsseiten: links Ueberschrift und
@@ -23,8 +22,7 @@ export default function AuthShell({
 }) {
   return (
     <section className="relative border-b border-[var(--color-line)]">
-      <PlusPattern />
-      <div className="frame frame-lines bg-[var(--color-ink)]">
+      <div className="frame bg-[var(--color-ink)]">
         <div className="grid min-h-[72vh] items-center gap-10 py-16 sm:py-20 lg:grid-cols-[minmax(0,1fr)_minmax(0,27rem)] lg:gap-20">
           <div className="max-w-xl">
             <span className="tag fade-up">{label}</span>

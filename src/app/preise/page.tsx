@@ -41,7 +41,7 @@ export default async function PreisePage() {
       <PricingSection currentPlan={user?.plan ?? null} />
 
       <section>
-        <div className="frame frame-lines section">
+        <div className="frame section">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
             <div>
               <span className="tag">Häufige Fragen</span>

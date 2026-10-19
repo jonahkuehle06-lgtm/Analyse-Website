@@ -19,7 +19,7 @@ export default async function KuendigenPage() {
   const user = await currentUser();
 
   return (
-    <div className="frame frame-lines">
+    <div className="frame">
       <div className="mx-auto max-w-3xl py-14 sm:py-20">
         <PageHeader
           label="Kündigung"

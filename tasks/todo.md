@@ -22,3 +22,35 @@ Pflicht-Häkchen zum sofortigen Beginn (Widerrufsrecht erlischt).
 - Nicht getestet: echte Stripe-Aufrufe (keine Schlüssel) – vor dem Livegang mit
   Stripe-Testmodus durchspielen (Bestellung, Portal-Kündigung, Jahresabo-Erstattung).
 - Offen: anwaltliche Prüfung, echte Firmendaten, SMTP-Zugang, Stripe-Webhook-Events.
+
+---
+
+# Runde 4: Breite, Kreuze, Taube, Ecken, „2 Monate gratis“ (19.10.2026)
+
+## Plan
+- [x] Volle Breite am PC: `--frame` von 75rem auf 120rem, mitwachsende Ränder; seitliche Rahmenlinien entfallen
+- [x] Pluszeichen-Raster und Kreuze entfernen (Startseite, Anmeldung, 404, Handymenü, Admin-Login)
+- [x] Taube im Fuß sichtbar und schön machen – sonst weglassen
+- [x] Runde Ecken nach Canva-Beispiel (YouTube-Screenshot): Karten ~16px, Knöpfe/Filter/Etiketten als Pille, Felder 12px
+- [x] Umschalter Jährlich: „2 Monate gratis“ statt „−2 Monate“
+- [x] Prüfen auf 1920/1440/390 px, Tests, auf Branch zeigen
+
+## Ergebnis
+- Breite: Inhalt füllt den Bildschirm bis 1920 px (vorher 1200 px); Ränder wachsen
+  von 40 auf bis zu 96 px. Erst über 1920 px (z. B. 2560) bleibt der Inhalt mittig.
+- Raster, Kreuze und seitliche Rahmenlinien sind entfernt (`PlusPattern` gelöscht,
+  tote Klassen `frame-lines`, `plus-grid`, `cross` raus).
+- Taube: Vorher war nur die Flügelspitze bei 6 % zu sehen. Jetzt ist die ganze Taube
+  mit Kopf und Flügeln zu sehen, bei 14 %, und sie läuft nach unten weich aus
+  (`.wasserzeichen`). Vier Varianten wurden verglichen; diese war die klarste.
+- Ecken:
+  - Tokens `--radius-card` 16 px, `--radius-field` 12 px und `--radius-control` als Pille.
+  - Gerundet sind Karten, Boxen, Knöpfe, Filter, Etiketten, Umschalter, Sperrbalken,
+    die Markierung „Investieren“, der Sprunglink, Chat und Cookie-Banner.
+  - Die E-Mail-Vorlagen sind ebenfalls gerundet; klassisches Outlook bleibt eckig.
+- Prüfskript: keine eckigen Kästen mehr auf 19 Seiten, im Kundenkonto und im Admin-Bereich.
+- Tests grün:
+  - Bestellung, Kündigung und Widerruf (Desktop und Handy).
+  - Paywall-Filter, Filterleiste und Paketbox (320–1280 px).
+  - Keine seitliche Verschiebung zwischen 1024 und 2560 px.
+- Neuer Text zur Freigabe: „2 Monate gratis“ (Umschalter Jährlich).

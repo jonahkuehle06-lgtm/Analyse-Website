@@ -91,7 +91,7 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
 
       {/* Der Balken */}
       <div className="relative h-11">
-        <div className="absolute inset-0 flex gap-px overflow-hidden">
+        <div className="absolute inset-0 flex gap-px overflow-hidden rounded-[var(--radius-field)]">
           {abschnitte.map(({ stufe, breite }) => (
             <span
               key={stufe}

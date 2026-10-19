@@ -46,7 +46,7 @@ export default function SignalFilter({ active }: { active: SignalLevel | null })
       <Link
         href="/analysen"
         aria-current={active === null ? "true" : undefined}
-        className={`inline-flex min-h-10 shrink-0 items-center border px-4 text-sm whitespace-nowrap transition-colors duration-200 ${
+        className={`inline-flex min-h-10 shrink-0 items-center rounded-full border px-4 text-sm whitespace-nowrap transition-colors duration-200 ${
           active === null
             ? "border-[var(--color-platinum)] bg-[var(--color-platinum)] font-medium text-[var(--color-ink)]"
             : "border-[var(--color-line-strong)] text-[var(--color-mist)] hover:border-[var(--color-platinum)] hover:text-[var(--color-platinum)]"
@@ -62,7 +62,7 @@ export default function SignalFilter({ active }: { active: SignalLevel | null })
             key={level}
             href={`/analysen?signal=${level}`}
             aria-current={isActive ? "true" : undefined}
-            className={`inline-flex min-h-10 shrink-0 items-center gap-2 border px-4 text-sm whitespace-nowrap transition-colors duration-200 ${
+            className={`inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm whitespace-nowrap transition-colors duration-200 ${
               isActive
                 ? "font-medium"
                 : "border-[var(--color-line-strong)] text-[var(--color-mist)] hover:border-[var(--color-mist)] hover:text-[var(--color-platinum)]"

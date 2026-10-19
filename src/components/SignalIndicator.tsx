@@ -46,7 +46,7 @@ export default function SignalIndicator({
           return (
             <span
               key={step}
-              className={`${barHeight} flex-1 transition-colors duration-300`}
+              className={`${barHeight} flex-1 rounded-full transition-colors duration-300`}
               style={{
                 backgroundColor: active ? meta.color : "var(--color-line-strong)",
               }}

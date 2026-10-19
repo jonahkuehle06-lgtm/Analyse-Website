@@ -97,7 +97,7 @@ export default function ChatWidget() {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Assistent schließen" : "Assistent öffnen"}
         aria-expanded={open}
-        className="fixed right-4 bottom-4 z-[70] flex print:hidden h-14 w-14 items-center justify-center border border-[var(--color-line-strong)] bg-[var(--color-anthracite-2)] shadow-[var(--shadow-overlay)] transition-colors duration-200 hover:border-[var(--color-platinum)] hover:bg-[var(--color-anthracite-3)] sm:right-6 sm:bottom-6"
+        className="fixed right-4 bottom-4 z-[70] flex print:hidden h-14 w-14 items-center justify-center rounded-full border border-[var(--color-line-strong)] bg-[var(--color-anthracite-2)] shadow-[var(--shadow-overlay)] transition-colors duration-200 hover:border-[var(--color-platinum)] hover:bg-[var(--color-anthracite-3)] sm:right-6 sm:bottom-6"
       >
         {open ? (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -156,7 +156,7 @@ export default function ChatWidget() {
                     key={s}
                     type="button"
                     onClick={() => send(s)}
-                    className="min-h-10 border border-[var(--color-line-strong)] px-3.5 py-2 text-left text-sm text-[var(--color-mist)] transition-colors hover:border-[var(--color-platinum)] hover:text-[var(--color-platinum)]"
+                    className="min-h-10 rounded-full border border-[var(--color-line-strong)] px-4 py-2 text-left text-sm text-[var(--color-mist)] transition-colors hover:border-[var(--color-platinum)] hover:text-[var(--color-platinum)]"
                   >
                     {s}
                   </button>
@@ -169,7 +169,7 @@ export default function ChatWidget() {
                 <div
                   className={
                     m.role === "user"
-                      ? "max-w-[85%] bg-[var(--color-anthracite-3)] px-4 py-2.5 text-[0.9375rem] text-[var(--color-platinum)]"
+                      ? "max-w-[85%] rounded-[var(--radius-field)] bg-[var(--color-anthracite-3)] px-4 py-2.5 text-[0.9375rem] text-[var(--color-platinum)]"
                       : "text-[0.9375rem] leading-relaxed whitespace-pre-wrap text-[var(--color-mist-2)]"
                   }
                 >

@@ -69,7 +69,7 @@ export default async function AnalyseDetail({
   const meta = SIGNALS[analysis.signal];
 
   return (
-    <div className="frame frame-lines">
+    <div className="frame">
       <div className="mx-auto max-w-4xl py-10 sm:py-14">
         <Link href="/analysen" className="btn-link !border-transparent text-[0.9375rem] text-[var(--color-mist)] hover:!border-[var(--color-mist)] hover:text-[var(--color-platinum)]">
           <span aria-hidden="true">←</span>

@@ -58,7 +58,7 @@ export default function CookiesPage() {
           {COOKIES.map((cookie) => (
             <div
               key={cookie.name}
-              className="border border-[var(--color-line)] bg-[var(--color-anthracite)] p-5"
+              className="rounded-[var(--radius-field)] border border-[var(--color-line)] bg-[var(--color-anthracite)] p-5"
             >
               <div className="flex items-baseline justify-between gap-3">
                 <code className="text-sm text-[var(--color-platinum)]">

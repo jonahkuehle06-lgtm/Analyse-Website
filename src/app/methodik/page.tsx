@@ -50,7 +50,7 @@ const PILLARS = [
 
 export default function MethodikPage() {
   return (
-    <div className="frame frame-lines">
+    <div className="frame">
       <div className="py-14 sm:py-20">
         <PageHeader
           label="Vorgehen"
@@ -171,7 +171,7 @@ export default function MethodikPage() {
           </p>
         </section>
 
-        <section className="section-paper mt-20 p-8 sm:mt-24 sm:p-10">
+        <section className="section-paper mt-20 rounded-[var(--radius-card)] p-8 sm:mt-24 sm:p-10">
           <h2 className="display text-[length:var(--step-h3)] text-[var(--color-platinum)]">
             Grenzen der Methodik
           </h2>

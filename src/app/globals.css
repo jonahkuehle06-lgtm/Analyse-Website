@@ -58,9 +58,11 @@
   --text-lg: 1.1875rem;
   --text-lg--line-height: 1.6;
 
-  /* Radien: eckig und ruhig */
-  --radius-card: 2px;
-  --radius-control: 2px;
+  /* Radien: weich wie im Canva-Beispiel - Karten deutlich gerundet,
+     Knoepfe, Filter und Etiketten als Pille */
+  --radius-card: 16px;
+  --radius-field: 12px;
+  --radius-control: 999px;
 
   /* Bewegung */
   --ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -70,7 +72,8 @@
   color-scheme: dark;
 
   /* Raster und Abstaende */
-  --frame: 75rem;
+  /* Volle Breite bis Full HD; die Raender wachsen mit dem Bildschirm */
+  --frame: 120rem;
   --gutter: 1.25rem;
   --section-y: clamp(4.5rem, 9vw, 8rem);
 
@@ -91,9 +94,6 @@
 
   --focus: var(--color-platinum);
 
-  /* Feines Pluszeichen-Raster (nach gauss.ag) */
-  --plus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 19v10M19 24h10' stroke='%23EFEAE1' stroke-opacity='0.1' stroke-width='1'/%3E%3C/svg%3E");
-
   /* Nur noch fuer feine Platin-Haarlinien; Text bekommt keinen Verlauf mehr */
   --platinum-gradient: linear-gradient(118deg, #f6f2ea 0%, #d9d3c7 40%, #a9a296 62%, #efeae1 100%);
 }
@@ -103,6 +103,9 @@
 }
 @media (min-width: 1024px) {
   :root { --gutter: 2.5rem; }
+}
+@media (min-width: 1280px) {
+  :root { --gutter: clamp(2.5rem, 4.5vw, 6rem); }
 }
 
 /* Grundlagen: nach dem Tailwind-Preflight, vor allen Bausteinen */
@@ -183,6 +186,7 @@ body {
   color: var(--color-ink);
   padding: 0 0.12em 0.02em;
   margin: 0 0.03em;
+  border-radius: 0.12em;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -209,7 +213,8 @@ body {
   align-items: center;
   gap: 0.5rem;
   border: 1px solid var(--color-line-strong);
-  padding: 0.4375rem 0.6875rem;
+  border-radius: 999px;
+  padding: 0.4375rem 0.875rem;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.16em;
@@ -248,6 +253,7 @@ body {
   left: 0.75rem;
   z-index: 100;
   padding: 0.75rem 1.125rem;
+  border-radius: var(--radius-control);
   background: var(--color-platinum);
   color: var(--color-ink);
   font-weight: 600;
@@ -303,35 +309,6 @@ body {
   padding-inline: var(--gutter);
 }
 
-@media (min-width: 1024px) {
-  .frame-lines {
-    border-inline: 1px solid var(--color-line);
-  }
-}
-
-.plus-grid {
-  background-image: var(--plus);
-  background-size: 48px 48px;
-  background-position: center top;
-}
-
-/* Fadenkreuz an den Kreuzungspunkten der Rahmenlinien */
-.cross {
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  color: var(--color-muted);
-  pointer-events: none;
-}
-.cross::before,
-.cross::after {
-  content: "";
-  position: absolute;
-  background: currentColor;
-}
-.cross::before { left: 7px; top: 0; width: 1px; height: 15px; }
-.cross::after { top: 7px; left: 0; width: 15px; height: 1px; }
-
 .section {
   padding-block: var(--section-y);
 }
@@ -358,7 +335,6 @@ body {
   --color-anthracite: #e6e1d8;
   --color-anthracite-2: #ddd7cc;
   --focus: #141414;
-  --plus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 19v10M19 24h10' stroke='%23141414' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E");
 }
 
 /* Dunkle Insel innerhalb eines hellen Abschnitts */
@@ -379,11 +355,13 @@ body {
 
 .hairline {
   border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
 }
 
 .surface {
   background: var(--color-anthracite);
   border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
 }
 
 .surface-hover {
@@ -486,7 +464,7 @@ body {
 .field {
   width: 100%;
   min-height: 3rem;
-  border-radius: var(--radius-control);
+  border-radius: var(--radius-field);
   border: 1px solid var(--color-line-strong);
   background: color-mix(in srgb, var(--color-platinum) 3%, transparent);
   padding: 0.75rem 0.9375rem;
@@ -560,6 +538,12 @@ input[type="radio"] {
   filter: blur(7px);
   user-select: none;
   pointer-events: none;
+}
+
+/* Taube im Fuss: laeuft nach unten weich aus statt hart abgeschnitten */
+.wasserzeichen {
+  -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent);
+  mask-image: linear-gradient(to bottom, #000 35%, transparent);
 }
 
 @keyframes pulse-soft {

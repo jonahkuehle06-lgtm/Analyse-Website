@@ -17,7 +17,7 @@ export default function Fehler({
 
   return (
     <section className="border-b border-[var(--color-line)]">
-      <div className="frame frame-lines">
+      <div className="frame">
         <div className="flex min-h-[60vh] flex-col justify-center py-20">
           <span className="tag self-start">Fehler</span>
           <h1 className="display mt-6 text-[length:var(--step-h1)] text-[var(--color-platinum)]">

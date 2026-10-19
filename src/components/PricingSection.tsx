@@ -24,7 +24,7 @@ export default function PricingSection({
 
   return (
     <section id="pakete" className="border-b border-[var(--color-line)]">
-      <div className="frame frame-lines section">
+      <div className="frame section">
         <div data-reveal className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           {heading ? (
             <div className="max-w-2xl">
@@ -45,7 +45,7 @@ export default function PricingSection({
           {/* Intervall-Umschalter */}
           <div className="flex flex-col gap-3 lg:items-end">
             <div
-              className="inline-flex self-start border border-[var(--color-line-strong)] p-1 lg:self-auto"
+              className="inline-flex self-start rounded-full border border-[var(--color-line-strong)] p-1 lg:self-auto"
               role="tablist"
               aria-label="Abrechnungszeitraum"
             >
@@ -60,7 +60,7 @@ export default function PricingSection({
                   role="tab"
                   aria-selected={interval === opt.key}
                   onClick={() => setInterval(opt.key)}
-                  className={`min-h-11 px-5 text-[0.9375rem] transition-colors duration-200 ${
+                  className={`min-h-11 rounded-full px-5 text-[0.9375rem] transition-colors duration-200 ${
                     interval === opt.key
                       ? "bg-[var(--color-platinum)] font-semibold text-[var(--color-ink)]"
                       : "text-[var(--color-mist)] hover:text-[var(--color-platinum)]"
@@ -73,7 +73,7 @@ export default function PricingSection({
                         interval === "yearly" ? "text-[var(--color-ink)]" : "text-[var(--color-silver)]"
                       }`}
                     >
-                      −{YEARLY_DISCOUNT_MONTHS} Monate
+                      {YEARLY_DISCOUNT_MONTHS} Monate gratis
                     </span>
                   )}
                 </button>
@@ -86,7 +86,7 @@ export default function PricingSection({
           </div>
         </div>
 
-        <div data-reveal className="mt-12 grid border border-[var(--color-line)] md:grid-cols-3">
+        <div data-reveal className="mt-12 grid overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] md:grid-cols-3">
           {PLAN_ORDER.map((planId, index) => {
             const plan = PLANS[planId];
             const price = interval === "monthly" ? plan.priceMonthly : plan.priceYearly;

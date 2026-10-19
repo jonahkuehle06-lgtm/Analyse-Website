@@ -49,7 +49,7 @@ export default async function AnalysenPage({
   const leer = all.length === 0 || (selected !== null && frei.length === 0);
 
   return (
-    <div className="frame frame-lines">
+    <div className="frame">
       <div className="py-14 sm:py-20">
         <PageHeader
           label="Research"
@@ -114,7 +114,7 @@ export default async function AnalysenPage({
             ))}
             {hinweis && (
               <div
-                className={`section-paper @container flex flex-col justify-between gap-8 p-8 sm:p-10 ${
+                className={`section-paper @container flex flex-col justify-between gap-8 rounded-[var(--radius-card)] p-8 sm:p-10 ${
                   frei.length === 0
                     ? "md:col-span-2 lg:col-span-3"
                     : frei.length % 3 === 1

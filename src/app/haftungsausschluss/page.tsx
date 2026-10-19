@@ -110,13 +110,13 @@ const PARAGRAPHS: { heading?: string; body: React.ReactNode }[] = [
 
 export default function HaftungsausschlussPage() {
   return (
-    <div className="frame frame-lines">
+    <div className="frame">
       <div className="mx-auto max-w-5xl py-14 sm:py-20">
       <LegalReviewNote />
 
       {/* Tafel im Stil klassischer Disclaimer-Seiten */}
       <article
-        className="relative overflow-hidden border border-[var(--color-line)] bg-[var(--color-anthracite)] px-6 py-10 sm:px-12 sm:py-14"
+        className="relative overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-anthracite)] px-6 py-10 sm:px-12 sm:py-14"
       >
 
         <header className="relative flex flex-wrap items-start justify-between gap-6 border-b border-[var(--color-line)] pb-8">

@@ -132,7 +132,7 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
       {open && (
         <div
           id="mobile-menu"
-          className="plus-grid fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col overflow-y-auto border-t border-[var(--color-line)] bg-[var(--color-ink)] px-[var(--gutter)] pb-8 md:hidden"
+          className="fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col overflow-y-auto border-t border-[var(--color-line)] bg-[var(--color-ink)] px-[var(--gutter)] pb-8 md:hidden"
         >
           <nav aria-label="Hauptnavigation" className="mt-4 flex flex-col">
             {mobileItems.map((item, i) => (

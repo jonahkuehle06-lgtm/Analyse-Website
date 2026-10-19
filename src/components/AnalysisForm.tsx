@@ -159,7 +159,7 @@ export default function AnalysisForm({
                   type="button"
                   onClick={() => setSignal(level)}
                   aria-pressed={selected}
-                  className="flex flex-col items-start gap-2.5 border p-3.5 text-left transition-all"
+                  className="flex flex-col items-start gap-2.5 rounded-[var(--radius-field)] border p-3.5 text-left transition-all"
                   style={{
                     borderColor: selected ? meta.color : "var(--color-line)",
                     backgroundColor: selected ? `${meta.color}12` : "transparent",
@@ -289,7 +289,7 @@ export default function AnalysisForm({
           ].map(([schluessel, titel, farbe]) => (
             <div
               key={schluessel}
-              className="border border-[var(--color-line)] p-4"
+              className="rounded-[var(--radius-field)] border border-[var(--color-line)] p-4"
             >
               <p className="flex items-center gap-2.5 text-sm font-medium text-[var(--color-platinum)]">
                 <span

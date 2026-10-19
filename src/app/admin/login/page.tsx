@@ -15,7 +15,7 @@ export default async function AdminLoginPage() {
   );
 
   return (
-    <div className="plus-grid min-h-screen">
+    <div className="min-h-screen">
     <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center bg-[var(--color-ink)] px-[var(--gutter)] py-16 sm:border-x sm:border-[var(--color-line)] sm:px-10">
       <Wordmark />
       <span className="tag mt-12 self-start">Verwaltung</span>

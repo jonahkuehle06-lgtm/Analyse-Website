@@ -54,7 +54,7 @@ export default async function AdminPage({
 
       {(gespeichert || geloescht) && (
         <p
-          className="mt-6 border border-[rgba(123,227,161,0.3)] bg-[rgba(123,227,161,0.07)] px-5 py-3 text-sm text-[var(--color-success)]"
+          className="mt-6 rounded-[var(--radius-field)] border border-[rgba(123,227,161,0.3)] bg-[rgba(123,227,161,0.07)] px-5 py-3 text-sm text-[var(--color-success)]"
           role="status"
         >
           {gespeichert
@@ -66,7 +66,7 @@ export default async function AdminPage({
       {/* Hinweise zur Konfiguration */}
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         {driver === "local" && (
-          <div className="border border-[rgba(232,198,75,0.3)] bg-[rgba(232,198,75,0.06)] px-5 py-4 text-sm leading-relaxed text-[var(--color-warning)]">
+          <div className="rounded-[var(--radius-field)] border border-[rgba(232,198,75,0.3)] bg-[rgba(232,198,75,0.06)] px-5 py-4 text-sm leading-relaxed text-[var(--color-warning)]">
             <strong className="font-semibold">Lokaler Testbetrieb.</strong> Die Daten
             liegen in <code>data/store.local.json</code>. Für den Live-Betrieb bitte
             Supabase hinterlegen — sonst gehen Änderungen beim nächsten Deployment
@@ -74,7 +74,7 @@ export default async function AdminPage({
           </div>
         )}
         {!stripeConfigured() && (
-          <div className="border border-[rgba(232,198,75,0.3)] bg-[rgba(232,198,75,0.06)] px-5 py-4 text-sm leading-relaxed text-[var(--color-warning)]">
+          <div className="rounded-[var(--radius-field)] border border-[rgba(232,198,75,0.3)] bg-[rgba(232,198,75,0.06)] px-5 py-4 text-sm leading-relaxed text-[var(--color-warning)]">
             <strong className="font-semibold">Stripe ist nicht verbunden.</strong> Ohne{" "}
             <code>STRIPE_SECRET_KEY</code> und Preis-IDs lässt sich kein Paket buchen.
           </div>
@@ -98,7 +98,7 @@ export default async function AdminPage({
 
       {/* Verteilung der Signalstufen */}
       {analyses.length > 0 && (
-        <div className="mt-8 grid gap-px overflow-hidden border border-[var(--color-line)] bg-[var(--color-line)] grid-cols-2 sm:grid-cols-5">
+        <div className="mt-8 grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-line)] bg-[var(--color-line)] grid-cols-2 sm:grid-cols-5">
           {([1, 2, 3, 4, 5] as const).map((level) => (
             <div key={level} className="bg-[var(--color-anthracite)] px-5 py-4">
               <span

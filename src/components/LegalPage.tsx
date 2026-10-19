@@ -19,7 +19,7 @@ export default function LegalPage({
   children: React.ReactNode;
 }) {
   return (
-    <div className="frame frame-lines">
+    <div className="frame">
       <div className="mx-auto max-w-4xl py-14 sm:py-20">
         <PageHeader label={eyebrow} title={title} lead={intro} />
 

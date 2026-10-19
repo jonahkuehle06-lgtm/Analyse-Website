@@ -28,7 +28,7 @@ const linkClass =
 export default function SiteFooter() {
   return (
     <footer className="cv-auto print:hidden relative overflow-hidden border-t border-[var(--color-line)] bg-[var(--color-void)]">
-      <div className="frame frame-lines">
+      <div className="frame">
         <div className="grid gap-12 pt-16 pb-12 md:grid-cols-[1.6fr_1fr_1fr] md:pt-20">
           <div>
             <Wordmark />
@@ -106,11 +106,15 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        {/* Die Taube als grosses, angeschnittenes Wasserzeichen */}
-        <div aria-hidden="true" className="relative h-[clamp(120px,20vw,260px)] overflow-hidden">
+        {/* Die Taube als grosses Wasserzeichen: Kopf und Fluegel bleiben
+            sichtbar, nach unten laeuft sie weich aus */}
+        <div
+          aria-hidden="true"
+          className="wasserzeichen relative h-[calc(min(600px,88vw)*0.66)] overflow-hidden"
+        >
           <DoveMark
             solid
-            className="absolute top-2 left-1/2 w-[min(720px,92vw)] -translate-x-1/2 text-[var(--color-platinum)] opacity-[0.06]"
+            className="absolute top-4 left-1/2 w-[min(600px,88vw)] -translate-x-1/2 text-[var(--color-platinum)] opacity-[0.14]"
           />
         </div>
       </div>
