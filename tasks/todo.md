@@ -54,3 +54,4 @@ Pflicht-Häkchen zum sofortigen Beginn (Widerrufsrecht erlischt).
   - Paywall-Filter, Filterleiste und Paketbox (320–1280 px).
   - Keine seitliche Verschiebung zwischen 1024 und 2560 px.
 - Neuer Text zur Freigabe: „2 Monate gratis“ (Umschalter Jährlich).
+- Freigabe „passt“ am 19.10.2026 – live auf `main`.
