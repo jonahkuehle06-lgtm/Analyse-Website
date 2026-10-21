@@ -55,3 +55,15 @@ Pflicht-Häkchen zum sofortigen Beginn (Widerrufsrecht erlischt).
   - Keine seitliche Verschiebung zwischen 1024 und 2560 px.
 - Neuer Text zur Freigabe: „2 Monate gratis“ (Umschalter Jährlich).
 - Freigabe „passt“ am 19.10.2026 – live auf `main`.
+
+---
+
+# Runde 5: Erste Analyse sperren, neue Preise (21.10.2026)
+
+## Plan
+- [ ] Leseprobe abschaffen: Ohne Paket ist keine Analyse frei (Liste, Startseite, Detailseite)
+- [ ] Texte, die die Leseprobe erwähnen, anpassen – neue Texte zur Freigabe auflisten
+- [ ] Preise: Basic 9 €, Black 24 €, Platin 49 € (Jahrespreise folgen „2 Monate gratis“)
+- [ ] Beschreibungen: Basic „Für den Einstieg in unsere Analysen“, Black „Für eine diversifizierte Auswahl an Aktien“, Platin unverändert
+- [ ] Stripe-Anbindung prüfen (feste Preis-IDs oder Beträge aus der Konfiguration?)
+- [ ] Build, Tests (Paywall ohne Leseprobe), Screenshots; auf Branch zeigen, `main` erst nach „passt“
