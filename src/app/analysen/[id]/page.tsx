@@ -10,9 +10,6 @@ import { PLANS, SIGNALS, planLimit } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
-/** Ohne Abo ist die neueste Analyse als Leseprobe frei - wie in der Übersicht. */
-const FREE_PREVIEW = 1;
-
 function geld(wert: number | null, waehrung: string): string {
   if (wert === null || Number.isNaN(wert)) return "—";
   return new Intl.NumberFormat("de-DE", {
@@ -62,7 +59,7 @@ export default async function AnalyseDetail({
   // Dieselbe Prüfung wie in der Übersicht: freigeschaltet sind die N
   // aktuellsten Analysen. Die Detailseite darf die Paywall nicht umgehen.
   const aktiv = hasActiveSubscription(user);
-  const limit = aktiv ? planLimit(user!.plan) : FREE_PREVIEW;
+  const limit = aktiv ? planLimit(user!.plan) : 0;
   const frei = new Set(alle.slice(0, limit).map((a) => a.id));
   if (!frei.has(analysis.id)) redirect("/preise?gesperrt=1");
 

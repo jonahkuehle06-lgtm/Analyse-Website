@@ -16,9 +16,6 @@ export const metadata: Metadata = {
     "Alle aktuellen Aktienanalysen mit Signalstärke, Kurzbegründung und Kursziel.",
 };
 
-/** Ohne Abo ist die neueste Analyse als Leseprobe frei zugänglich. */
-const FREE_PREVIEW = 1;
-
 export default async function AnalysenPage({
   searchParams,
 }: {
@@ -28,7 +25,8 @@ export default async function AnalysenPage({
   const [all, user] = await Promise.all([listAnalyses(), currentUser()]);
 
   const active = hasActiveSubscription(user);
-  const limit = active ? planLimit(user!.plan) : FREE_PREVIEW;
+  /* Ohne Abo ist keine Analyse frei. */
+  const limit = active ? planLimit(user!.plan) : 0;
 
   /** Freigeschaltet sind immer die N aktuellsten Analysen. */
   const unlockedIds = new Set(all.slice(0, limit).map((a) => a.id));
@@ -59,7 +57,7 @@ export default async function AnalysenPage({
               {all.length} Analysen im Bestand.{" "}
               {active
                 ? `Dein Paket ${PLANS[user!.plan!].name} schaltet die ${limit} aktuellsten frei.`
-                : "Die neueste Analyse ist als Leseprobe frei zugänglich."}
+                : "Mit einem Paket schaltest du die aktuellsten frei."}
             </>
           }
         >
@@ -98,16 +96,19 @@ export default async function AnalysenPage({
           <p className="mt-16 text-center text-[0.9375rem] text-[var(--color-mist)]">
             {all.length === 0
               ? "Es wurden noch keine Analysen veröffentlicht."
-              : hinweis
-                ? "Unter den freigeschalteten Analysen ist aktuell keine mit dieser Signalstufe."
-                : "Für diese Signalstufe liegt aktuell keine Analyse vor."}
+              : !active
+                ? "Der Filter durchsucht nur freigeschaltete Analysen – mit einem Paket schaltest du sie frei."
+                : hinweis
+                  ? "Unter den freigeschalteten Analysen ist aktuell keine mit dieser Signalstufe."
+                  : "Für diese Signalstufe liegt aktuell keine Analyse vor."}
           </p>
         )}
 
         {(frei.length > 0 || hinweis) && (
-          /* Freigeschaltete Karten. Sind es weniger als drei (etwa die
-             Leseprobe), fuellt der Paket-Hinweis die freie Flaeche daneben;
-             sonst steht er als eigene Zeile darunter. */
+          /* Freigeschaltete Karten. Sind es weniger als drei (etwa beim
+             Filtern), fuellt der Paket-Hinweis die freie Flaeche daneben;
+             sonst steht er als eigene Zeile darunter. Ohne Abo ist er
+             allein und volle Breite. */
           <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {frei.map((analysis) => (
               <AnalysisCard key={analysis.id} analysis={analysis} headingLevel={2} />

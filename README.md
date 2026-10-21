@@ -128,9 +128,9 @@ Abrechnung**; bei jährlicher Zahlung entfallen zwei Monatsbeiträge.
 
 | Paket | Analysen | monatlich | jährlich |
 |---|---:|---:|---:|
-| Basic | 10 | 29 € | 290 € |
-| Black | 25 | 59 € | 590 € |
-| Platin | 50 | 99 € | 990 € |
+| Basic | 10 | 9 € | 90 € |
+| Black | 25 | 24 € | 240 € |
+| Platin | 50 | 49 € | 490 € |
 
 Freigeschaltet werden immer die **aktuellsten** Analysen des Bestands. Erscheint
 eine neue Analyse, rückt sie automatisch in den Zugang aller Kunden nach.
@@ -319,7 +319,7 @@ das Szenario-Diagramm und der Kurszonen-Balken.
 
 **Die Paywall gilt dort genauso.** Die Detailseite prueft serverseitig
 dieselbe Regel wie die Uebersicht: freigeschaltet sind die N aktuellsten
-Analysen des gebuchten Pakets, ohne Abo nur die neueste als Leseprobe.
+Analysen des gebuchten Pakets, ohne Abo keine.
 Wer eine gesperrte Kennung direkt aufruft, landet auf `/preise`. Gesperrte
 Karten fuehren ebenfalls nur zu den Paketen, nie auf die Detailseite. Die
 Seiten sind zudem auf `noindex` gesetzt - bezahlte Inhalte gehoeren nicht in

@@ -73,10 +73,10 @@ export const PLANS: Record<PlanId, PlanMeta> = {
   basic: {
     id: "basic",
     name: "Basic",
-    tagline: "Der Einstieg in unsere laufende Berichterstattung.",
+    tagline: "Für den Einstieg in unsere Analysen.",
     limit: 10,
-    priceMonthly: 29,
-    priceYearly: 290,
+    priceMonthly: 9,
+    priceYearly: 90,
     features: [
       "Zugriff auf 10 Analysen",
       "Signalstärke inkl. Farbcode",
@@ -87,10 +87,10 @@ export const PLANS: Record<PlanId, PlanMeta> = {
   black: {
     id: "black",
     name: "Black",
-    tagline: "Für Anleger, die den Markt in der Breite verfolgen.",
+    tagline: "Für eine diversifizierte Auswahl an Aktien.",
     limit: 25,
-    priceMonthly: 59,
-    priceYearly: 590,
+    priceMonthly: 24,
+    priceYearly: 240,
     highlight: true,
     features: [
       "Zugriff auf 25 Analysen",
@@ -105,8 +105,8 @@ export const PLANS: Record<PlanId, PlanMeta> = {
     name: "Platin",
     tagline: "Das vollständige Research-Universum ohne Limit im Paketumfang.",
     limit: 50,
-    priceMonthly: 99,
-    priceYearly: 990,
+    priceMonthly: 49,
+    priceYearly: 490,
     features: [
       "Zugriff auf 50 Analysen",
       "Signalstärke inkl. Farbcode",

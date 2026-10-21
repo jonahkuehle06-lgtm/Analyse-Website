@@ -170,8 +170,8 @@ export default async function HomePage() {
             </div>
 
             <div data-reveal className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {preview.map((analysis, index) =>
-                unlocked || index === 0 ? (
+              {preview.map((analysis) =>
+                unlocked ? (
                   <AnalysisCard key={analysis.id} analysis={analysis} />
                 ) : (
                   <LockedAnalysisCard key={analysis.id} analysis={analysis} />
@@ -181,8 +181,7 @@ export default async function HomePage() {
 
             {!unlocked && (
               <p className="mt-8 text-sm text-[var(--color-mist)]">
-                Die erste Analyse ist frei einsehbar. Alle weiteren schaltest du mit einem
-                Paket frei.
+                Alle Analysen schaltest du mit einem Paket frei.
               </p>
             )}
           </div>

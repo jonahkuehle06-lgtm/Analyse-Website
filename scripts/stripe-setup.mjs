@@ -19,9 +19,9 @@ if (!key) {
 const stripe = new Stripe(key);
 
 const PLANS = [
-  { id: "basic", name: "Basic", limit: 10, monthly: 2900, yearly: 29000 },
-  { id: "black", name: "Black", limit: 25, monthly: 5900, yearly: 59000 },
-  { id: "platin", name: "Platin", limit: 50, monthly: 9900, yearly: 99000 },
+  { id: "basic", name: "Basic", limit: 10, monthly: 900, yearly: 9000 },
+  { id: "black", name: "Black", limit: 25, monthly: 2400, yearly: 24000 },
+  { id: "platin", name: "Platin", limit: 50, monthly: 4900, yearly: 49000 },
 ];
 
 const ENV_NAMES = {
@@ -35,9 +35,11 @@ async function findProduct(planId) {
   return list.data[0] ?? null;
 }
 
-async function findPrice(productId, interval) {
+async function findPrice(productId, interval, amount) {
   const prices = await stripe.prices.list({ product: productId, active: true, limit: 100 });
-  return prices.data.find((p) => p.recurring?.interval === interval) ?? null;
+  // Nur einen Preis mit genau diesem Betrag wiederverwenden - bei geaenderten
+  // Betraegen wird ein neuer angelegt
+  return prices.data.find((p) => p.recurring?.interval === interval && p.unit_amount === amount) ?? null;
 }
 
 const lines = [];
@@ -59,7 +61,7 @@ for (const plan of PLANS) {
     ["month", plan.monthly, ENV_NAMES[plan.id][0]],
     ["year", plan.yearly, ENV_NAMES[plan.id][1]],
   ]) {
-    let price = await findPrice(product.id, interval);
+    let price = await findPrice(product.id, interval, amount);
     if (!price) {
       price = await stripe.prices.create({
         product: product.id,
