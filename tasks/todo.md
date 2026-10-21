@@ -61,9 +61,24 @@ Pflicht-Häkchen zum sofortigen Beginn (Widerrufsrecht erlischt).
 # Runde 5: Erste Analyse sperren, neue Preise (21.10.2026)
 
 ## Plan
-- [ ] Leseprobe abschaffen: Ohne Paket ist keine Analyse frei (Liste, Startseite, Detailseite)
-- [ ] Texte, die die Leseprobe erwähnen, anpassen – neue Texte zur Freigabe auflisten
-- [ ] Preise: Basic 9 €, Black 24 €, Platin 49 € (Jahrespreise folgen „2 Monate gratis“)
-- [ ] Beschreibungen: Basic „Für den Einstieg in unsere Analysen“, Black „Für eine diversifizierte Auswahl an Aktien“, Platin unverändert
-- [ ] Stripe-Anbindung prüfen (feste Preis-IDs oder Beträge aus der Konfiguration?)
-- [ ] Build, Tests (Paywall ohne Leseprobe), Screenshots; auf Branch zeigen, `main` erst nach „passt“
+- [x] Leseprobe abschaffen: Ohne Paket ist keine Analyse frei (Liste, Startseite, Detailseite)
+- [x] Texte, die die Leseprobe erwähnen, anpassen – neue Texte zur Freigabe auflisten
+- [x] Preise: Basic 9 €, Black 24 €, Platin 49 € (Jahrespreise folgen „2 Monate gratis“)
+- [x] Beschreibungen: Basic „Für den Einstieg in unsere Analysen“, Black „Für eine diversifizierte Auswahl an Aktien“, Platin unverändert
+- [x] Stripe-Anbindung prüfen (feste Preis-IDs oder Beträge aus der Konfiguration?)
+- [x] Build, Tests (Paywall ohne Leseprobe), Screenshots; auf Branch zeigen, `main` erst nach „passt“
+
+## Ergebnis
+- Ohne Paket ist keine Analyse frei. Die Detailseite leitet Gäste auf `/preise` um.
+  Die Startseite zeigt drei gesperrte Karten.
+- Preise 9/24/49 € im Monat und 90/240/490 € im Jahr (10 Monatsbeiträge). § 2 der AGB
+  übernimmt sie automatisch, deshalb ist der Stand der Rechtstexte jetzt der 21.10.2026.
+- Stripe rechnet über feste Preis-IDs. Neue Preise müssen in Stripe angelegt und die
+  IDs in Vercel ersetzt werden. `stripe:setup` legt bei geänderten Beträgen jetzt
+  wirklich neue Preise an.
+- Neue Texte zur Freigabe:
+  - „Mit einem Paket schaltest du die aktuellsten frei.“
+  - „Alle Analysen schaltest du mit einem Paket frei.“
+  - „Der Filter durchsucht nur freigeschaltete Analysen – mit einem Paket schaltest du sie frei.“
+- Recherche und Prüfung liefen über Unteragenten. Build und alle Tests sind grün,
+  der Paywall-Test läuft jetzt ohne Leseprobe.
