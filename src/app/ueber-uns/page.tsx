@@ -5,7 +5,7 @@ import PageHeader from "@/components/PageHeader";
 export const metadata: Metadata = {
   title: "Über uns",
   description:
-    "Finanzielle Freiheit ist für jeden: wer hinter PAX Solutions steht und wie wir Unternehmen analysieren.",
+    "Finanzielle Freiheit ist für jeden. Analysen und Research zu Aktien.",
 };
 
 /**
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 const TITEL = "Finanzielle Freiheit ist für jeden.";
 
 const EINLEITUNG =
-  "Wir bei Pax Solutions haben es uns zur Aufgabe gemacht, hohe Renditen und finanzielle Bildung für jeden zugänglich zu machen. Denn jeder Mensch sollte die Möglichkeit haben, ein selbstbestimmtes Leben zu führen. Die richtigen Investmententscheidungen lassen sich nur mit den richtigen Informationen treffen. Wir bereiten diese Informationen so auf, dass fundierte Entscheidungen in kurzer Zeit getroffen werden können.";
+  "Wir bei Pax Solutions haben es uns zur Aufgabe gemacht, hohe Renditen und finanzielle Bildung für jeden zugänglich zu machen. Denn jeder Mensch sollte die Möglichkeit haben, ein finanziell freies und somit selbstbestimmtes Leben zu führen. Die richtigen Investmententscheidungen lassen sich nur mit den richtigen Informationen treffen. Wir bereiten diese Informationen so auf, dass fundierte Entscheidungen in kurzer Zeit getroffen werden können.";
 
 const ABSCHNITTE: { titel: string; absaetze: string[] }[] = [
   {
