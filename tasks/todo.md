@@ -82,3 +82,4 @@ Pflicht-Häkchen zum sofortigen Beginn (Widerrufsrecht erlischt).
   - „Der Filter durchsucht nur freigeschaltete Analysen – mit einem Paket schaltest du sie frei.“
 - Recherche und Prüfung liefen über Unteragenten. Build und alle Tests sind grün,
   der Paywall-Test läuft jetzt ohne Leseprobe.
+- Freigabe „passt“ am 22.10.2026 – live auf `main`.
