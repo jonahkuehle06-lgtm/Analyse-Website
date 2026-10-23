@@ -8,7 +8,8 @@ import type { Analysis, AnalysisInput, PlanId, SubscriptionStatus, User } from "
  * Datenschicht mit zwei Treibern:
  *
  *  - "supabase"  -> Produktion. Aktiv, sobald NEXT_PUBLIC_SUPABASE_URL und
- *                   SUPABASE_SERVICE_ROLE_KEY gesetzt sind.
+ *                   SUPABASE_SERVICE_ROLE_KEY gesetzt sind (oder die Namen,
+ *                   die die Supabase-Integration von Vercel anlegt).
  *  - "local"     -> Entwicklung/Demo. Schreibt in data/store.local.json,
  *                   damit die Seite ohne jedes Backend startet.
  *
@@ -17,10 +18,35 @@ import type { Analysis, AnalysisInput, PlanId, SubscriptionStatus, User } from "
 
 export type DbDriver = "supabase" | "local";
 
+function supabaseUrl(): string | undefined {
+  return process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+}
+
+function supabaseSchluessel(): string | undefined {
+  return process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
+}
+
 export function activeDriver(): DbDriver {
-  return process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
-    ? "supabase"
-    : "local";
+  return supabaseUrl() && supabaseSchluessel() ? "supabase" : "local";
+}
+
+/** Live-Seite auf Vercel (nicht Vorschau, nicht lokal). */
+export function istLiveSeite(): boolean {
+  return process.env.VERCEL_ENV === "production";
+}
+
+/**
+ * Auf der Live-Seite darf nichts im flüchtigen Speicher landen: Fehlt dort
+ * die Datenbank, wird eine Änderung abgelehnt statt still verworfen. Der
+ * Stripe-Webhook antwortet dann mit einem Fehler, und Stripe stellt das
+ * Ereignis später erneut zu - verloren geht nichts.
+ */
+function lokalSchreibenPruefen(): void {
+  if (istLiveSeite()) {
+    throw new Error(
+      "Die Datenbank ist nicht verbunden – die Änderung wurde nicht gespeichert.",
+    );
+  }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -77,11 +103,9 @@ let supabaseClient: SupabaseClientType | null = null;
 async function supabase(): Promise<SupabaseClientType> {
   if (supabaseClient) return supabaseClient;
   const { createClient } = await import("@supabase/supabase-js");
-  supabaseClient = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    { auth: { persistSession: false } },
-  );
+  supabaseClient = createClient(supabaseUrl()!, supabaseSchluessel()!, {
+    auth: { persistSession: false },
+  });
   return supabaseClient;
 }
 
@@ -220,6 +244,7 @@ export async function createAnalysis(input: AnalysisInput): Promise<Analysis> {
     if (error) throw new Error(`Analyse konnte nicht angelegt werden: ${error.message}`);
     return analysisFromRow(data);
   }
+  lokalSchreibenPruefen();
   const store = await readLocal();
   const analysis: Analysis = { ...input, id: randomUUID(), createdAt: now, updatedAt: now };
   store.analyses.unshift(analysis);
@@ -242,6 +267,7 @@ export async function updateAnalysis(
     if (error) throw new Error(`Analyse konnte nicht gespeichert werden: ${error.message}`);
     return data ? analysisFromRow(data) : null;
   }
+  lokalSchreibenPruefen();
   const store = await readLocal();
   const index = store.analyses.findIndex((a) => a.id === id);
   if (index === -1) return null;
@@ -262,6 +288,7 @@ export async function deleteAnalysis(id: string): Promise<void> {
     if (error) throw new Error(`Analyse konnte nicht gelöscht werden: ${error.message}`);
     return;
   }
+  lokalSchreibenPruefen();
   const store = await readLocal();
   store.analyses = store.analyses.filter((a) => a.id !== id);
   await writeLocal(store);
@@ -363,6 +390,7 @@ export async function upsertUser(email: string, patch: UserPatch = {}): Promise<
     return userFromRow(data);
   }
 
+  lokalSchreibenPruefen();
   const store = await readLocal();
   const index = store.users.findIndex((u) => u.email === normalized);
   if (index === -1) {

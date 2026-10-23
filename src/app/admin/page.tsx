@@ -4,7 +4,7 @@ import Wordmark from "@/components/Wordmark";
 import { adminLogoutAction } from "@/lib/actions/auth";
 import { deleteAnalysisAction } from "@/lib/actions/analyses";
 import { isAdmin } from "@/lib/auth";
-import { activeDriver, listAnalyses } from "@/lib/db";
+import { activeDriver, istLiveSeite, listAnalyses } from "@/lib/db";
 import { SIGNALS } from "@/lib/config";
 import { stripeConfigured } from "@/lib/stripe";
 
@@ -65,7 +65,15 @@ export default async function AdminPage({
 
       {/* Hinweise zur Konfiguration */}
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        {driver === "local" && (
+        {driver === "local" && istLiveSeite() && (
+          <div className="rounded-[var(--radius-field)] border border-[rgba(240,139,139,0.35)] bg-[rgba(240,139,139,0.06)] px-5 py-4 text-sm leading-relaxed text-[var(--color-danger)]">
+            <strong className="font-semibold">Datenbank nicht verbunden.</strong> Die
+            Seite zeigt die Beispieldaten, Änderungen werden abgelehnt. Bitte Supabase
+            in Vercel hinterlegen (<code>NEXT_PUBLIC_SUPABASE_URL</code>,{" "}
+            <code>SUPABASE_SERVICE_ROLE_KEY</code>) und neu deployen.
+          </div>
+        )}
+        {driver === "local" && !istLiveSeite() && (
           <div className="rounded-[var(--radius-field)] border border-[rgba(232,198,75,0.3)] bg-[rgba(232,198,75,0.06)] px-5 py-4 text-sm leading-relaxed text-[var(--color-warning)]">
             <strong className="font-semibold">Lokaler Testbetrieb.</strong> Die Daten
             liegen in <code>data/store.local.json</code>. Für den Live-Betrieb bitte

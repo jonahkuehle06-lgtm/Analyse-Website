@@ -47,7 +47,18 @@ Supabase ist die einfachste Variante — kein eigener Server, kostenloser Einsti
      ausschließlich serverseitig gesetzt werden, nie im Browser)
 
 Sobald beide Variablen gesetzt sind, schaltet die Anwendung automatisch von der
-lokalen JSON-Datei auf Supabase um.
+lokalen JSON-Datei auf Supabase um (nach einem neuen Deployment). Die Namen
+`SUPABASE_URL` und `SUPABASE_SECRET_KEY` aus der Supabase-Integration von Vercel
+werden ebenfalls erkannt.
+
+In Vercel beide Variablen **nur für „Production“** anlegen, den Schlüssel als
+„Sensitive“. Vorschau-Deployments von Branches laufen dann mit Beispieldaten und
+können die echten Daten nicht verändern.
+
+**Schutz vor Datenverlust:** Fehlt auf der Live-Seite die Datenbank, lehnt die
+Seite jede Änderung ab, statt sie im flüchtigen Speicher abzulegen. Der
+Admin-Bereich zeigt dann einen roten Hinweis; der Stripe-Webhook antwortet mit
+einem Fehler, und Stripe stellt das Ereignis später erneut zu.
 
 ---
 
