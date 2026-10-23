@@ -141,3 +141,11 @@ Grundlage:
   - Bestellungen mit fremder E-Mail.
 - Freigabe „passt“ am 23.10.2026 – live auf `main`.
 
+## Supabase-Anbindung (23.10.2026, Auftrag: „binde Supabase an … damit nichts verloren gehen kann“)
+- [x] 20 Analysen (die live sichtbaren, IDs unverändert) per SQL nach Supabase übernommen; Schema war vollständig
+- [x] Schutz: Live-Seite lehnt Änderungen ohne Datenbank ab (statt flüchtigem Speicher); Admin zeigt roten Hinweis
+- [x] Variablennamen der Vercel-Integration werden ebenfalls erkannt
+- [ ] Nutzer: NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in Vercel (nur Production), dann Redeploy
+- [ ] Danach live prüfen: Supabase-Logs zeigen Zugriffe der Seite, Analysen werden aus der Datenbank geladen
+- Offen (klein): Löschen im Admin und Passwort-Setzen zeigen ohne Datenbank nur die allgemeine Fehlerseite statt eines Hinweises
+
