@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import AuthForm from "@/components/AuthForm";
 import AuthShell from "@/components/AuthShell";
 import { passwortSetzenAction, zugangslinkAction } from "@/lib/actions/auth";
-import { zugangLesen } from "@/lib/zugang";
+import { zugangLesen, zugangsCookieVorhanden } from "@/lib/zugang";
 
 export const dynamic = "force-dynamic";
 
@@ -88,8 +88,15 @@ export default async function WillkommenPage({
     );
   }
 
-  // Ohne Nachweis: Link per E-Mail anfordern
-  const hinweis = HINWEISE[zahlung ?? ""] ?? (link === "ungueltig" ? HINWEISE.ungueltig : null);
+  // Ohne Nachweis: Link per E-Mail anfordern. Ein Cookie ohne gültigen
+  // Nachweis heißt: Der Link ist abgelaufen oder schon benutzt.
+  const abgelaufen = link === "ungueltig" || (await zugangsCookieVorhanden());
+  const hinweis =
+    zahlung && Object.hasOwn(HINWEISE, zahlung)
+      ? HINWEISE[zahlung]
+      : abgelaufen
+        ? HINWEISE.ungueltig
+        : null;
 
   return (
     <AuthShell

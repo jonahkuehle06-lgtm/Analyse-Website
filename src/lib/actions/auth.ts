@@ -13,7 +13,7 @@ import {
   verifyPasswordBlind,
 } from "@/lib/auth";
 import { findUserByEmail, upsertUser } from "@/lib/db";
-import { clientIp, gedrosselt, gueltigeEmail } from "@/lib/drossel";
+import { clientIp, gedrosselt, gueltigeEmail, ueberGrenze, vermerke } from "@/lib/drossel";
 import { sendeMail } from "@/lib/mail/versand";
 import { zugangslinkMail } from "@/lib/mail/vorlagen";
 import { zugangLesen, zugangLoeschen, zugangslink } from "@/lib/zugang";
@@ -45,11 +45,10 @@ export async function loginAction(
     return { error: "Bitte E-Mail-Adresse und Passwort eingeben." };
   }
 
-  // Gegen Passwort-Raten: je Adresse und je Gerät begrenzt
-  if (
-    gedrosselt(`login:${await clientIp()}`, 10, 15 * 60_000) ||
-    gedrosselt(`login:${email.toLowerCase()}`, 10, 15 * 60_000)
-  ) {
+  // Gegen Passwort-Raten: höchstens 10 Fehlversuche je Gerät und je Adresse
+  // in 15 Minuten. Erfolgreiche Anmeldungen zählen nicht.
+  const schluessel = [`login:${await clientIp()}`, `login:${email.toLowerCase()}`];
+  if (schluessel.some((k) => ueberGrenze(k, 10, 15 * 60_000))) {
     return { error: ZU_VIELE };
   }
 
@@ -58,6 +57,7 @@ export async function loginAction(
     ? await verifyPassword(password, user.passwordHash)
     : await verifyPasswordBlind(password);
   if (!user || !korrekt) {
+    schluessel.forEach(vermerke);
     return { error: "E-Mail-Adresse oder Passwort ist nicht korrekt." };
   }
 
@@ -156,10 +156,12 @@ export async function adminLoginAction(
         "Es ist kein Admin-Zugang konfiguriert. Bitte ADMIN_EMAIL und ADMIN_PASSWORD_HASH setzen.",
     };
   }
-  if (gedrosselt(`admin:${await clientIp()}`, 5, 15 * 60_000)) {
+  const schluessel = `admin:${await clientIp()}`;
+  if (ueberGrenze(schluessel, 5, 15 * 60_000)) {
     return { error: ZU_VIELE };
   }
   if (!(await verifyAdminCredentials(email, password))) {
+    vermerke(schluessel);
     return { error: "Zugangsdaten sind nicht korrekt." };
   }
 

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { checkoutAbgleichen, nachweis, ZUGANG_COOKIE, zugangCookieOptionen } from "@/lib/zugang";
+import { checkoutAbgleichen, checkoutNachweis, ZUGANG_COOKIE, zugangCookieOptionen } from "@/lib/zugang";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
   const antwort = NextResponse.redirect(ziel, 303);
   antwort.cookies.set(
     ZUGANG_COOKIE,
-    await nachweis(ergebnis.user, "checkout", ergebnis.paket),
+    await checkoutNachweis(ergebnis.user, ergebnis.paket),
     zugangCookieOptionen,
   );
   return antwort;

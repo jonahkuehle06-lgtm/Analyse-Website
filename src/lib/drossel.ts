@@ -7,24 +7,33 @@ import { headers } from "next/headers";
  * Missbrauch und Mail-Fluten zu bremsen, ohne gemeinsamen Speicher.
  */
 const treffer = new Map<string, number[]>();
+/** Längstes Zeitfenster, das irgendwo verwendet wird - fürs Aufräumen */
+const MAX_FENSTER = 60 * 60_000;
 
-export function gedrosselt(schluessel: string, max: number, fensterMs: number): boolean {
+/** Ist die Grenze erreicht? Zählt selbst nicht mit. */
+export function ueberGrenze(schluessel: string, max: number, fensterMs: number): boolean {
+  const grenze = Date.now() - fensterMs;
+  return (treffer.get(schluessel) ?? []).filter((t) => t > grenze).length >= max;
+}
+
+/** Einen Versuch zählen, z. B. eine fehlgeschlagene Anmeldung. */
+export function vermerke(schluessel: string): void {
   const jetzt = Date.now();
-  const grenze = jetzt - fensterMs;
-  const juengste = (treffer.get(schluessel) ?? []).filter((t) => t > grenze);
-
-  if (juengste.length >= max) {
-    treffer.set(schluessel, juengste);
-    return true;
-  }
-  juengste.push(jetzt);
-  treffer.set(schluessel, juengste);
+  const zeiten = (treffer.get(schluessel) ?? []).filter((t) => t > jetzt - MAX_FENSTER);
+  zeiten.push(jetzt);
+  treffer.set(schluessel, zeiten);
 
   if (treffer.size > 5000) {
-    for (const [k, zeiten] of treffer) {
-      if (zeiten.every((t) => t <= grenze)) treffer.delete(k);
+    for (const [k, z] of treffer) {
+      if (z.every((t) => t <= jetzt - MAX_FENSTER)) treffer.delete(k);
     }
   }
+}
+
+/** Prüfen und zählen in einem: true, wenn die Grenze schon erreicht war. */
+export function gedrosselt(schluessel: string, max: number, fensterMs: number): boolean {
+  if (ueberGrenze(schluessel, max, fensterMs)) return true;
+  vermerke(schluessel);
   return false;
 }
 

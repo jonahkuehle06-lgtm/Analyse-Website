@@ -54,41 +54,48 @@ export async function zugangslink(user: User): Promise<string> {
   return `${siteUrl()}/willkommen/link?token=${encodeURIComponent(token)}`;
 }
 
-/** Prüft den Link aus der E-Mail und liefert das Konto. */
-export async function linkPruefen(token: string): Promise<User | null> {
-  const p = await leseNachweis(token, "passwort-link");
-  if (!p || typeof p.sub !== "string") return null;
-  const user = await findUserById(p.sub);
-  return user && p.fp === fingerabdruck(user.passwordHash) ? user : null;
+/**
+ * Formale Prüfung des Links (Signatur, Zweck, Ablauf) - ohne Datenbank. Ob er
+ * schon benutzt wurde, prüft erst die Seite beim Lesen des Nachweises.
+ */
+export async function linkGueltig(token: string): Promise<boolean> {
+  return token.length <= 2000 && (await leseNachweis(token, "passwort-link")) !== null;
 }
 
 /* ------------------------------- Nachweis --------------------------------- */
 
-/** Wert für das Nachweis-Cookie (gesetzt von den Route-Handlern). */
-export async function nachweis(
-  user: User,
-  quelle: Zugang["quelle"],
-  paket: string | null,
-): Promise<string> {
+/** Nachweis nach dem Checkout (gesetzt vom Route-Handler als Cookie). */
+export async function checkoutNachweis(user: User, paket: string | null): Promise<string> {
   return signiereNachweis(
     "passwort-setzen",
-    { sub: user.id, fp: fingerabdruck(user.passwordHash), quelle, paket },
+    { sub: user.id, fp: fingerabdruck(user.passwordHash), paket },
     DAUER,
   );
 }
 
-/** Liest den Nachweis aus dem Cookie - null, wenn keiner da oder er verbraucht ist. */
+/** Liegt überhaupt ein Nachweis-Cookie vor (gültig oder nicht)? */
+export async function zugangsCookieVorhanden(): Promise<boolean> {
+  return (await cookies()).has(ZUGANG_COOKIE);
+}
+
+/**
+ * Liest den Nachweis aus dem Cookie - null, wenn keiner da, er abgelaufen
+ * oder schon verbraucht ist. Das Cookie enthält entweder den Nachweis aus dem
+ * Checkout oder den Link aus der E-Mail; beide tragen den Fingerabdruck des
+ * Passworts von damals.
+ */
 export async function zugangLesen(): Promise<Zugang | null> {
   const token = (await cookies()).get(ZUGANG_COOKIE)?.value;
   if (!token) return null;
-  const p = await leseNachweis(token, "passwort-setzen");
+  const checkout = await leseNachweis(token, "passwort-setzen");
+  const p = checkout ?? (await leseNachweis(token, "passwort-link"));
   if (!p || typeof p.sub !== "string") return null;
   const user = await findUserById(p.sub);
   if (!user || p.fp !== fingerabdruck(user.passwordHash)) return null;
   return {
     user,
-    paket: typeof p.paket === "string" ? p.paket : null,
-    quelle: p.quelle === "link" ? "link" : "checkout",
+    paket: checkout && typeof p.paket === "string" ? p.paket : null,
+    quelle: checkout ? "checkout" : "link",
   };
 }
 
