@@ -94,18 +94,18 @@ Grundlage:
 - Eine Web-Recherche zur aktuellen Lage.
 
 ## Plan – Phase 1: Code (auf dem Arbeitsbranch, live erst nach „passt“)
-- [ ] Next.js 16.3.8 → gepatchte 16.4.x (kritisch: RCE/DoS, GHSA-2464 / -p3m5 / -673q); Bildoptimierer abschalten (wird nicht genutzt)
-- [ ] Kontoübernahme schließen (/willkommen setzte für jede E-Mail ein neues Passwort):
+- [x] Next.js 16.3.8 → gepatchte 16.4.x (kritisch: RCE/DoS, GHSA-2464 / -p3m5 / -673q); Bildoptimierer abschalten (wird nicht genutzt)
+- [x] Kontoübernahme schließen (/willkommen setzte für jede E-Mail ein neues Passwort):
       Passwort nur noch mit Nachweis – bezahlte Stripe-Checkout-Session (nur erstes Passwort) oder
       signierter E-Mail-Link (1 h, einmalig); Nachweis im httpOnly-Cookie statt in der URL
-- [ ] Checkout-Abgleich nur für abgeschlossene, bezahlte Sessions; keine Felder mit null überschreiben
-- [ ] Logins gegen Passwort-Raten drosseln (Kunde, Admin, Link-Anforderung); gleiche Antwortzeit für unbekannte Adressen; Admin-Sitzung 12 h statt 30 Tage
-- [ ] Kündigungsquittung verrät keine Vertragsdaten mehr (Paket, Vertragsende nur per E-Mail); Mails je Empfänger drosseln
-- [ ] Stripe-Webhook: frischen Abo-Stand laden (Reihenfolge der Events), Paket aus Abo-Metadaten (alte Preis-IDs), keine internen Fehlertexte
-- [ ] Chat: nur Anfragen von der eigenen Seite, Verlauf sauber kürzen, Anzahl Analysen zwischenspeichern
-- [ ] Sicherheits-Header: CSP (Grundregeln), Permissions-Policy, Cross-Origin-Opener-Policy
-- [ ] Kleinkram: `.env*` in .gitignore, SMTP nur mit TLS, ungültige Analyse-ID → 404 statt 500, PDF-Cache am CDN
-- [ ] Build, Tests, neue Tests für die Lücken (Unteragent); Bericht und Freigabe
+- [x] Checkout-Abgleich nur für abgeschlossene, bezahlte Sessions; keine Felder mit null überschreiben
+- [x] Logins gegen Passwort-Raten drosseln (Kunde, Admin, Link-Anforderung); gleiche Antwortzeit für unbekannte Adressen; Admin-Sitzung 12 h statt 30 Tage
+- [x] Kündigungsquittung verrät keine Vertragsdaten mehr (Paket, Vertragsende nur per E-Mail); Mails je Empfänger drosseln
+- [x] Stripe-Webhook: frischen Abo-Stand laden (Reihenfolge der Events), Paket aus Abo-Metadaten (alte Preis-IDs), keine internen Fehlertexte
+- [x] Chat: nur Anfragen von der eigenen Seite, Verlauf sauber kürzen, Anzahl Analysen zwischenspeichern
+- [x] Sicherheits-Header: CSP (Grundregeln), Permissions-Policy, Cross-Origin-Opener-Policy
+- [x] Kleinkram: `.env*` in .gitignore, SMTP nur mit TLS, ungültige Analyse-ID → 404 statt 500, PDF-Cache am CDN
+- [x] Build, Tests, neue Tests für die Lücken (Unteragent); Bericht und Freigabe
 
 ## Plan – Phase 2: mit KI und Diensten (nach Rückfrage, teils Konten nötig)
 - [ ] Wöchentliche KI-Sicherheitsprüfung als Routine (npm audit, neue Advisories, Code-Review, Fix auf Branch, Nachricht)
@@ -113,3 +113,30 @@ Grundlage:
 - [ ] Vercel Firewall: Rate-Limits für Login/Chat/Formulare, Bot-Schutz, im Ernstfall Attack Challenge Mode
 - [ ] Optional: strenge CSP mit Nonce (nach Test mit dem echten GTM-Container), Bot-Schutz (BotID/Turnstile) für Formulare
 - [ ] Supabase in Vercel anbinden (Live-Seite nutzt noch Beispieldaten/Arbeitsspeicher)
+
+## Ergebnis Phase 1
+- Funde aus dem Audit, alle im Code nachgeprüft:
+  - Kontoübernahme ohne Anmeldung über /willkommen (kritisch)
+  - Next.js-Lücken (kritisch laut npm audit, bei uns erreichbar: DoS über Server-Aktionen)
+  - keine Drosselung der Anmeldung
+  - Kündigungsquittung verriet Vertragsdaten
+  - Checkout-Abgleich mit offenen Sessions
+  - Webhook-Reihenfolge, Chat-Kosten
+- Kein Geheimnis in der Git-Historie (43 Commits geprüft); Supabase-Advisor nur Info.
+  Die Tabellen sind leer – live laufen noch Beispieldaten.
+- Prüfung durch einen Unteragenten:
+  - Erster Lauf: 164 ok, 7 Fehler (Absturz bei ?zahlung=constructor, Link-Prüfung mit lokalem Speicher).
+  - Beides behoben, zweiter Lauf: 214 ok, 0 Fehler.
+  - Dazu alle bisherigen Tests grün; Angriffstests (abgefangene Aktion ohne Nachweis, gefälschte Tokens) scheitern wie gewollt.
+- Neue Texte zur Freigabe:
+  - /willkommen: „Gib die E-Mail-Adresse ein, mit der du dein Paket gebucht hast. Wir schicken dir einen Link, mit dem du dein Passwort vergibst.“
+  - Hinweise nach dem Checkout bzw. bei abgelaufenem Link.
+  - Mail „Dein Link zum Passwort“.
+  - Login: „Passwort vergessen? Neuen Link anfordern“.
+  - Sperrhinweis „Zu viele Versuche in kurzer Zeit. Bitte warte ein paar Minuten.“
+- Offen, nicht im Code lösbar:
+  - Vercel-Plan (Hobby ist nur nicht-kommerziell).
+  - Supabase anbinden.
+  - Rechtsfrage: Kündigung erst nach E-Mail-Bestätigung ausführen?
+  - Bestellungen mit fremder E-Mail.
+
