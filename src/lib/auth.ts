@@ -15,6 +15,8 @@ const scrypt = promisify(scryptCb) as (
 const CUSTOMER_COOKIE = "ma_session";
 const ADMIN_COOKIE = "ma_admin";
 const SESSION_DAYS = 30;
+/** Admin-Sitzungen laufen kurz - ein gestohlenes Cookie nützt nicht lange. */
+const ADMIN_HOURS = 12;
 
 /* -------------------------------------------------------------------------- */
 /* Passwoerter                                                                 */
@@ -44,6 +46,16 @@ export async function verifyPassword(password: string, stored: string): Promise<
   return timingSafeEqual(derived, expected);
 }
 
+/* Für unbekannte Adressen wird gegen diesen Hash geprüft, damit die Antwort
+   gleich lange dauert und nicht verrät, ob es ein Konto gibt. */
+let blindHash: Promise<string> | null = null;
+
+export async function verifyPasswordBlind(password: string): Promise<false> {
+  blindHash ??= hashPassword(randomBytes(16).toString("hex"));
+  await verifyPassword(password, await blindHash);
+  return false;
+}
+
 /* -------------------------------------------------------------------------- */
 /* Sessions                                                                    */
 /* -------------------------------------------------------------------------- */
@@ -58,21 +70,42 @@ function secret(): Uint8Array {
   return new TextEncoder().encode(value);
 }
 
-async function sign(payload: Record<string, unknown>): Promise<string> {
+async function sign(payload: Record<string, unknown>, dauer = `${SESSION_DAYS}d`): Promise<string> {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime(`${SESSION_DAYS}d`)
+    .setExpirationTime(dauer)
     .sign(secret());
 }
 
 async function read(token: string): Promise<Record<string, unknown> | null> {
   try {
-    const { payload } = await jwtVerify(token, secret());
+    const { payload } = await jwtVerify(token, secret(), { algorithms: ["HS256"] });
     return payload as Record<string, unknown>;
   } catch {
     return null;
   }
+}
+
+/**
+ * Kurzlebige, zweckgebundene Nachweise (z. B. der Link zum Passwort-Setzen).
+ * Sie tragen ein Feld `zweck` und keine Rolle - als Sitzung taugen sie also
+ * nicht, und eine Sitzung taugt umgekehrt nicht als Nachweis.
+ */
+export async function signiereNachweis(
+  zweck: string,
+  daten: Record<string, unknown>,
+  dauer: string,
+): Promise<string> {
+  return sign({ ...daten, zweck }, dauer);
+}
+
+export async function leseNachweis(
+  token: string,
+  zweck: string,
+): Promise<Record<string, unknown> | null> {
+  const payload = await read(token);
+  return payload && payload.zweck === zweck && !("role" in payload) ? payload : null;
 }
 
 const cookieOptions = {
@@ -115,7 +148,9 @@ export async function verifyAdminCredentials(
 ): Promise<boolean> {
   const expectedEmail = adminEmail();
   if (!expectedEmail) return false;
-  if (email.trim().toLowerCase() !== expectedEmail) return false;
+  // Bei falscher Adresse trotzdem rechnen - sonst verrät die Antwortzeit,
+  // ob die Admin-Adresse stimmt
+  if (email.trim().toLowerCase() !== expectedEmail) return verifyPasswordBlind(password);
 
   const hash = process.env.ADMIN_PASSWORD_HASH;
   if (hash) return verifyPassword(password, hash);
@@ -130,8 +165,8 @@ export async function verifyAdminCredentials(
 }
 
 export async function createAdminSession(): Promise<void> {
-  const token = await sign({ sub: adminEmail(), role: "admin" });
-  (await cookies()).set(ADMIN_COOKIE, token, cookieOptions);
+  const token = await sign({ sub: adminEmail(), role: "admin" }, `${ADMIN_HOURS}h`);
+  (await cookies()).set(ADMIN_COOKIE, token, { ...cookieOptions, maxAge: ADMIN_HOURS * 60 * 60 });
 }
 
 export async function destroyAdminSession(): Promise<void> {

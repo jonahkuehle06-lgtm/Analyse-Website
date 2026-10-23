@@ -1,8 +1,9 @@
 node_modules
 .next
 out
-.env
-.env.local
+# Alle Umgebungsdateien (Geheimnisse) - nur die Vorlage wird eingecheckt
+.env*
+!.env.example
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store

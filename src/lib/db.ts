@@ -196,6 +196,8 @@ export async function listAnalyses(): Promise<Analysis[]> {
 }
 
 export async function getAnalysis(id: string): Promise<Analysis | null> {
+  // Kennungen sind UUIDs - alles andere gibt es nicht (statt eines Datenbankfehlers)
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return null;
   if (activeDriver() === "supabase") {
     const sb = await supabase();
     const { data, error } = await sb.from("analyses").select("*").eq("id", id).maybeSingle();

@@ -51,6 +51,33 @@ function clientIp(request: Request): string {
   return request.headers.get("x-real-ip") ?? "unbekannt";
 }
 
+/**
+ * Nur Anfragen von der eigenen Seite. Fremde Webseiten sollen den
+ * Assistenten nicht über die Browser ihrer Besucher auf unsere Kosten nutzen.
+ */
+function vonEigenerSeite(request: Request): boolean {
+  const site = request.headers.get("sec-fetch-site");
+  if (site) return site === "same-origin";
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+  try {
+    return new URL(origin).host === request.headers.get("host");
+  } catch {
+    return false;
+  }
+}
+
+/* Die Anzahl der Analysen steht im Systemtext. Sie ändert sich selten -
+   nicht bei jeder Frage den ganzen Bestand laden. */
+let anzahlCache: { wert: number; bis: number } | null = null;
+
+async function analysenAnzahl(): Promise<number> {
+  if (anzahlCache && anzahlCache.bis > Date.now()) return anzahlCache.wert;
+  const wert = (await listAnalyses()).length;
+  anzahlCache = { wert, bis: Date.now() + 5 * 60_000 };
+  return wert;
+}
+
 /* -------------------------------------------------------------------------- */
 
 function sanitize(raw: unknown): ChatMessage[] | null {
@@ -66,9 +93,10 @@ function sanitize(raw: unknown): ChatMessage[] | null {
     if (text) messages.push({ role, content: text });
   }
 
+  // Beim Kürzen kann vorn eine Antwort stehen bleiben - das Gespräch muss
+  // mit einer Nutzernachricht beginnen und enden.
+  while (messages.length > 0 && messages[0].role !== "user") messages.shift();
   if (messages.length === 0) return null;
-  // Die Konversation muss mit einer Nutzernachricht beginnen und enden.
-  if (messages[0].role !== "user") return null;
   if (messages[messages.length - 1].role !== "user") return null;
   return messages;
 }
@@ -79,6 +107,10 @@ export async function POST(request: Request) {
       { error: "Der Assistent ist derzeit nicht verfügbar." },
       { status: 503 },
     );
+  }
+
+  if (!vonEigenerSeite(request)) {
+    return Response.json({ error: "Ungültige Anfrage." }, { status: 403 });
   }
 
   if (rateLimited(clientIp(request))) {
@@ -103,7 +135,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Ungültiger Gesprächsverlauf." }, { status: 400 });
   }
 
-  const analyses = await listAnalyses();
+  const anzahl = await analysenAnzahl();
   const client = new Anthropic();
 
   const encoder = new TextEncoder();
@@ -118,7 +150,7 @@ export async function POST(request: Request) {
           system: [
             {
               type: "text",
-              text: buildSystemPrompt(analyses.length),
+              text: buildSystemPrompt(anzahl),
               // Der Systemtext aendert sich selten - zwischenspeichern spart Kosten.
               cache_control: { type: "ephemeral" },
             },

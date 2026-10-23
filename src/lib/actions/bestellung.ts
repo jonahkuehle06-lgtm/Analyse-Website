@@ -103,7 +103,7 @@ export async function bestellenAction(
     mode: "subscription",
     line_items: [{ price, quantity: 1 }],
     client_reference_id: nummer,
-    success_url: `${siteUrl()}/willkommen?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${siteUrl()}/willkommen/zahlung?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl()}/bestellen?paket=${plan}&abrechnung=${abrechnung}&abgebrochen=1`,
     locale: "de",
     allow_promotion_codes: true,

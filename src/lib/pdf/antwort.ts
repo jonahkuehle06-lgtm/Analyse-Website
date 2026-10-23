@@ -9,7 +9,9 @@ export async function pdfAntwort(doc: LegalDoc): Promise<Response> {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `inline; filename="${pdfDateiname(doc)}"`,
-      "Cache-Control": "public, max-age=3600",
+      // s-maxage: auch am CDN zwischenspeichern, damit Abrufe nicht jedes Mal
+      // die Funktion starten (ein neues Deployment leert den Cache)
+      "Cache-Control": "public, max-age=3600, s-maxage=86400",
     },
   });
 }

@@ -83,3 +83,33 @@ Pflicht-Häkchen zum sofortigen Beginn (Widerrufsrecht erlischt).
 - Recherche und Prüfung liefen über Unteragenten. Build und alle Tests sind grün,
   der Paywall-Test läuft jetzt ohne Leseprobe.
 - Freigabe „passt“ am 22.10.2026 – live auf `main`.
+
+---
+
+# Runde 7: Sicherheit (23.10.2026)
+
+Grundlage:
+- Code-Audit durch einen Unteragenten; die Funde habe ich selbst im Code nachgeprüft.
+- `npm audit`, eine Prüfung der Git-Historie auf Geheimnisse und der Supabase-Security-Advisor.
+- Eine Web-Recherche zur aktuellen Lage.
+
+## Plan – Phase 1: Code (auf dem Arbeitsbranch, live erst nach „passt“)
+- [ ] Next.js 16.3.8 → gepatchte 16.4.x (kritisch: RCE/DoS, GHSA-2464 / -p3m5 / -673q); Bildoptimierer abschalten (wird nicht genutzt)
+- [ ] Kontoübernahme schließen (/willkommen setzte für jede E-Mail ein neues Passwort):
+      Passwort nur noch mit Nachweis – bezahlte Stripe-Checkout-Session (nur erstes Passwort) oder
+      signierter E-Mail-Link (1 h, einmalig); Nachweis im httpOnly-Cookie statt in der URL
+- [ ] Checkout-Abgleich nur für abgeschlossene, bezahlte Sessions; keine Felder mit null überschreiben
+- [ ] Logins gegen Passwort-Raten drosseln (Kunde, Admin, Link-Anforderung); gleiche Antwortzeit für unbekannte Adressen; Admin-Sitzung 12 h statt 30 Tage
+- [ ] Kündigungsquittung verrät keine Vertragsdaten mehr (Paket, Vertragsende nur per E-Mail); Mails je Empfänger drosseln
+- [ ] Stripe-Webhook: frischen Abo-Stand laden (Reihenfolge der Events), Paket aus Abo-Metadaten (alte Preis-IDs), keine internen Fehlertexte
+- [ ] Chat: nur Anfragen von der eigenen Seite, Verlauf sauber kürzen, Anzahl Analysen zwischenspeichern
+- [ ] Sicherheits-Header: CSP (Grundregeln), Permissions-Policy, Cross-Origin-Opener-Policy
+- [ ] Kleinkram: `.env*` in .gitignore, SMTP nur mit TLS, ungültige Analyse-ID → 404 statt 500, PDF-Cache am CDN
+- [ ] Build, Tests, neue Tests für die Lücken (Unteragent); Bericht und Freigabe
+
+## Plan – Phase 2: mit KI und Diensten (nach Rückfrage, teils Konten nötig)
+- [ ] Wöchentliche KI-Sicherheitsprüfung als Routine (npm audit, neue Advisories, Code-Review, Fix auf Branch, Nachricht)
+- [ ] GitHub: Dependabot-Alerts/-Updates (mit Wartezeit gegen frische Schadpakete), Secret Scanning + Push Protection, CodeQL + Copilot Autofix
+- [ ] Vercel Firewall: Rate-Limits für Login/Chat/Formulare, Bot-Schutz, im Ernstfall Attack Challenge Mode
+- [ ] Optional: strenge CSP mit Nonce (nach Test mit dem echten GTM-Container), Bot-Schutz (BotID/Turnstile) für Formulare
+- [ ] Supabase in Vercel anbinden (Live-Seite nutzt noch Beispieldaten/Arbeitsspeicher)

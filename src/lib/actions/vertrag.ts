@@ -80,6 +80,9 @@ export async function kuendigenAction(
   const ergebnis = await kuendigen({ art, grund, name, email, vertrag, wunsch });
   const d = ergebnis.daten;
 
+  // Die Quittung zeigt nur, was hier eingegeben wurde. Paket und Vertragsende
+  // gehen per E-Mail an die Adresse - sonst ließe sich über das Formular
+  // ablesen, ob und welches Abo zu einer fremden Adresse gehört.
   const zeilen: [string, string][] = [
     ["Abgegeben über", "Schaltfläche „jetzt kündigen“"],
     ["Art der Kündigung", art === "ordentlich" ? "Ordentliche Kündigung" : "Außerordentliche Kündigung"],
@@ -88,10 +91,9 @@ export async function kuendigenAction(
   zeilen.push(
     ["Name", name],
     ["E-Mail-Adresse", email],
-    ["Vertrag", d.vertrag],
+    ["Vertrag", vertrag],
     ["Gewünschtes Vertragsende", wunsch === "naechstmoeglich" ? "Zum nächstmöglichen Zeitpunkt" : `Zum ${datum(wunsch)}`],
   );
-  if (d.ende) zeilen.push(["Vertragsende", datum(d.ende)]);
 
   return {
     quittung: {
@@ -99,11 +101,7 @@ export async function kuendigenAction(
       nummer: d.nummer,
       eingang: datumZeit(d.eingang),
       zeilen,
-      hinweis: d.ende
-        ? `Dein Vertrag endet am ${datum(d.ende)}. Bis dahin bleibt dein Zugang bestehen.${
-            d.erstattung ? " Den bereits bezahlten Betrag für die Zeit danach erstatten wir dir anteilig nach dem Vertragsende." : ""
-          }`
-        : "Wir prüfen deine Kündigung und bestätigen dir das genaue Vertragsende umgehend per E-Mail.",
+      hinweis: "Wir prüfen deine Kündigung und bestätigen dir das genaue Vertragsende umgehend per E-Mail.",
       mailVersendet: ergebnis.mailVersendet,
     },
   };

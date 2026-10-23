@@ -30,6 +30,12 @@ export default async function LoginPage() {
             </Link>
           </p>
           <p>
+            Passwort vergessen?{" "}
+            <Link href="/willkommen" className="text-link text-[var(--color-platinum)]">
+              Neuen Link anfordern
+            </Link>
+          </p>
+          <p>
             Noch kein Paket?{" "}
             <Link href="/preise" className="text-link text-[var(--color-platinum)]">
               Pakete ansehen

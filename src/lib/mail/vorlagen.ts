@@ -549,6 +549,30 @@ export function erstattungsbestaetigung(e: ErstattungsDaten): FertigeMail {
 }
 
 /* ------------------------------------------------------------------------ */
+/* Link zum Passwort-Vergeben                                               */
+/* ------------------------------------------------------------------------ */
+
+export function zugangslinkMail(link: string): FertigeMail {
+  return render({
+    betreff: "Dein Link zum Passwort",
+    vorschau: "Mit diesem Link vergibst du dein Passwort. Er ist eine Stunde gültig.",
+    titel: "Passwort vergeben",
+    anrede: hallo(""),
+    bausteine: [
+      {
+        art: "absatz",
+        text: "du hast einen Link angefordert, um das Passwort für dein Konto zu vergeben. Er ist eine Stunde gültig und funktioniert nur einmal.",
+      },
+      { art: "knopf", text: "Passwort vergeben", href: link },
+      {
+        art: "klein",
+        text: "Du hast keinen Link angefordert? Dann ignoriere diese E-Mail – dein Passwort bleibt unverändert.",
+      },
+    ],
+  });
+}
+
+/* ------------------------------------------------------------------------ */
 /* Interne Meldung an den Betreiber                                         */
 /* ------------------------------------------------------------------------ */
 

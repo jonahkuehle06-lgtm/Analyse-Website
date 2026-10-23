@@ -259,10 +259,12 @@ allgemeine Analyse mehr, sondern individuelle Anlageberatung.
 ### Missbrauchsschutz
 
 Pro IP sind 15 Nachrichten in 10 Minuten moeglich, je Nachricht hoechstens
-1200 Zeichen, je Gespraech 20 Nachrichten. Die Zaehlung liegt im
-Arbeitsspeicher der jeweiligen Serverinstanz — auf Vercel laufen mehrere
-parallel, die Grenze wirkt dort also weicher als angegeben. Fuer harte
-Garantien braeuchte es einen gemeinsamen Speicher (etwa Vercel KV).
+1200 Zeichen, je Gespraech 12 Nachrichten. Angenommen werden nur Anfragen von
+der eigenen Seite. Die Zaehlung liegt im Arbeitsspeicher der jeweiligen
+Serverinstanz — auf Vercel laufen mehrere parallel, die Grenze wirkt dort also
+weicher als angegeben. Harte Grenzen setzen eine Rate-Limit-Regel in der
+Vercel-Firewall fuer `/api/chat` und ein Ausgabenlimit fuer den API-Schluessel
+(eigener Workspace in der Claude Console).
 
 ---
 
@@ -413,6 +415,9 @@ alter table public.analyses
    dieser Bestätigung erlischt das Widerrufsrecht. **Ohne funktionierenden
    Webhook und Mailversand bleibt es bestehen** — beides muss eingerichtet sein.
 
+5. Rückkehr auf `/willkommen/zahlung`: Die Seite gleicht die Bestellung ab und
+   bietet beim ersten Mal das Passwort-Vergeben an (siehe 6e).
+
 Bestellnummer, Zustimmungszeitpunkt und Stand der Rechtstexte stehen als
 Metadaten an der Zahlung und am Abo in Stripe.
 
@@ -463,6 +468,29 @@ einrichten. Ohne `SMTP_HOST` landen die Mails lokal als `.eml` und `.html` in
 Website, PDFs und E-Mails lesen aus diesen Dateien — sie können nicht
 auseinanderlaufen. Bei inhaltlichen Änderungen `RECHTSTEXTE_STAND` anpassen.
 Die PDFs gibt es auch unter `/agb/pdf` und `/widerruf/pdf`.
+
+---
+
+## 6e. Sicherheit
+
+- **Passwort nur mit Nachweis** (`src/lib/zugang.ts`): Das erste Passwort nach
+  dem Checkout setzt nur, wer von einer abgeschlossenen Stripe-Session kommt
+  und solange das Konto noch keins hat. Sonst gibt es einen Link per E-Mail
+  (`/willkommen` → „Link anfordern“), eine Stunde gültig und einmalig. Der
+  Nachweis liegt in einem httpOnly-Cookie, nie in der URL.
+- **Drosselung**: Anmeldung (je Gerät und Adresse), Admin-Anmeldung,
+  Link-Anforderung, Kündigung, Widerruf und Chat. Die Zähler liegen je
+  Serverinstanz im Speicher; harte Grenzen setzt die Vercel-Firewall.
+- **Sitzungen**: signiert (HS256, `AUTH_SECRET`), httpOnly; Kunden 30 Tage,
+  Admin 12 Stunden.
+- **Kündigungsquittung** zeigt nur die eigenen Angaben; Paket und Vertragsende
+  gehen per E-Mail an die Vertragsadresse.
+- **Stripe-Webhook** prüft die Signatur und liest den Abo-Stand frisch bei
+  Stripe (Events kommen nicht immer in Reihenfolge).
+- **Header** (`next.config.ts`): CSP-Grundregeln, `X-Frame-Options`,
+  `Permissions-Policy`, `Cross-Origin-Opener-Policy`; HSTS setzt Vercel.
+- **Abhängigkeiten**: `npm audit` vor jedem Livegang; Updates erst nach einigen
+  Tagen übernehmen (Schutz vor frisch kompromittierten Paketen).
 
 ---
 

@@ -78,7 +78,7 @@ export const CHAT_LIMITS = {
   /** Maximale Zeichen je Nutzernachricht. */
   maxMessageChars: 1200,
   /** Maximale Anzahl Nachrichten im Verlauf, die mitgeschickt werden. */
-  maxHistory: 20,
+  maxHistory: 12,
   /** Nachrichten je IP im Zeitfenster. */
   requestsPerWindow: 15,
   /** Laenge des Zeitfensters in Millisekunden. */

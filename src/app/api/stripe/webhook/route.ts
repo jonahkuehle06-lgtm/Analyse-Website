@@ -37,9 +37,9 @@ export async function POST(request: Request) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET,
     );
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "unbekannt";
-    return NextResponse.json({ error: `Signatur ungültig: ${message}` }, { status: 400 });
+  } catch {
+    // Keine Details nach außen - wer probiert, erfährt nichts über die Prüfung
+    return NextResponse.json({ error: "Signatur ungültig." }, { status: 400 });
   }
 
   try {
@@ -83,7 +83,10 @@ export async function POST(request: Request) {
       case "customer.subscription.created":
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
-        const subscription = event.data.object;
+        // Stripe garantiert keine Reihenfolge: Ein verspätetes "updated" darf
+        // ein bereits beendetes Abo nicht wieder freischalten. Deshalb gilt
+        // der aktuelle Stand bei Stripe, nicht der Schnappschuss im Event.
+        const subscription = await stripe().subscriptions.retrieve(event.data.object.id);
         const customerId =
           typeof subscription.customer === "string"
             ? subscription.customer
@@ -99,8 +102,13 @@ export async function POST(request: Request) {
         }
         if (!email) break;
 
-        const deleted = event.type === "customer.subscription.deleted";
-        const plan = planFromPriceId(subscription.items.data[0]?.price?.id);
+        const deleted =
+          event.type === "customer.subscription.deleted" || subscription.status === "canceled";
+        // Paket aus den Abo-Metadaten der Bestellung - Preis-IDs ändern sich
+        // bei Preisanpassungen, alte Abos laufen aber weiter
+        const plan =
+          (subscription.metadata?.plan as PlanId | undefined) ||
+          planFromPriceId(subscription.items.data[0]?.price?.id);
 
         await upsertUser(email, {
           stripeCustomerId: customerId,
@@ -119,9 +127,9 @@ export async function POST(request: Request) {
         break;
     }
   } catch (error) {
-    const message = error instanceof Error ? error.message : "unbekannt";
+    console.error(`[Webhook] ${event.type} fehlgeschlagen:`, error);
     // 500 sorgt dafür, dass Stripe den Event erneut zustellt.
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: "Verarbeitung fehlgeschlagen." }, { status: 500 });
   }
 
   return NextResponse.json({ received: true });

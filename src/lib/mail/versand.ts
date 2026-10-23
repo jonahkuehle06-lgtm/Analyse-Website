@@ -62,6 +62,9 @@ function transport(): Transporter {
       host: process.env.SMTP_HOST,
       port,
       secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : port === 465,
+      // Ohne direkte TLS-Verbindung STARTTLS erzwingen - sonst ginge das
+      // Passwort bei einem Downgrade unverschlüsselt über die Leitung
+      requireTLS: true,
       auth: process.env.SMTP_USER
         ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
         : undefined,

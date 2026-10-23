@@ -1,5 +1,6 @@
 "use server";
 
+import { after } from "next/server";
 import { redirect } from "next/navigation";
 import {
   createAdminSession,
@@ -9,8 +10,13 @@ import {
   hashPassword,
   verifyAdminCredentials,
   verifyPassword,
+  verifyPasswordBlind,
 } from "@/lib/auth";
 import { findUserByEmail, upsertUser } from "@/lib/db";
+import { clientIp, gedrosselt, gueltigeEmail } from "@/lib/drossel";
+import { sendeMail } from "@/lib/mail/versand";
+import { zugangslinkMail } from "@/lib/mail/vorlagen";
+import { zugangLesen, zugangLoeschen, zugangslink } from "@/lib/zugang";
 
 export interface FormState {
   error?: string;
@@ -18,6 +24,8 @@ export interface FormState {
 }
 
 const MIN_PASSWORD = 8;
+const MAX_PASSWORD = 200;
+const ZU_VIELE = "Zu viele Versuche in kurzer Zeit. Bitte warte ein paar Minuten.";
 
 function str(data: FormData, key: string): string {
   const value = data.get(key);
@@ -37,8 +45,19 @@ export async function loginAction(
     return { error: "Bitte E-Mail-Adresse und Passwort eingeben." };
   }
 
+  // Gegen Passwort-Raten: je Adresse und je Gerät begrenzt
+  if (
+    gedrosselt(`login:${await clientIp()}`, 10, 15 * 60_000) ||
+    gedrosselt(`login:${email.toLowerCase()}`, 10, 15 * 60_000)
+  ) {
+    return { error: ZU_VIELE };
+  }
+
   const user = await findUserByEmail(email);
-  if (!user || !user.passwordHash || !(await verifyPassword(password, user.passwordHash))) {
+  const korrekt = user?.passwordHash
+    ? await verifyPassword(password, user.passwordHash)
+    : await verifyPasswordBlind(password);
+  if (!user || !korrekt) {
     return { error: "E-Mail-Adresse oder Passwort ist nicht korrekt." };
   }
 
@@ -52,37 +71,71 @@ export async function logoutAction(): Promise<void> {
 }
 
 /**
- * Passwort nach dem Checkout setzen bzw. im Konto ändern.
- * Der Nutzer wird über die im Stripe-Checkout verwendete E-Mail identifiziert,
- * die zuvor per Webhook bzw. auf der Willkommensseite angelegt wurde.
+ * Passwort vergeben - nur mit Nachweis (siehe src/lib/zugang.ts). Das Konto
+ * kommt aus dem Nachweis, nie aus dem Formular.
  */
-export async function setPasswordAction(
+export async function passwortSetzenAction(
   _prev: FormState,
   data: FormData,
 ): Promise<FormState> {
-  const email = str(data, "email");
+  const zugang = await zugangLesen();
+  if (!zugang) {
+    return { error: "Der Link ist abgelaufen oder wurde schon benutzt. Bitte fordere einen neuen an." };
+  }
+
   const password = str(data, "password");
   const confirm = str(data, "passwordConfirm");
-
-  if (!email) return { error: "E-Mail-Adresse fehlt." };
   if (password.length < MIN_PASSWORD) {
     return { error: `Das Passwort muss mindestens ${MIN_PASSWORD} Zeichen lang sein.` };
+  }
+  if (password.length > MAX_PASSWORD) {
+    return { error: `Das Passwort darf höchstens ${MAX_PASSWORD} Zeichen lang sein.` };
   }
   if (password !== confirm) {
     return { error: "Die beiden Passwörter stimmen nicht überein." };
   }
 
-  const user = await findUserByEmail(email);
-  if (!user) {
-    return {
-      error:
-        "Zu dieser E-Mail-Adresse liegt kein Zugang vor. Bitte die im Checkout verwendete Adresse eingeben.",
-    };
-  }
-
-  const updated = await upsertUser(email, { passwordHash: await hashPassword(password) });
+  const updated = await upsertUser(zugang.user.email, { passwordHash: await hashPassword(password) });
+  await zugangLoeschen();
   await createCustomerSession(updated.id);
   redirect("/analysen");
+}
+
+/**
+ * Link zum Passwort-Vergeben per E-Mail anfordern. Die Antwort ist immer
+ * dieselbe und kommt sofort - sie verrät nicht, ob es zur Adresse ein Konto gibt.
+ */
+export async function zugangslinkAction(
+  _prev: FormState,
+  data: FormData,
+): Promise<FormState> {
+  const email = str(data, "email").toLowerCase();
+  if (!gueltigeEmail(email)) return { error: "Bitte gib eine gültige E-Mail-Adresse an." };
+
+  if (
+    gedrosselt(`zugangslink:${await clientIp()}`, 5, 15 * 60_000) ||
+    gedrosselt(`zugangslink:${email}`, 3, 60 * 60_000)
+  ) {
+    return { error: ZU_VIELE };
+  }
+
+  const user = await findUserByEmail(email);
+  if (user) {
+    after(async () => {
+      try {
+        const link = await zugangslink(user);
+        // Ohne Archiv-Kopie: Der Link ist ein Schlüssel zum Konto
+        await sendeMail({ an: user.email, ...zugangslinkMail(link), archiv: false });
+      } catch (error) {
+        console.error("[Zugang] Link-Mail nicht versendet:", error);
+      }
+    });
+  }
+
+  return {
+    success:
+      "Wenn zu dieser Adresse ein Konto besteht, haben wir dir einen Link geschickt. Er ist eine Stunde gültig.",
+  };
 }
 
 /* -------------------------------- Admin ----------------------------------- */
@@ -102,6 +155,9 @@ export async function adminLoginAction(
       error:
         "Es ist kein Admin-Zugang konfiguriert. Bitte ADMIN_EMAIL und ADMIN_PASSWORD_HASH setzen.",
     };
+  }
+  if (gedrosselt(`admin:${await clientIp()}`, 5, 15 * 60_000)) {
+    return { error: ZU_VIELE };
   }
   if (!(await verifyAdminCredentials(email, password))) {
     return { error: "Zugangsdaten sind nicht korrekt." };
