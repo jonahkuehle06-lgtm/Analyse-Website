@@ -139,4 +139,5 @@ Grundlage:
   - Supabase anbinden.
   - Rechtsfrage: Kündigung erst nach E-Mail-Bestätigung ausführen?
   - Bestellungen mit fremder E-Mail.
+- Freigabe „passt“ am 23.10.2026 – live auf `main`.
 
