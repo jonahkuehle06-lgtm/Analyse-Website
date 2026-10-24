@@ -108,7 +108,7 @@ Grundlage:
 - [x] Build, Tests, neue Tests für die Lücken (Unteragent); Bericht und Freigabe
 
 ## Plan – Phase 2: mit KI und Diensten (nach Rückfrage, teils Konten nötig)
-- [ ] Wöchentliche KI-Sicherheitsprüfung als Routine (npm audit, neue Advisories, Code-Review, Fix auf Branch, Nachricht)
+- [x] Wöchentliche KI-Sicherheitsprüfung als Routine „Wöchentlicher Sicherheitscheck“, montags 8:45 Uhr (Berlin), Push + E-Mail; läuft ohne Connectoren (Prüfen/Berichten ja, Fix-Branch pushen evtl. nicht)
 - [ ] GitHub: Dependabot-Alerts/-Updates (mit Wartezeit gegen frische Schadpakete), Secret Scanning + Push Protection, CodeQL + Copilot Autofix
 - [ ] Vercel Firewall: Rate-Limits für Login/Chat/Formulare, Bot-Schutz, im Ernstfall Attack Challenge Mode
 - [ ] Optional: strenge CSP mit Nonce (nach Test mit dem echten GTM-Container), Bot-Schutz (BotID/Turnstile) für Formulare
