@@ -3,6 +3,7 @@ import PricingSection from "@/components/PricingSection";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import LogoScene from "@/components/LogoScene";
 import CandleChart from "@/components/CandleChart";
+import Vergleich from "@/components/Vergleich";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { PLANS } from "@/lib/config";
@@ -187,6 +188,9 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* ---------------------------- Vergleich ----------------------------- */}
+      <Vergleich />
 
       {/* ------------------------------ Pakete ------------------------------ */}
       <div className="cv-auto">
