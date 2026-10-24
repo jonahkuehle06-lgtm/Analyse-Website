@@ -145,7 +145,7 @@ Grundlage:
 - [x] 20 Analysen (die live sichtbaren, IDs unverändert) per SQL nach Supabase übernommen; Schema war vollständig
 - [x] Schutz: Live-Seite lehnt Änderungen ohne Datenbank ab (statt flüchtigem Speicher); Admin zeigt roten Hinweis
 - [x] Variablennamen der Vercel-Integration werden ebenfalls erkannt
-- [ ] Nutzer: NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in Vercel (nur Production), dann Redeploy
-- [ ] Danach live prüfen: Supabase-Logs zeigen Zugriffe der Seite, Analysen werden aus der Datenbank geladen
+- [x] Nutzer: NEXT_PUBLIC_SUPABASE_URL (Typ Config) + SUPABASE_SERVICE_ROLE_KEY (Secret) in Vercel, nur Production, Redeploy (24.10.2026)
+- [x] Live geprüft: Supabase-Logs zeigen GET /rest/v1/analyses (200) von supabase-js auf Node 24.21.0 genau zu den Seitenaufrufen; 20 Analysen sichtbar
 - Offen (klein): Löschen im Admin und Passwort-Setzen zeigen ohne Datenbank nur die allgemeine Fehlerseite statt eines Hinweises
 
