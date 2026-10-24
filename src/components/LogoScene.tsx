@@ -156,15 +156,23 @@ export default function LogoScene({ className = STANDARD_GROESSE }: { className?
       const ro = new ResizeObserver(beiGroessenaenderung);
       ro.observe(el);
 
-      // Bei verdecktem Tab nicht weiterrechnen
+      // Nur weiterrechnen, solange die Marke im Bild und der Tab sichtbar ist - sonst
+      // belegt sie die Grafikkarte, waehrend weiter unten die Kartenbuehne laeuft
+      let imBild = true;
       const beiSichtwechsel = () => {
-        if (document.hidden) cancelAnimationFrame(frame);
-        else zeichnen();
+        cancelAnimationFrame(frame);
+        if (imBild && !document.hidden) zeichnen();
       };
+      const sicht = new IntersectionObserver(([eintrag]) => {
+        imBild = eintrag.isIntersecting;
+        beiSichtwechsel();
+      });
+      sicht.observe(el);
       document.addEventListener("visibilitychange", beiSichtwechsel);
 
       aufraeumen = () => {
         cancelAnimationFrame(frame);
+        sicht.disconnect();
         document.removeEventListener("visibilitychange", beiSichtwechsel);
         ro.disconnect();
         pmrem.dispose();

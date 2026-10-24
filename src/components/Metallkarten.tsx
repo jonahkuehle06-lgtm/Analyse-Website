@@ -378,6 +378,11 @@ function bauBuehne({ buehne, bild, leinwand, intro, kartenTexte }: BuehnenTeile)
     modus = neu;
     buehne.dataset.modus = neu;
   };
+  // three.js braucht WebGL 2 - fehlt es, gleich die normale Einleitung statt spaeter mitten im Scrollen
+  if (!("WebGL2RenderingContext" in window)) {
+    setzeModus("none");
+    return () => {};
+  }
   setzeModus(ruhig.matches ? "static" : "scroll");
 
   let abgebrochen = false;
@@ -410,6 +415,8 @@ function bauBuehne({ buehne, bild, leinwand, intro, kartenTexte }: BuehnenTeile)
       schriftenLaden(),
     ]);
     if (abgebrochen) return;
+    // "Bewegung reduzieren" kann seit dem Laden umgestellt worden sein
+    setzeModus(ruhig.matches ? "static" : "scroll");
 
     const renderer = new THREE.WebGLRenderer({ canvas: leinwand, antialias: true, alpha: true });
     aufraeumer.push(() => renderer.dispose());
@@ -568,7 +575,10 @@ function bauBuehne({ buehne, bild, leinwand, intro, kartenTexte }: BuehnenTeile)
         k.kante.dispose();
         k.farbTextur.dispose();
         k.datenTextur.dispose();
+        // Zeichenflaechen gleich freigeben - iOS begrenzt den Speicher dafuer
+        k.farbe.width = k.farbe.height = k.daten.width = k.daten.height = 0;
       }
+      auraBild.width = auraBild.height = 0;
       geometrie.dispose();
       leisteGeometrie.dispose();
       leisteMaterial.dispose();
@@ -786,6 +796,13 @@ function bauBuehne({ buehne, bild, leinwand, intro, kartenTexte }: BuehnenTeile)
     }
 
     function neuZeichnen() {
+      // Passt die Einleitung nicht ins stehende Bild (grosse Schrift, starker Zoom), entfaellt die Buehne:
+      // ihr Text waere sonst abgeschnitten, und er steht nur hier
+      if (modus === "scroll" && intro.offsetHeight > bild.clientHeight) {
+        setzeModus("none");
+        aufraeumen();
+        return;
+      }
       groesse();
       aktuell = ziel = zielAusScroll();
       zeichne(aktuell);
