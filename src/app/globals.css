@@ -780,13 +780,13 @@ input[type="radio"] {
    bleibt; darin drei Metallkarten (three.js, siehe Metallkarten.tsx).
    Uebernommen aus dem Prototyp "PAX Metallkarten". */
 .karten-buehne {
-  /* Hoehe der Kopfzeile samt Linie (SiteHeader: h-16, ab md 76px) */
+  /* Hoehe der Kopfzeile samt Linie (SiteHeader: h-16, ab lg 76px) */
   --kopfzeile: calc(4rem + 1px);
   position: relative;
   height: 480vh;
   height: 480svh;
 }
-@media (min-width: 48rem) {
+@media (min-width: 64rem) {
   .karten-buehne { --kopfzeile: 77px; }
 }
 @media (max-aspect-ratio: 1/1) {

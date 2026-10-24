@@ -56,12 +56,13 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
           : "bg-[var(--color-ink)]"
       }`}
     >
-      <div className="frame flex h-16 items-center justify-between gap-6 md:h-[76px]">
+      <div className="frame flex h-16 items-center justify-between gap-6 lg:h-[76px]">
         <Link href="/" aria-label="Zur Startseite" className="shrink-0">
           <Wordmark />
         </Link>
 
-        <nav aria-label="Hauptnavigation" className="hidden items-center gap-9 md:flex">
+        {/* Volle Navigation erst ab 1024 px - auf Tablets passt sie nicht in eine Zeile */}
+        <nav aria-label="Hauptnavigation" className="hidden items-center gap-9 lg:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
@@ -78,7 +79,7 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
           ))}
         </nav>
 
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-6 lg:flex">
           {loggedIn ? (
             <>
               <Link
@@ -112,7 +113,7 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
           aria-label={open ? "Menü schließen" : "Menü öffnen"}
           aria-expanded={open}
           aria-controls="mobile-menu"
-          className="-mr-2 flex h-11 w-11 items-center justify-center md:hidden"
+          className="-mr-2 flex h-11 w-11 items-center justify-center lg:hidden"
         >
           <span className="relative block h-3 w-6">
             <span
@@ -132,7 +133,7 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
       {open && (
         <div
           id="mobile-menu"
-          className="fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col overflow-y-auto border-t border-[var(--color-line)] bg-[var(--color-ink)] px-[var(--gutter)] pb-8 md:hidden"
+          className="fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col overflow-y-auto border-t border-[var(--color-line)] bg-[var(--color-ink)] px-[var(--gutter)] pb-8 lg:hidden"
         >
           <nav aria-label="Hauptnavigation" className="mt-4 flex flex-col">
             {mobileItems.map((item, i) => (

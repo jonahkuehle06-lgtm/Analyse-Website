@@ -230,3 +230,13 @@ Umsetzung
 - Geprüft lokal (16 Adressen): je ein Canonical auf die eigene Adresse (Filter und ?gesperrt=1 auf die
   Grundseite), je eine H1, je ein og:image (200), Titel/Beschreibungen wie freigegeben, /login weiter noindex,
   PDFs mit X-Robots-Tag noindex, /favicon.ico 200, robots.txt sperrt nur /api/; H1 auf /preise sieht aus wie zuvor
+
+---
+
+# Kopfzeile auf Tablets und Tauben-Kennung (24.10.2026, Auftrag: „Ja“ – zur Probe)
+- [x] Kopfzeile: volle Navigation erst ab 1024 px (vorher ab 768 px, dort brachen „Über uns“ und „Zugang sichern“
+      um); darunter das Handy-Menü mit „Zugang sichern“ im Menü. Bühnen-Abstand (`--kopfzeile`) folgt dem Wechsel
+- [x] DoveMark: eigene Kennung je Taube (`useId`), vorher 5× `id="taube"`; einfarbige Taube ohne Verlauf
+- [x] Geprüft: 768/820 px ohne Umbruch, Kopfzeile 65 px, Bühne bündig; Menü öffnet mit allen Punkten;
+      1024/1440 px unverändert; 4 eindeutige Kennungen, alle 8 Verweise gültig
+- [ ] Freigabe abwarten, dann live
