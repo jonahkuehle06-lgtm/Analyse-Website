@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import LegalPage, { LegalSection } from "@/components/LegalPage";
 import { COMPANY } from "@/lib/config";
+import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Datenschutz",
   description: "Informationen zur Verarbeitung personenbezogener Daten nach Art. 13 DSGVO.",
+  ...kanonisch("/datenschutz"),
 };
 
 export default function DatenschutzPage() {

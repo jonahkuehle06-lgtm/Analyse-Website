@@ -3,11 +3,13 @@ import Link from "next/link";
 import LegalReviewNote from "@/components/LegalReviewNote";
 import Wordmark from "@/components/Wordmark";
 import { BRAND, COMPANY } from "@/lib/config";
+import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Haftungsausschluss",
   description:
     "Risikohinweise, Haftungsausschluss und Hinweise zu möglichen Interessenkonflikten.",
+  ...kanonisch("/haftungsausschluss"),
 };
 
 const PARAGRAPHS: { heading?: string; body: React.ReactNode }[] = [

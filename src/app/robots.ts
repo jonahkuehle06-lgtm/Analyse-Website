@@ -6,7 +6,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin", "/admin/", "/konto", "/login", "/willkommen", "/api/"],
+      // Private Seiten tragen selbst "noindex" - gesperrt saehe Google den Hinweis nie
+      disallow: ["/api/"],
     },
     sitemap: `${siteUrl()}/sitemap.xml`,
   };

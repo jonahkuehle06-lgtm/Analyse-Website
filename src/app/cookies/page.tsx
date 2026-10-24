@@ -3,11 +3,13 @@ import Link from "next/link";
 import LegalPage, { LegalSection } from "@/components/LegalPage";
 import { COMPANY } from "@/lib/config";
 import { gtmId } from "@/components/GoogleTagManager";
+import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Cookies",
   description:
     "Welche Cookies diese Website setzt, wozu sie dienen und wie sie sich löschen lassen.",
+  ...kanonisch("/cookies"),
 };
 
 const COOKIES = [

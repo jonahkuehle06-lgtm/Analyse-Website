@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import PricingSection from "@/components/PricingSection";
 import { currentUser } from "@/lib/auth";
-import { YEARLY_DISCOUNT_MONTHS } from "@/lib/config";
+import { PLANS, YEARLY_DISCOUNT_MONTHS } from "@/lib/config";
+import { kanonisch } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Pakete",
-  description: "Basic, Black und Platin — Zugang zu 10, 25 oder 50 Analysen.",
+  title: "Pakete und Preise",
+  description: `${PLANS.basic.name}, ${PLANS.black.name} und ${PLANS.platin.name}: Zugang zu ${PLANS.basic.limit}, ${PLANS.black.limit} oder ${PLANS.platin.limit} Aktienanalysen – monatlich oder jährlich mit ${YEARLY_DISCOUNT_MONTHS} Monaten gratis.`,
+  ...kanonisch("/preise"),
 };
 
 const FAQ = [
@@ -38,7 +40,7 @@ export default async function PreisePage() {
 
   return (
     <>
-      <PricingSection currentPlan={user?.plan ?? null} />
+      <PricingSection currentPlan={user?.plan ?? null} headingTag="h1" />
 
       <section>
         <div className="frame section">

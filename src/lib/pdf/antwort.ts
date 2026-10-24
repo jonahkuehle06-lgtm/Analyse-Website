@@ -12,6 +12,8 @@ export async function pdfAntwort(doc: LegalDoc): Promise<Response> {
       // s-maxage: auch am CDN zwischenspeichern, damit Abrufe nicht jedes Mal
       // die Funktion starten (ein neues Deployment leert den Cache)
       "Cache-Control": "public, max-age=3600, s-maxage=86400",
+      // Nur die HTML-Seite soll in Suchergebnissen stehen, nicht ihr PDF-Doppel
+      "X-Robots-Tag": "noindex",
     },
   });
 }

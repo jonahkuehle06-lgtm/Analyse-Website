@@ -15,6 +15,7 @@ import ConsentBanner from "@/components/ConsentBanner";
 import RevealObserver from "@/components/RevealObserver";
 import { BRAND, siteUrl } from "@/lib/config";
 import { currentUser } from "@/lib/auth";
+import { OPEN_GRAPH } from "@/lib/seo";
 
 /*
  * Zwei Schriften, mehr nicht:
@@ -46,6 +47,7 @@ export const metadata: Metadata = {
   description:
     "Aktienanalysen auf Basis fundamentaler und technischer Methoden – mit langfristigem Value-Ansatz. Kurzbegründung, Kursziel und Signalstärke je Titel.",
   robots: { index: true, follow: true },
+  openGraph: OPEN_GRAPH,
 };
 
 export const viewport: Viewport = {

@@ -7,11 +7,13 @@ import ScenarioChart from "@/components/ScenarioChart";
 import PriceZones from "@/components/PriceZones";
 import { BEISPIEL_ANALYSE } from "@/lib/beispiel";
 import { SIGNALS, SIGNAL_LEVELS } from "@/lib/config";
+import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Methodik",
+  title: "Methodik: So entstehen unsere Analysen",
   description:
-    "Wie die Signalstärke zustande kommt und was eine Analyse enthält.",
+    "Bilanzanalyse, Bewertungsmodelle, technische Indikatoren und Elliott-Wellen: So entstehen die Aktienanalysen von PAX Solutions und ihre Signalstärke.",
+  ...kanonisch("/methodik"),
 };
 
 /** Die sechs Saeulen, auf denen eine Analyse steht. */

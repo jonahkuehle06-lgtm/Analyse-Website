@@ -5,12 +5,14 @@ import WiderrufForm from "@/components/WiderrufForm";
 import { widerrufenAction } from "@/lib/actions/vertrag";
 import { currentUser } from "@/lib/auth";
 import { vertragsOptionFuer, vertragsOptionen } from "@/lib/legal/vertrag";
+import { kanonisch } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Vertrag widerrufen",
   description: "Vertrag elektronisch widerrufen – mit sofortiger Eingangsbestätigung per E-Mail.",
+  ...kanonisch("/widerrufen"),
 };
 
 /** Widerrufsfunktion: elektronischer Widerruf ohne Anmeldung, mit Eingangsbestätigung. */

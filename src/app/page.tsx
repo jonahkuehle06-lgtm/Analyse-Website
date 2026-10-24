@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Metallkarten from "@/components/Metallkarten";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
@@ -6,9 +7,15 @@ import CandleChart from "@/components/CandleChart";
 import Vergleich from "@/components/Vergleich";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
-import { PLANS } from "@/lib/config";
+import { BRAND, PLANS } from "@/lib/config";
+import { kanonisch, strukturierteDaten } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: { absolute: `Aktienanalysen mit Value-Ansatz — ${BRAND.name} ${BRAND.suffix}` },
+  ...kanonisch("/"),
+};
 
 /** Die drei Grundsaetze, die unter dem Hero stehen. */
 const PRINCIPLES = [
@@ -52,6 +59,11 @@ export default async function HomePage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(strukturierteDaten()).replace(/</g, "\\u003c") }}
+      />
+
       {/* ------------------------------- Hero ------------------------------- */}
       <section className="relative border-b border-[var(--color-line)]">
         <div className="frame bg-[var(--color-ink)]">

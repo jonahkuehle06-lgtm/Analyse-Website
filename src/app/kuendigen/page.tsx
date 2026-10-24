@@ -6,12 +6,14 @@ import { kuendigenAction } from "@/lib/actions/vertrag";
 import { currentUser } from "@/lib/auth";
 import { COMPANY } from "@/lib/config";
 import { vertragsOptionFuer, vertragsOptionen } from "@/lib/legal/vertrag";
+import { kanonisch } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Vertrag kündigen",
   description: "Abonnement kündigen – ohne Anmeldung, mit sofortiger Bestätigung per E-Mail.",
+  ...kanonisch("/kuendigen"),
 };
 
 /** Bestätigungsseite der Kündigungsschaltfläche (§ 312k BGB) - bewusst ohne Anmeldung erreichbar. */

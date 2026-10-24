@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
+import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Über uns",
   description:
     "Finanzielle Freiheit ist für jeden. Analysen und Research zu Aktien.",
+  ...kanonisch("/ueber-uns"),
 };
 
 /**

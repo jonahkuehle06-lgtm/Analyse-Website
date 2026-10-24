@@ -176,7 +176,7 @@ Nur auf der Startseite, nicht unter /preise. Texte aktuell halten. Live erst nac
 - [x] /preise unverändert (PricingSection mit eigener Überschrift, ohne Bühne)
 - [x] Prüfung durch Unteragenten: alle Formate, Umschalter, Ausweichmodi, Videos; unabhängiger Code-Review
 - [x] Funde aus dem Review behoben (Commit 47b0e3a) und nachgeprüft
-- [ ] Bilder und Videos zur Freigabe zeigen; live erst nach „passt“
+- [x] Bilder und Videos gezeigt; Freigabe „alles passt“ am 24.10.2026 – live seit 21:13 UTC (main 3777107)
 
 ### Review Runde 9
 **Geprüft** (Chromium + SwiftShader, 1440×900, 1920×1080, 1440×790, 1180×820, 844×390, 820×1180, 390×844, 375×667)
@@ -217,6 +217,16 @@ Befund (Kurzfassung)
 - Später: eigene Domain, mehr öffentliche Inhalte (fast alles hinter der Bezahlschranke), HTML nie gecacht
 
 Vorschläge (warten auf Freigabe)
-- [ ] Technik ohne neue Texte: Canonical, H1 auf /preise, Open Graph, JSON-LD (Name, URL, Logo), PDFs noindex, favicon.ico, robots.txt
-- [ ] Neue Titel und Beschreibungen (Liste im Chat)
+- [x] Technik ohne neue Texte: Canonical, H1 auf /preise, Open Graph, JSON-LD (Name, URL, Logo), PDFs noindex, favicon.ico, robots.txt
+- [x] Neue Titel und Beschreibungen (Freigabe „alles passt … kann alles live“ am 24.10.2026)
 - [ ] Search-Console-Code einbauen, sobald der Inhaber ihn schickt
+
+Umsetzung
+- `src/lib/seo.ts`: `kanonisch(pfad)` für 13 öffentliche Seiten (Canonical + og:url, type, locale, site_name, Bild);
+  Grundwerte im Layout; JSON-LD (Organization, WebSite) auf der Startseite
+- Preise-Beschreibung aus config.ts (Namen, Umfang, Gratis-Monate) – bleibt so aktuell
+- Fund beim Prüfen: Seiten mit eigener Open-Graph-Angabe verlieren das Bild aus opengraph-image.png –
+  deshalb steht das Bild ausdrücklich in `kanonisch()`
+- Geprüft lokal (16 Adressen): je ein Canonical auf die eigene Adresse (Filter und ?gesperrt=1 auf die
+  Grundseite), je eine H1, je ein og:image (200), Titel/Beschreibungen wie freigegeben, /login weiter noindex,
+  PDFs mit X-Robots-Tag noindex, /favicon.ico 200, robots.txt sperrt nur /api/; H1 auf /preise sieht aus wie zuvor

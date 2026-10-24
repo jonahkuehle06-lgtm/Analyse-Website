@@ -7,13 +7,15 @@ import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { PLANS, PLAN_ORDER, SIGNAL_LEVELS, planLimit } from "@/lib/config";
 import type { SignalLevel } from "@/lib/types";
+import { kanonisch } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Analysen",
+  title: "Aktienanalysen",
   description:
-    "Alle aktuellen Aktienanalysen mit Signalstärke, Kurzbegründung und Kursziel.",
+    "Alle aktuellen Aktienanalysen von PAX Solutions mit Signalstärke, Kurzbegründung und Kursziel – fundamental und technisch fundiert.",
+  ...kanonisch("/analysen"),
 };
 
 export default async function AnalysenPage({

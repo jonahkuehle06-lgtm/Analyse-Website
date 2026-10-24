@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import LegalPage, { LegalSection } from "@/components/LegalPage";
 import { BRAND, COMPANY } from "@/lib/config";
+import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Impressum",
   description: "Anbieterkennzeichnung nach § 5 DDG und § 18 Abs. 2 MStV.",
+  ...kanonisch("/impressum"),
 };
 
 export default function ImpressumPage() {

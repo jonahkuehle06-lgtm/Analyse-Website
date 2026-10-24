@@ -13,13 +13,20 @@ const euro = new Intl.NumberFormat("de-DE", {
 });
 
 /** Kopf des Paket-Bereichs - auf der Startseite steht er in der Kartenbühne (Metallkarten). */
-export function PaketeKopf({ className = "max-w-2xl" }: { className?: string }) {
+export function PaketeKopf({
+  className = "max-w-2xl",
+  als: Ueberschrift = "h2",
+}: {
+  className?: string;
+  /** Auf /preise ist es die Hauptüberschrift der Seite */
+  als?: "h1" | "h2";
+}) {
   return (
     <div className={className}>
       <span className="tag">Pakete</span>
-      <h2 className="display mt-6 text-[length:var(--step-h2)] text-[var(--color-platinum)]">
+      <Ueberschrift className="display mt-6 text-[length:var(--step-h2)] text-[var(--color-platinum)]">
         Zugang nach <em>Maß</em>
-      </h2>
+      </Ueberschrift>
       <p className="lead mt-5">
         Jedes Paket schaltet eine feste Anzahl der aktuellsten Analysen frei.
         Das Monatsabo ist monatlich kündbar, das Jahresabo nach den ersten zwölf
@@ -32,11 +39,13 @@ export function PaketeKopf({ className = "max-w-2xl" }: { className?: string }) 
 export default function PricingSection({
   currentPlan = null,
   heading = true,
+  headingTag = "h2",
   interval: vorgabe,
   onIntervalChange,
 }: {
   currentPlan?: PlanId | null;
   heading?: boolean;
+  headingTag?: "h1" | "h2";
   /** Abrechnungszeitraum von außen - so zeigt die Kartenbühne dieselben Preise */
   interval?: BillingInterval;
   onIntervalChange?: (interval: BillingInterval) => void;
@@ -50,7 +59,7 @@ export default function PricingSection({
     <section id="pakete" className="border-b border-[var(--color-line)]">
       <div className="frame section">
         <div data-reveal className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          {heading ? <PaketeKopf /> : <span />}
+          {heading ? <PaketeKopf als={headingTag} /> : <span />}
 
           {/* Intervall-Umschalter */}
           <div className="flex flex-col gap-3 lg:items-end">
