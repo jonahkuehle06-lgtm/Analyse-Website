@@ -1,10 +1,8 @@
 /**
- * Inhalte der Gegenüberstellung auf der Startseite.
- * PLATZHALTER - der endgültige Text kommt vom Inhaber.
+ * Inhalte der Gegenüberstellung auf der Startseite (Text vom Inhaber).
  */
 
 export interface VergleichsZeile {
-  kriterium: string;
   andere: string;
   pax: string;
 }
@@ -13,35 +11,30 @@ export const VERGLEICH = {
   etikett: "Vergleich",
   /** Überschrift; der zweite Teil wird kursiv betont */
   titel: ["Was PAX Solutions ", "unterscheidet"] as const,
-  einleitung:
-    "Kurz gegenübergestellt: worin sich unsere Analysen von typischen Analyse-Portalen unterscheiden.",
-  andere: "Typische Analyse-Portale",
+  /** Optionaler Satz unter der Überschrift - leer lassen, wenn keiner gewünscht */
+  einleitung: "",
+  andere: "Andere Analysehäuser",
   pax: "PAX Solutions",
   zeilen: [
     {
-      kriterium: "Umfang je Analyse",
-      andere: "Lange Texte über mehrere Seiten",
-      pax: "Eine Karte, in zehn Sekunden gelesen",
+      andere: "Einseitige und oberflächliche Analysen",
+      pax: "Mehrstufiger Analyseprozess aus verschiedenen Blickwinkeln",
     },
     {
-      kriterium: "Empfehlung",
-      andere: "Oft ohne klare Einordnung",
-      pax: "Signalstärke in fünf Stufen",
+      andere: "Komplizierte Fachsprache mit zu vielen Angaben",
+      pax: "Ausgefeilte Veröffentlichungen, auf den Kern heruntergebrochen und sofort umsetzbar",
     },
     {
-      kriterium: "Kursziel und Horizont",
-      andere: "Selten beides angegeben",
-      pax: "Bei jeder Analyse",
+      andere: "Theoretisches Wissen",
+      pax: "Praktische Erfahrung",
     },
     {
-      kriterium: "Methode",
-      andere: "Meist nur ein Ansatz",
-      pax: "Fundamental und technisch, mit Value-Fokus",
+      andere: "Kurzfristiges Trading",
+      pax: "Langfristiger Aufbau von Vermögen und Werten",
     },
     {
-      kriterium: "Kosten",
-      andere: "Teure Jahresabos",
-      pax: "Monatlich kündbar",
+      andere: "Häufig wechselnde Meinungen",
+      pax: "Langfristige und konstante Ziele",
     },
   ] satisfies VergleichsZeile[],
 };
