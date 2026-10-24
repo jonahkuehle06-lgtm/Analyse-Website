@@ -174,8 +174,30 @@ Nur auf der Startseite, nicht unter /preise. Texte aktuell halten. Live erst nac
   - Bühne bleibt unter der Kopfzeile stehen; three.js startet erst kurz vor der Bühne
   - Kamera hält die vordere Karte mit etwa 3 % Abstand vom Rand (vorher stieß sie bei flachen Fenstern an)
 - [x] /preise unverändert (PricingSection mit eigener Überschrift, ohne Bühne)
-- [ ] Prüfung durch Unteragenten: alle Formate, Umschalter, Ausweichmodi, Videos; unabhängiger Code-Review
+- [x] Prüfung durch Unteragenten: alle Formate, Umschalter, Ausweichmodi, Videos; unabhängiger Code-Review
+- [x] Funde aus dem Review behoben (Commit 47b0e3a) und nachgeprüft
 - [ ] Bilder und Videos zur Freigabe zeigen; live erst nach „passt“
+
+### Review Runde 9
+**Geprüft** (Chromium + SwiftShader, 1440×900, 1920×1080, 1440×790, 1180×820, 844×390, 820×1180, 390×844, 375×667)
+- Kopfzeile bleibt oben, Bühne direkt darunter; kein Überlauf; Konsole sauber
+- Karten nie am Rand abgeschnitten (vordere Karte am PC 15–27 px Abstand); Bildunterschriften
+  vollständig im Bild, ohne Überlappung, Texte wörtlich wie config.ts
+- Umschalter: Jährlich zeigt 90/240/490 € „/Jahr“ in Raster und Bildunterschriften, zurück ebenso
+- In Ruhe keine weiteren Bilder; /preise ohne Bühne; je eine H2 „Zugang nach Maß“ und ein #pakete
+- Bewegung reduzieren: Standbild unter der Einleitung; ohne WebGL und ohne JavaScript: nur Einleitung
+- Seitenwechsel zu /preise und zurück: Bühne startet wieder
+- Nach dem Review: Logo pausiert außerhalb des Bilds (0 Zeichnungen), Druck ohne Bühne,
+  ohne WebGL 2 sofort Einleitung, bei 200 % Schrift entfällt die Bühne (Text bleibt lesbar)
+
+**Unabhängiger Review:** keine schweren Fehler; Zahlen der Choreografie 1:1 wie im Prototyp.
+Behoben: abgeschnittene Einleitung bei großer Schrift, Kopfzeilenhöhe in rem, Druckansicht,
+Speicher freigeben, „Bewegung reduzieren“ beim Start neu lesen, LogoScene pausiert, WebGL-2-Prüfung.
+Nicht umgesetzt: Aufteilung der Startarbeit auf mehrere Bilder (erst bei Ruckeln am Handy).
+
+**Grenzen:** nur Software-Rendering geprüft – auf einem echten Handy noch offen (Ruckeln beim
+Heranscrollen, Zurück-Taste an der Bühne: im Test sprang die Seite einmal nach oben, vermutlich
+ein Effekt des langsamen Software-Renderings).
 
 ---
 
