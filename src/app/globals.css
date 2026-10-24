@@ -779,8 +779,9 @@ input[type="radio"] {
 /* iOS 26: Safari zeichnet die Seite auch unter der Statusleiste (Dynamic
    Island) und faerbt sie nicht mehr per theme-color. Ohne diese Flaeche
    liefe dort der Inhalt sichtbar ueber der klebenden Kopfzeile durch. Sie
-   uebernimmt Hintergrund und Unschaerfe der Kopfzeile; auf anderen Geraeten
-   liegt sie unsichtbar oberhalb des Bildschirms. */
+   uebernimmt den Hintergrund der Kopfzeile - auf dem Handy deckend schwarz,
+   die Insel verschwindet darin. Auf anderen Geraeten liegt sie unsichtbar
+   oberhalb des Bildschirms. */
 .kopfzeile::before {
   content: "";
   position: absolute;

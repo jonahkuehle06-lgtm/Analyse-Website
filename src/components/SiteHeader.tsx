@@ -50,10 +50,10 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
       // Wichtig: Bei offenem Menue keine Unschaerfe. backdrop-filter macht die
       // Kopfzeile zum Bezugsrahmen fuer "fixed" - das Menue darunter waere
       // dann nur so hoch wie die Kopfzeile selbst.
-      className={`kopfzeile sticky top-0 z-50 print:hidden border-b border-[var(--color-line)] transition-colors duration-300 ${
-        scrolled && !open
-          ? "bg-[rgba(7,7,7,0.88)] backdrop-blur-xl"
-          : "bg-[var(--color-ink)]"
+      // Auf Handy und Tablet immer deckend schwarz: Die Flaeche um die Dynamic
+      // Island (.kopfzeile::before) geht so nahtlos in die Kopfzeile ueber.
+      className={`kopfzeile sticky top-0 z-50 print:hidden border-b border-[var(--color-line)] bg-[var(--color-ink)] transition-colors duration-300 ${
+        scrolled && !open ? "lg:bg-[rgba(7,7,7,0.88)] lg:backdrop-blur-xl" : ""
       }`}
     >
       <div className="frame flex h-16 items-center justify-between gap-6 lg:h-[76px]">

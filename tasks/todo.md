@@ -248,4 +248,8 @@ beim Scrollen läuft der Inhalt sichtbar über der klebenden Kopfzeile durch.
 - [x] `.kopfzeile::before`: Fläche über der Kopfzeile mit deren Hintergrund und Unschärfe (`inherit`)
 - [x] Geprüft (Chromium): Fläche liegt oberhalb des Bildschirms, Farbe/Unschärfe wie die Kopfzeile (auch gescrollt);
       Nachbildung der iOS-26-Lage (Kopfzeile 59 px tiefer, Insel): vorher scheint der helle Abschnitt durch, nachher nicht
-- [ ] Auf einem echten iPhone prüfen (nur dort sichtbar); Freigabe abwarten
+- [x] Wunsch des Inhabers (Screenshot): oben einfach schwarz, passend zur Insel – Kopfzeile auf Handy und Tablet
+      deckend schwarz (Glas-Effekt nur noch am PC), Fläche darüber ebenso
+- [x] Geprüft: 393 px gescrollt Kopf und Fläche rgb(7,7,7) ohne Unschärfe; 1440 px weiter rgba(7,7,7,0.88) + blur;
+      Nachbildung wie der Screenshot: vorher Text über der Leiste, nachher durchgehend schwarz
+- [ ] Freigabe abwarten, dann live; danach auf dem echten iPhone prüfen
