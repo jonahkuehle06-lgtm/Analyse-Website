@@ -11,8 +11,8 @@ export const VERGLEICH = {
   etikett: "Vergleich",
   /** Überschrift; der zweite Teil wird kursiv betont */
   titel: ["Was PAX Solutions ", "unterscheidet"] as const,
-  /** Optionaler Satz unter der Überschrift - leer lassen, wenn keiner gewünscht */
-  einleitung: "",
+  /** Satz unter der Überschrift - nur am PC, wo neben der Tabelle Platz ist */
+  einleitung: "Unsere Prinzipien, die den Unterschied ausmachen.",
   andere: "Andere Analysehäuser",
   pax: "PAX Solutions",
   zeilen: [

@@ -55,8 +55,9 @@ export default function Vergleich() {
             {VERGLEICH.titel[0]}
             <em>{VERGLEICH.titel[1]}</em>
           </h2>
+          {/* Nur am PC: füllt den Platz neben der Tabelle */}
           {VERGLEICH.einleitung && (
-            <p className="mt-5 max-w-[46ch] text-[1.0625rem] leading-relaxed text-[var(--color-mist)]">
+            <p className="mt-5 hidden max-w-[46ch] text-[1.0625rem] leading-relaxed text-[var(--color-mist)] lg:block">
               {VERGLEICH.einleitung}
             </p>
           )}

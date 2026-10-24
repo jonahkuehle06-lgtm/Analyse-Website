@@ -149,3 +149,11 @@ Grundlage:
 - [x] Live geprüft: Supabase-Logs zeigen GET /rest/v1/analyses (200) von supabase-js auf Node 24.21.0 genau zu den Seitenaufrufen; 20 Analysen sichtbar
 - Offen (klein): Löschen im Admin und Passwort-Setzen zeigen ohne Datenbank nur die allgemeine Fehlerseite statt eines Hinweises
 
+
+---
+
+# Runde 8: Vergleich auf der Startseite (24.10.2026)
+- [x] Stelle B (vor den Paketen), heller Abschnitt; PC: Überschrift links, Tabelle rechts (PAX-Spalte dunkel mit Logo); Handy: zwei Karten
+- [x] Text vom Inhaber (5 Gegenüberstellungen); Überschrift „Was PAX Solutions unterscheidet“; Einleitung nur am PC: „Unsere Prinzipien, die den Unterschied ausmachen.“
+- [x] Geprüft: 1440/1920/820/390 px ohne Überlauf, Konsole sauber, Einleitung nur ab 1024 px sichtbar
+- Freigabe „passt … kann live“ am 24.10.2026
