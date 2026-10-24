@@ -176,3 +176,25 @@ Nur auf der Startseite, nicht unter /preise. Texte aktuell halten. Live erst nac
 - [x] /preise unverändert (PricingSection mit eigener Überschrift, ohne Bühne)
 - [ ] Prüfung durch Unteragenten: alle Formate, Umschalter, Ausweichmodi, Videos; unabhängiger Code-Review
 - [ ] Bilder und Videos zur Freigabe zeigen; live erst nach „passt“
+
+---
+
+# SEO-Audit (24.10.2026, Auftrag: „führe einen SEO Audit für die Website durch“)
+Datensammlung durch Unteragenten (Live-Seite = `main` a9e8fc4, 30 URLs, robots, Sitemap, Code).
+PageSpeed Insights ohne API-Schlüssel gesperrt (Kontingent 0) – Messung durch den Inhaber oder lokal.
+
+Befund (Kurzfassung)
+- Gut: crawlbar, serverseitig gerendert, richtige Domain überall, Sitemap/robots gültig, keine kaputten Links,
+  echte 404, Weiterleitungen (Schrägstrich, http→https), HSTS, eindeutige Titel, LCP ist Text, CLS 0
+- Dringend (Inhaber): Impressum und Fuß zeigen Platzhalter (Musterstraße, Max Mustermann, example.com …)
+- Dringend (Inhaber): keine Spur einer Indexierung – Search Console einrichten, Sitemap einreichen
+- Technik: keine Canonical-Tags (Filter-URLs /analysen?signal=1…5 = Duplikate), /preise ohne H1,
+  Open Graph ohne url/type/locale/site_name, kein JSON-LD, PDFs ohne noindex, /favicon.ico 404,
+  robots.txt sperrt Seiten mit noindex, Sitemap-lastmod überall Build-Zeit
+- Texte: Start-Titel 81 Zeichen ohne „Aktienanalysen“, Unterseiten-Titel einwortig, Beschreibungen kurz
+- Später: eigene Domain, mehr öffentliche Inhalte (fast alles hinter der Bezahlschranke), HTML nie gecacht
+
+Vorschläge (warten auf Freigabe)
+- [ ] Technik ohne neue Texte: Canonical, H1 auf /preise, Open Graph, JSON-LD (Name, URL, Logo), PDFs noindex, favicon.ico, robots.txt
+- [ ] Neue Titel und Beschreibungen (Liste im Chat)
+- [ ] Search-Console-Code einbauen, sobald der Inhaber ihn schickt
