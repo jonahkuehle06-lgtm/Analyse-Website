@@ -50,7 +50,7 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
       // Wichtig: Bei offenem Menue keine Unschaerfe. backdrop-filter macht die
       // Kopfzeile zum Bezugsrahmen fuer "fixed" - das Menue darunter waere
       // dann nur so hoch wie die Kopfzeile selbst.
-      className={`sticky top-0 z-50 print:hidden border-b border-[var(--color-line)] transition-colors duration-300 ${
+      className={`kopfzeile sticky top-0 z-50 print:hidden border-b border-[var(--color-line)] transition-colors duration-300 ${
         scrolled && !open
           ? "bg-[rgba(7,7,7,0.88)] backdrop-blur-xl"
           : "bg-[var(--color-ink)]"

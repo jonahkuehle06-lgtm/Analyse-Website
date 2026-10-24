@@ -240,3 +240,12 @@ Umsetzung
 - [x] Geprüft: 768/820 px ohne Umbruch, Kopfzeile 65 px, Bühne bündig; Menü öffnet mit allen Punkten;
       1024/1440 px unverändert; 4 eindeutige Kennungen, alle 8 Verweise gültig
 - [ ] Freigabe abwarten, dann live
+
+# Kopfzeile auf dem iPhone bündig oben (24.10.2026, zur Probe)
+Anlass (Inhaber): Auf neueren iPhones schließt die Leiste mit dem Logo neben der Dynamic Island nicht bündig ab.
+Ursache: Seit iOS 26 zeichnet Safari die Seite auch unter der Statusleiste und färbt sie nicht mehr per theme-color –
+beim Scrollen läuft der Inhalt sichtbar über der klebenden Kopfzeile durch.
+- [x] `.kopfzeile::before`: Fläche über der Kopfzeile mit deren Hintergrund und Unschärfe (`inherit`)
+- [x] Geprüft (Chromium): Fläche liegt oberhalb des Bildschirms, Farbe/Unschärfe wie die Kopfzeile (auch gescrollt);
+      Nachbildung der iOS-26-Lage (Kopfzeile 59 px tiefer, Insel): vorher scheint der helle Abschnitt durch, nachher nicht
+- [ ] Auf einem echten iPhone prüfen (nur dort sichtbar); Freigabe abwarten

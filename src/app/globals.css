@@ -775,6 +775,24 @@ input[type="radio"] {
   .abtaster { display: none; }
 }
 
+/* -------------------------------- Kopfzeile ------------------------------- */
+/* iOS 26: Safari zeichnet die Seite auch unter der Statusleiste (Dynamic
+   Island) und faerbt sie nicht mehr per theme-color. Ohne diese Flaeche
+   liefe dort der Inhalt sichtbar ueber der klebenden Kopfzeile durch. Sie
+   uebernimmt Hintergrund und Unschaerfe der Kopfzeile; auf anderen Geraeten
+   liegt sie unsichtbar oberhalb des Bildschirms. */
+.kopfzeile::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 100%;
+  height: 6rem;
+  background: inherit;
+  -webkit-backdrop-filter: inherit;
+  backdrop-filter: inherit;
+  pointer-events: none;
+}
+
 /* ------------------------ Metallkarten (Startseite) ----------------------- */
 /* Eine hohe Buehne, deren Bild beim Scrollen unter der Kopfzeile stehen
    bleibt; darin drei Metallkarten (three.js, siehe Metallkarten.tsx).
