@@ -239,7 +239,7 @@ Umsetzung
 - [x] DoveMark: eigene Kennung je Taube (`useId`), vorher 5× `id="taube"`; einfarbige Taube ohne Verlauf
 - [x] Geprüft: 768/820 px ohne Umbruch, Kopfzeile 65 px, Bühne bündig; Menü öffnet mit allen Punkten;
       1024/1440 px unverändert; 4 eindeutige Kennungen, alle 8 Verweise gültig
-- [ ] Freigabe abwarten, dann live
+- [x] Freigabe „passt … kannst du live stellen“ am 24.10.2026 – live seit 21:41 UTC (main 5f66384)
 
 # Kopfzeile auf dem iPhone bündig oben (24.10.2026, zur Probe)
 Anlass (Inhaber): Auf neueren iPhones schließt die Leiste mit dem Logo neben der Dynamic Island nicht bündig ab.
@@ -252,4 +252,4 @@ beim Scrollen läuft der Inhalt sichtbar über der klebenden Kopfzeile durch.
       deckend schwarz (Glas-Effekt nur noch am PC), Fläche darüber ebenso
 - [x] Geprüft: 393 px gescrollt Kopf und Fläche rgb(7,7,7) ohne Unschärfe; 1440 px weiter rgba(7,7,7,0.88) + blur;
       Nachbildung wie der Screenshot: vorher Text über der Leiste, nachher durchgehend schwarz
-- [ ] Freigabe abwarten, dann live; danach auf dem echten iPhone prüfen
+- [x] Freigabe „passt“ am 24.10.2026 – live; danach auf dem echten iPhone prüfen (Inhaber)
