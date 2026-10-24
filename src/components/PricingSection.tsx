@@ -12,35 +12,45 @@ const euro = new Intl.NumberFormat("de-DE", {
   maximumFractionDigits: 0,
 });
 
+/** Kopf des Paket-Bereichs - auf der Startseite steht er in der Kartenbühne (Metallkarten). */
+export function PaketeKopf({ className = "max-w-2xl" }: { className?: string }) {
+  return (
+    <div className={className}>
+      <span className="tag">Pakete</span>
+      <h2 className="display mt-6 text-[length:var(--step-h2)] text-[var(--color-platinum)]">
+        Zugang nach <em>Maß</em>
+      </h2>
+      <p className="lead mt-5">
+        Jedes Paket schaltet eine feste Anzahl der aktuellsten Analysen frei.
+        Das Monatsabo ist monatlich kündbar, das Jahresabo nach den ersten zwölf
+        Monaten ebenfalls.
+      </p>
+    </div>
+  );
+}
+
 export default function PricingSection({
   currentPlan = null,
   heading = true,
+  interval: vorgabe,
+  onIntervalChange,
 }: {
   currentPlan?: PlanId | null;
   heading?: boolean;
+  /** Abrechnungszeitraum von außen - so zeigt die Kartenbühne dieselben Preise */
+  interval?: BillingInterval;
+  onIntervalChange?: (interval: BillingInterval) => void;
 }) {
-  const [interval, setInterval] = useState<BillingInterval>("monthly");
+  const [eigenes, setEigenes] = useState<BillingInterval>("monthly");
+  const interval = vorgabe ?? eigenes;
+  const setInterval = onIntervalChange ?? setEigenes;
   const abrechnung = interval === "monthly" ? "monatlich" : "jaehrlich";
 
   return (
     <section id="pakete" className="border-b border-[var(--color-line)]">
       <div className="frame section">
         <div data-reveal className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          {heading ? (
-            <div className="max-w-2xl">
-              <span className="tag">Pakete</span>
-              <h2 className="display mt-6 text-[length:var(--step-h2)] text-[var(--color-platinum)]">
-                Zugang nach <em>Maß</em>
-              </h2>
-              <p className="lead mt-5">
-                Jedes Paket schaltet eine feste Anzahl der aktuellsten Analysen frei.
-                Das Monatsabo ist monatlich kündbar, das Jahresabo nach den ersten zwölf
-                Monaten ebenfalls.
-              </p>
-            </div>
-          ) : (
-            <span />
-          )}
+          {heading ? <PaketeKopf /> : <span />}
 
           {/* Intervall-Umschalter */}
           <div className="flex flex-col gap-3 lg:items-end">

@@ -774,6 +774,160 @@ input[type="radio"] {
   .kz-live { animation: none; }
   .abtaster { display: none; }
 }
+
+/* ------------------------ Metallkarten (Startseite) ----------------------- */
+/* Eine hohe Buehne, deren Bild beim Scrollen unter der Kopfzeile stehen
+   bleibt; darin drei Metallkarten (three.js, siehe Metallkarten.tsx).
+   Uebernommen aus dem Prototyp "PAX Metallkarten". */
+.karten-buehne {
+  --kopfzeile: 65px; /* Hoehe der Kopfzeile samt Linie (SiteHeader) */
+  position: relative;
+  height: 480vh;
+  height: 480svh;
+}
+@media (min-width: 768px) {
+  .karten-buehne { --kopfzeile: 77px; }
+}
+@media (max-aspect-ratio: 1/1) {
+  .karten-buehne {
+    height: 540vh;
+    height: 540svh;
+  }
+}
+
+.karten-bild {
+  position: sticky;
+  top: var(--kopfzeile);
+  height: calc(100vh - var(--kopfzeile));
+  height: calc(100svh - var(--kopfzeile));
+  overflow: hidden;
+}
+
+.karten-leinwand {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.karten-intro {
+  z-index: 2;
+  padding-top: clamp(3rem, 7vw, 6rem);
+  will-change: transform, opacity;
+}
+.karten-intro-inhalt { max-width: 42rem; }
+
+/* Handy quer: Einleitung schmaler, damit sie den Kartenstapel rechts nicht
+   ueberdeckt (Abstaende darin siehe unten, ausserhalb der Ebene) */
+@media (max-height: 520px) and (min-aspect-ratio: 1/1) {
+  .karten-intro { padding-top: 1.5rem; }
+  .karten-intro-inhalt { max-width: 50%; }
+}
+
+/* Bildunterschrift zur Karte im Fokus - Lage und Deckkraft setzt das Skript */
+.karten-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: min(24rem, calc(100% - 2 * var(--gutter)));
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.karten-text-name {
+  font-size: var(--step-h3);
+  font-weight: 400;
+  color: var(--color-platinum);
+}
+.karten-text-tagline {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.625;
+  color: var(--color-mist);
+}
+.karten-text-menge {
+  margin-top: 1rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-platinum);
+}
+.karten-text-preis {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.5rem;
+  margin-top: 0.5rem;
+}
+.karten-text-preis > .display {
+  font-size: 2.5rem;
+  line-height: 1;
+  color: var(--color-platinum);
+}
+.karten-text-einheit {
+  font-size: 0.9375rem;
+  color: var(--color-mist);
+}
+
+/* Handy quer: unter der Karte ist wenig Hoehe - kompakte Bildunterschrift
+   ohne Beschreibung (die steht vollstaendig im Preisraster darunter) */
+@media (max-height: 520px) and (min-aspect-ratio: 1/1) {
+  .karten-text { width: min(18rem, calc(100% - 2 * var(--gutter))); }
+  .karten-text-tagline { display: none; }
+  .karten-text-menge { margin-top: 0.5rem; }
+  .karten-text-preis > .display { font-size: 2rem; }
+}
+
+/* Ohne 3D (kein WebGL, three.js nicht ladbar): Buehne wird zur normalen
+   Einleitung. Ohne JavaScript dasselbe per noscript. */
+.karten-buehne[data-modus="none"] { height: auto; }
+.karten-buehne[data-modus="none"] .karten-bild {
+  position: relative;
+  top: auto;
+  height: auto;
+  overflow: visible;
+}
+.karten-buehne[data-modus="none"] .karten-leinwand,
+.karten-buehne[data-modus="none"] .karten-text { display: none; }
+
+/* Bewegung reduzieren: kein Mitlaufen, die Karten stehen als Schlussbild
+   unter der Einleitung */
+@media (prefers-reduced-motion: reduce) {
+  .karten-buehne { height: auto; }
+  .karten-bild {
+    position: relative;
+    top: auto;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+  .karten-leinwand {
+    position: relative;
+    inset: auto;
+    order: 1;
+    height: auto;
+    margin-top: 2rem;
+    aspect-ratio: 13 / 5;
+  }
+  .karten-text { display: none; }
+}
+@media (prefers-reduced-motion: reduce) and (max-aspect-ratio: 1/1) {
+  .karten-leinwand { aspect-ratio: 2 / 3; }
+}
+}
+
+/* Metallkarten, Handy quer: Abstaende in der Einleitung (PaketeKopf) kleiner.
+   Ausserhalb der Ebene, damit die Regeln die Hilfsklassen mt-6/mt-5
+   uebersteuern. */
+@media (max-height: 520px) and (min-aspect-ratio: 1/1) {
+  .karten-intro h2 { margin-top: 1rem; }
+  .karten-intro .lead {
+    margin-top: 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
 }
 
 /* Druckfassung, etwa um eine Kündigungsbestätigung zu speichern: Dunkle

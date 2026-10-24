@@ -157,3 +157,22 @@ Grundlage:
 - [x] Text vom Inhaber (5 Gegenüberstellungen); Überschrift „Was PAX Solutions unterscheidet“; Einleitung nur am PC: „Unsere Prinzipien, die den Unterschied ausmachen.“
 - [x] Geprüft: 1440/1920/820/390 px ohne Überlauf, Konsole sauber, Einleitung nur ab 1024 px sichtbar
 - Freigabe „passt … kann live“ am 24.10.2026
+
+---
+
+# Runde 9: Metallkarten-Animation auf der Startseite (24.10.2026, zur Probe)
+Auftrag: „setze jetzt die Animation mit den Bankkarten ein“ – aus dem Repo `Try-Out-`, Branch
+`claude/cool-brahmagupta-v4dxrw` (`metallkarten/index.html`, Artefakt „PAX Metallkarten“).
+Nur auf der Startseite, nicht unter /preise. Texte aktuell halten. Live erst nach Freigabe.
+
+- [x] Prototyp gelesen; Datei im Repo und Artefakt sind identisch
+- [x] Texte abgeglichen: Einleitung, Namen, Beschreibungen, Umfang und Preise (9/24/49 €, 90/240/490 €) stimmen mit der Website überein
+- [x] Komponente `Metallkarten.tsx`: Bühne mit three.js (Code des Prototyps), darunter das bestehende Preisraster
+  - Texte direkt aus `config.ts` (Bildunterschriften, Gravur) und aus `PaketeKopf` (Einleitung) – ändern sich künftig mit
+  - Umschalter Monatlich/Jährlich gilt auch für die Bildunterschriften (wie im Prototyp)
+  - Schriften von der Website (next/font) statt Google Fonts, three.js aus dem Paket statt CDN
+  - Bühne bleibt unter der Kopfzeile stehen; three.js startet erst kurz vor der Bühne
+  - Kamera hält die vordere Karte mit etwa 3 % Abstand vom Rand (vorher stieß sie bei flachen Fenstern an)
+- [x] /preise unverändert (PricingSection mit eigener Überschrift, ohne Bühne)
+- [ ] Prüfung durch Unteragenten: alle Formate, Umschalter, Ausweichmodi, Videos; unabhängiger Code-Review
+- [ ] Bilder und Videos zur Freigabe zeigen; live erst nach „passt“

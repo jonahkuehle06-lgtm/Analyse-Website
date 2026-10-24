@@ -1,5 +1,5 @@
 import Link from "next/link";
-import PricingSection from "@/components/PricingSection";
+import Metallkarten from "@/components/Metallkarten";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import LogoScene from "@/components/LogoScene";
 import CandleChart from "@/components/CandleChart";
@@ -192,10 +192,8 @@ export default async function HomePage() {
       {/* ---------------------------- Vergleich ----------------------------- */}
       <Vergleich />
 
-      {/* ------------------------------ Pakete ------------------------------ */}
-      <div className="cv-auto">
-        <PricingSection currentPlan={user?.plan ?? null} />
-      </div>
+      {/* ------------- Pakete: Metallkarten-Buehne, darunter die Preise ------------- */}
+      <Metallkarten currentPlan={user?.plan ?? null} />
     </>
   );
 }
