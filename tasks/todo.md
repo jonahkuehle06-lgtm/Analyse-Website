@@ -266,4 +266,4 @@ Umsetzung:
 - [x] Geprüft mit nachgebildeten sicheren Bereichen (Chromium): Hochformat (oben 59, unten 34) Kopfzeile 0–124 px,
       Logo unter der Insel, Bühne bündig, Menü ab 123 px, Chat/Cookie 34 px über der Home-Leiste; Querformat
       (links/rechts 59) Inhalt neben der Notch; PC unverändert; Sprungmarke versteckt, mit Tab sichtbar
-- [ ] Freigabe abwarten, dann live; auf dem echten iPhone prüfen
+- [x] Freigabe „passt“ am 25.10.2026 – live; auf dem echten iPhone prüfen (Inhaber)
