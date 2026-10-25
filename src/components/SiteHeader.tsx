@@ -52,7 +52,7 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
       // dann nur so hoch wie die Kopfzeile selbst.
       // Auf Handy und Tablet immer deckend schwarz: Die Flaeche um die Dynamic
       // Island (.kopfzeile::before) geht so nahtlos in die Kopfzeile ueber.
-      className={`kopfzeile sticky top-0 z-50 print:hidden border-b border-[var(--color-line)] bg-[var(--color-ink)] transition-colors duration-300 ${
+      className={`kopfzeile sticky top-0 z-50 print:hidden pt-[env(safe-area-inset-top)] border-b border-[var(--color-line)] bg-[var(--color-ink)] transition-colors duration-300 ${
         scrolled && !open ? "lg:bg-[rgba(7,7,7,0.88)] lg:backdrop-blur-xl" : ""
       }`}
     >
@@ -133,7 +133,7 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
       {open && (
         <div
           id="mobile-menu"
-          className="fixed inset-x-0 top-16 bottom-0 z-40 flex flex-col overflow-y-auto border-t border-[var(--color-line)] bg-[var(--color-ink)] px-[var(--gutter)] pb-8 lg:hidden"
+          className="fixed inset-x-0 top-[calc(4rem+env(safe-area-inset-top))] bottom-0 z-40 flex flex-col overflow-y-auto border-t border-[var(--color-line)] bg-[var(--color-ink)] pr-[max(var(--gutter),env(safe-area-inset-right))] pb-[calc(2rem+env(safe-area-inset-bottom))] pl-[max(var(--gutter),env(safe-area-inset-left))] lg:hidden"
         >
           <nav aria-label="Hauptnavigation" className="mt-4 flex flex-col">
             {mobileItems.map((item, i) => (

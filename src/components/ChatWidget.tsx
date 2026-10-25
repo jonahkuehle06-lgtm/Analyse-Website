@@ -97,7 +97,7 @@ export default function ChatWidget() {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Assistent schließen" : "Assistent öffnen"}
         aria-expanded={open}
-        className="fixed right-4 bottom-4 z-[70] flex print:hidden h-14 w-14 items-center justify-center rounded-full border border-[var(--color-line-strong)] bg-[var(--color-anthracite-2)] shadow-[var(--shadow-overlay)] transition-colors duration-200 hover:border-[var(--color-platinum)] hover:bg-[var(--color-anthracite-3)] sm:right-6 sm:bottom-6"
+        className="fixed right-[max(1rem,env(safe-area-inset-right))] bottom-[calc(1rem+env(safe-area-inset-bottom))] z-[70] flex print:hidden h-14 w-14 items-center justify-center rounded-full border border-[var(--color-line-strong)] bg-[var(--color-anthracite-2)] shadow-[var(--shadow-overlay)] transition-colors duration-200 hover:border-[var(--color-platinum)] hover:bg-[var(--color-anthracite-3)] sm:right-[max(1.5rem,env(safe-area-inset-right))] sm:bottom-[calc(1.5rem+env(safe-area-inset-bottom))]"
       >
         {open ? (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -125,7 +125,7 @@ export default function ChatWidget() {
         <div
           role="dialog"
           aria-label="Assistent"
-          className="surface fixed inset-x-3 bottom-22 z-[69] flex print:hidden max-h-[min(72vh,580px)] flex-col overflow-hidden shadow-[var(--shadow-overlay)] sm:inset-x-auto sm:right-6 sm:bottom-24 sm:w-[410px]"
+          className="surface fixed right-[max(0.75rem,env(safe-area-inset-right))] bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-[max(0.75rem,env(safe-area-inset-left))] z-[69] flex print:hidden max-h-[min(72vh,580px)] flex-col overflow-hidden shadow-[var(--shadow-overlay)] sm:left-auto sm:right-[max(1.5rem,env(safe-area-inset-right))] sm:bottom-[calc(6rem+env(safe-area-inset-bottom))] sm:w-[410px]"
         >
           <header className="flex items-center justify-between border-b border-[var(--color-line)] px-5 py-4">
             <div>

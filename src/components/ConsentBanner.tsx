@@ -58,7 +58,7 @@ export default function ConsentBanner() {
       role="dialog"
       aria-modal="false"
       aria-labelledby="consent-titel"
-      className="fixed inset-x-0 bottom-0 z-[80] print:hidden px-3 pb-3 sm:px-5 sm:pb-5"
+      className="fixed inset-x-0 bottom-0 z-[80] print:hidden px-[max(0.75rem,env(safe-area-inset-left),env(safe-area-inset-right))] pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:px-[max(1.25rem,env(safe-area-inset-left),env(safe-area-inset-right))] sm:pb-[calc(1.25rem+env(safe-area-inset-bottom))]"
     >
       <div
         className="surface mx-auto max-w-3xl p-6 shadow-[var(--shadow-overlay)] sm:p-8"

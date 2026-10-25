@@ -253,3 +253,17 @@ beim Scrollen läuft der Inhalt sichtbar über der klebenden Kopfzeile durch.
 - [x] Geprüft: 393 px gescrollt Kopf und Fläche rgb(7,7,7) ohne Unschärfe; 1440 px weiter rgba(7,7,7,0.88) + blur;
       Nachbildung wie der Screenshot: vorher Text über der Leiste, nachher durchgehend schwarz
 - [x] Freigabe „passt“ am 24.10.2026 – live; danach auf dem echten iPhone prüfen (Inhaber)
+
+# Kopfzeile iPhone, zweiter Anlauf (25.10.2026, Auftrag: „Versuch es noch einmal“ – zur Probe)
+Befund (Recherche zu Safari 26: Farbe der Statusleiste kommt von der obersten festen/klebenden Ebene am Rand):
+- Die bildschirmfüllende Körnung (`body.grain::after`, fest, Ebene 60) lag über der Kopfzeile – an ihr bricht
+  Safari die Suche ab (fast unsichtbar), färbt nichts, und der Inhalt scheint durch
+- Die Fläche oberhalb der Kopfzeile wird unter der Statusleiste offenbar nicht gezeichnet
+Umsetzung:
+- [x] Körnung unter die Kopfzeile (Ebene 45)
+- [x] `viewportFit: "cover"`; Kopfzeile reicht bis an den oberen Rand, Abstand `env(safe-area-inset-top)`
+- [x] Sichere Bereiche auch für Menü, `.frame` (Querformat), Cookie-Hinweis, Chat, Sprungmarke, Bühnen-Abstand
+- [x] Geprüft mit nachgebildeten sicheren Bereichen (Chromium): Hochformat (oben 59, unten 34) Kopfzeile 0–124 px,
+      Logo unter der Insel, Bühne bündig, Menü ab 123 px, Chat/Cookie 34 px über der Home-Leiste; Querformat
+      (links/rechts 59) Inhalt neben der Notch; PC unverändert; Sprungmarke versteckt, mit Tab sichtbar
+- [ ] Freigabe abwarten, dann live; auf dem echten iPhone prüfen

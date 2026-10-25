@@ -54,6 +54,9 @@ export const viewport: Viewport = {
   themeColor: "#070707",
   width: "device-width",
   initialScale: 1,
+  // Bis unter Statusleiste und Dynamic Island - die Kopfzeile reicht so bis an
+  // den oberen Rand; Abstaende per env(safe-area-inset-*)
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
