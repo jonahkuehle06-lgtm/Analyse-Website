@@ -274,5 +274,5 @@ Umsetzung:
 - [x] Double-Opt-in: Bestätigungsmail, /warteliste/bestaetigen; Abmelden per Knopf auf /warteliste/abmelden (löscht)
 - [x] Admin: Anzahl bestätigter Einträge, CSV-Download /admin/warteliste (nur angemeldet)
 - [x] Geprüft lokal: Eintragen, Mail, Bestätigen, Abmelden, falscher Link, CSV 401, 390 px ohne Überlauf, Konsole sauber
-- [ ] Texte freigeben; Abschnitt Datenschutzerklärung (Vorschlag im Chat, anwaltlich prüfen)
-- [ ] Freigabe, dann live
+- [x] Texte freigegeben („Passt“ 28.10.2026); Datenschutz Abschnitt 5 „Warteliste“ (Sie-Form, anwaltlich prüfen)
+- [x] Freigabe „Passt“ – live

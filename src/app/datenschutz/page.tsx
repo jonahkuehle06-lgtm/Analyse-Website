@@ -79,7 +79,18 @@ export default function DatenschutzPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="5. Hosting und Datenbank">
+      <LegalSection title="5. Warteliste">
+        <p>
+          Wenn Sie sich auf unsere Warteliste eintragen, speichern wir Ihre E-Mail-Adresse,
+          optional Ihren Vornamen und die Seite, über die Sie kamen, um Sie über den Start
+          von PAX Solutions zu informieren. Rechtsgrundlage ist Ihre Einwilligung (Art. 6
+          Abs. 1 lit. a DSGVO). Die Eintragung wird erst wirksam, wenn Sie sie über den Link
+          in unserer E-Mail bestätigen (Double-Opt-in). Sie können sich jederzeit über den
+          Link in jeder E-Mail abmelden; Ihr Eintrag wird dann gelöscht.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="6. Hosting und Datenbank">
         <p>
           [Platzhalter — die tatsächlich eingesetzten Dienstleister eintragen, z. B.
           Vercel Inc. für das Hosting und Supabase für die Datenbank, jeweils mit Hinweis
@@ -88,7 +99,7 @@ export default function DatenschutzPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="6. Speicherdauer">
+      <LegalSection title="7. Speicherdauer">
         <p>
           Kontodaten werden für die Dauer des Vertragsverhältnisses gespeichert und
           anschließend gelöscht, soweit keine handels- oder steuerrechtlichen
@@ -96,7 +107,7 @@ export default function DatenschutzPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="7. Ihre Rechte">
+      <LegalSection title="8. Ihre Rechte">
         <p>
           Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO),
           Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO),
