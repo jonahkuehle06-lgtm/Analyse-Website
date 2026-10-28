@@ -145,8 +145,12 @@ export const COMPANY = {
   managingDirector:
     process.env.NEXT_PUBLIC_COMPANY_MANAGING_DIRECTOR || "Max Mustermann",
   register: process.env.NEXT_PUBLIC_COMPANY_REGISTER || "Amtsgericht Stuttgart, HRB 000000",
-  vatId: process.env.NEXT_PUBLIC_COMPANY_VAT_ID || "DE000000000",
+  // Nur angeben, wenn vorhanden - Kleinunternehmer haben oft keine USt-IdNr.
+  vatId: process.env.NEXT_PUBLIC_COMPANY_VAT_ID || "",
 };
+
+/** Kleinunternehmerregelung: Hinweis überall dort, wo ein Preis genannt wird. */
+export const STEUERHINWEIS = "Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.";
 
 export const BRAND = {
   name: "PAX",

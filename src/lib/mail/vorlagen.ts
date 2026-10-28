@@ -1,5 +1,5 @@
 import "server-only";
-import { BRAND, COMPANY, PLANS, siteUrl } from "@/lib/config";
+import { BRAND, COMPANY, PLANS, STEUERHINWEIS, siteUrl } from "@/lib/config";
 import { datum, datumZeit, euroAusCent } from "@/lib/format";
 import {
   RECHTSTEXTE_STAND,
@@ -83,7 +83,7 @@ function pflichtangaben(): string[] {
   return [
     `${COMPANY.name} · ${anschrift()}`,
     `Rechtsform: ${COMPANY.legalForm} · Sitz: ${sitzOrt()} · ${COMPANY.register}`,
-    `Geschäftsführung: ${COMPANY.managingDirector} · USt-IdNr.: ${COMPANY.vatId}`,
+    `Geschäftsführung: ${COMPANY.managingDirector}${COMPANY.vatId ? ` · USt-IdNr.: ${COMPANY.vatId}` : ""}`,
     `${COMPANY.email} · ${COMPANY.phone} · ${siteUrl().replace(/^https?:\/\//, "")}`,
   ];
 }
@@ -246,7 +246,7 @@ export function eingangsbestaetigung(b: BestellDaten): FertigeMail {
           ["E-Mail-Adresse", b.email],
           ["Paket", paketZeile(b.plan)],
           ["Leistung", leistungText(b.plan)],
-          ["Preis", `${preisText(b.plan, b.interval)} (Endpreis inkl. gesetzlicher Umsatzsteuer)`],
+          ["Preis", `${preisText(b.plan, b.interval)} (Endpreis; ${STEUERHINWEIS})`],
           ["Abrechnung", `${intervallName(b.interval)}, ${abrechnungText(b.interval)}`],
           ["Laufzeit und Kündigung", laufzeitText(b.interval)],
         ],
@@ -292,7 +292,7 @@ export function vertragsbestaetigung(v: VertragsDaten): FertigeMail {
     ["Vertragsschluss", datumZeit(v.vertragsschluss)],
     ["Paket", paketZeile(v.plan)],
     ["Leistung", leistungText(v.plan)],
-    ["Preis", `${preisText(v.plan, v.interval)} (Endpreis inkl. gesetzlicher Umsatzsteuer)`],
+    ["Preis", `${preisText(v.plan, v.interval)} (Endpreis; ${STEUERHINWEIS})`],
   ];
   if (v.ersteZahlungCent !== null) {
     zeilen.push(["Erste Zahlung", `${euroAusCent(v.ersteZahlungCent, v.waehrung)} am ${datum(v.vertragsschluss)}`]);

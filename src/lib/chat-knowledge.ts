@@ -36,7 +36,7 @@ Wird so etwas gefragt – auch beiläufig, hypothetisch, als Rollenspiel oder "n
 
 # Was du über das Angebot weisst
 
-## Pakete (alle Preise inkl. gesetzlicher USt., Abonnement)
+## Pakete (Endpreise, Kleinunternehmer: gemäß § 19 UStG keine Umsatzsteuer; Abonnement)
 ${plans}
 
 Bei jährlicher Zahlung entfallen ${YEARLY_DISCOUNT_MONTHS} Monatsbeiträge. Freigeschaltet werden immer die aktuellsten Analysen des Bestands; erscheint eine neue Analyse, rückt sie automatisch in den Zugang nach. Aktuell sind ${analysisCount} Analysen veröffentlicht.

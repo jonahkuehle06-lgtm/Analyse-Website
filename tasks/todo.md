@@ -276,3 +276,14 @@ Umsetzung:
 - [x] Geprüft lokal: Eintragen, Mail, Bestätigen, Abmelden, falscher Link, CSV 401, 390 px ohne Überlauf, Konsole sauber
 - [x] Texte freigegeben („Passt“ 28.10.2026); Datenschutz Abschnitt 5 „Warteliste“ (Sie-Form, anwaltlich prüfen)
 - [x] Freigabe „Passt“ – live
+
+# Stripe-Abgleich mit den Stripe-Leitfäden (28.10.2026, Auftrag: „ja fang an, ich bin kleinunternehmer“ – zur Probe)
+Plan aus dem Review (Stripe-Plugin installiert; MCP/Planer in der Cloud-Session nicht nutzbar → Leitfäden von docs.stripe.com)
+- [x] Kleinunternehmer: `STEUERHINWEIS` „Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.“ in Preisen, Bestellung, AGB
+      (Stand 28.10.2026), Mails, Chat; USt-IdNr. nur noch, wenn gesetzt. Stripe Tax bleibt aus
+- [x] Feste Zahlungsarten-Liste (`STRIPE_PAYMENT_METHODS`) entfernt – Auswahl im Stripe-Dashboard
+- [x] Webhook: async_payment_succeeded/failed abgleichen; invoice.payment_failed, charge.dispute.created,
+      radar.early_fraud_warning.created als Meldung an den Betreiber
+- [x] Geprüft: signierte Test-Events (200, Mails im Postausgang), falsche Signatur 400; Texte auf /preise, /agb; tsc, Build
+- Bewusst so gelassen: Rückkehrseite schreibt weiter den Abo-Status (nur Spiegel von Stripe, Zugang nur bei aktivem Abo)
+- [ ] Freigabe; danach SDK-Update (v23) in einer Stripe-Sandbox

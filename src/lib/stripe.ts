@@ -53,21 +53,6 @@ export function planFromPriceId(priceId: string | null | undefined): PlanId | nu
   return null;
 }
 
-/**
- * Zahlungsarten fuer den Checkout.
- * "auto" (oder leer) ueberlaesst die Auswahl den Dashboard-Einstellungen,
- * inkl. automatisch passender lokaler Methoden.
- */
-export function paymentMethodTypes(): Stripe.Checkout.SessionCreateParams.PaymentMethodType[] | undefined {
-  const raw = (process.env.STRIPE_PAYMENT_METHODS || "").trim();
-  if (!raw || raw === "auto") return undefined;
-  const list = raw
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean) as Stripe.Checkout.SessionCreateParams.PaymentMethodType[];
-  return list.length ? list : undefined;
-}
-
 export function mapStatus(status: Stripe.Subscription.Status): SubscriptionStatus {
   switch (status) {
     case "active":

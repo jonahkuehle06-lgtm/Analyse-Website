@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { aboBeendet, aboGeaendert, sendeVertragsbestaetigung } from "@/lib/abo";
+import { aboBeendet, aboGeaendert, sendeVertragsbestaetigung, zahlungsproblemMelden } from "@/lib/abo";
 import { findUserByStripeCustomerId, upsertUser } from "@/lib/db";
 import { mapStatus, periodEnd, planFromPriceId, stripe, stripeConfigured } from "@/lib/stripe";
 import type { PlanId } from "@/lib/types";
@@ -14,9 +14,17 @@ export const dynamic = "force-dynamic";
  *
  * Einzurichten unter  <deine-domain>/api/stripe/webhook  mit den Events
  *   checkout.session.completed      -> Vertragsbestätigung mit AGB und Widerrufsbelehrung
+ *   checkout.session.async_payment_succeeded / _failed
+ *                                   -> Ergebnis einer Lastschrift nach der Bestellung
  *   customer.subscription.created
  *   customer.subscription.updated   -> Kündigungen aus dem Kundenportal bestätigen
  *   customer.subscription.deleted   -> anteilige Erstattung beim Jahresabo
+ *   invoice.payment_failed          -> Meldung an den Betreiber
+ *   charge.dispute.created          -> Meldung an den Betreiber
+ *   radar.early_fraud_warning.created -> Meldung an den Betreiber
+ *
+ * Der Zugang hängt allein am Abo-Status bei Stripe (aktiv/Testphase) - eine
+ * noch offene Lastschrift schaltet nichts frei.
  */
 export async function POST(request: Request) {
   if (!stripeConfigured() || !process.env.STRIPE_WEBHOOK_SECRET) {
@@ -44,7 +52,9 @@ export async function POST(request: Request) {
 
   try {
     switch (event.type) {
-      case "checkout.session.completed": {
+      case "checkout.session.completed":
+      case "checkout.session.async_payment_succeeded":
+      case "checkout.session.async_payment_failed": {
         const session = event.data.object;
         const email = session.customer_details?.email || session.customer_email;
         if (!email) break;
@@ -76,9 +86,18 @@ export async function POST(request: Request) {
         });
 
         // Annahme der Bestellung: Vertragsbestätigung (§ 312f BGB) - idempotent
-        if (subscriptionId) await sendeVertragsbestaetigung(session.id);
+        if (subscriptionId && event.type === "checkout.session.completed") {
+          await sendeVertragsbestaetigung(session.id);
+        }
+        if (event.type === "checkout.session.async_payment_failed") await zahlungsproblemMelden(event);
         break;
       }
+
+      case "invoice.payment_failed":
+      case "charge.dispute.created":
+      case "radar.early_fraud_warning.created":
+        await zahlungsproblemMelden(event);
+        break;
 
       case "customer.subscription.created":
       case "customer.subscription.updated":

@@ -49,8 +49,12 @@ export default function ImpressumPage() {
       <LegalSection title="Registereintrag">
         <p>
           {COMPANY.register}
-          <br />
-          Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: {COMPANY.vatId}
+          {COMPANY.vatId && (
+            <>
+              <br />
+              Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: {COMPANY.vatId}
+            </>
+          )}
         </p>
       </LegalSection>
 

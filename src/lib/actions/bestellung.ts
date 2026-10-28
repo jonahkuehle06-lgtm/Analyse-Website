@@ -12,7 +12,7 @@ import { RECHTSTEXTE_STAND_ISO } from "@/lib/legal/vertrag";
 import { rechtstextAnhaenge } from "@/lib/mail/anhaenge";
 import { sendeMail } from "@/lib/mail/versand";
 import { eingangsbestaetigung } from "@/lib/mail/vorlagen";
-import { paymentMethodTypes, priceIdFor, stripe, stripeConfigured } from "@/lib/stripe";
+import { priceIdFor, stripe, stripeConfigured } from "@/lib/stripe";
 import type { BillingInterval, PlanId } from "@/lib/types";
 
 export interface BestellZustand {
@@ -118,9 +118,6 @@ export async function bestellenAction(
       },
     },
   };
-
-  const methods = paymentMethodTypes();
-  if (methods) params.payment_method_types = methods;
 
   if (user?.stripeCustomerId) {
     params.customer = user.stripeCustomerId;

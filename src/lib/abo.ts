@@ -618,3 +618,35 @@ export async function aboBeendet(aboId: string): Promise<void> {
     });
   }
 }
+
+/* ------------------------------------------------------------------------ */
+/* Zahlungsprobleme                                                         */
+/* ------------------------------------------------------------------------ */
+
+/**
+ * Fehlgeschlagene Zahlung, Rückbuchung oder Betrugswarnung: Meldung an den
+ * Betreiber. Den Kunden informiert Stripe selbst (Dashboard: Einstellungen →
+ * E-Mails, fehlgeschlagene Zahlungen).
+ */
+export async function zahlungsproblemMelden(event: Stripe.Event): Promise<void> {
+  const o = event.data.object as unknown as Record<string, unknown>;
+  const betrag = typeof o.amount === "number" ? o.amount : typeof o.amount_due === "number" ? o.amount_due : null;
+  const titel: Record<string, string> = {
+    "invoice.payment_failed": "Zahlung einer Abo-Rechnung fehlgeschlagen",
+    "checkout.session.async_payment_failed": "Lastschrift nach der Bestellung fehlgeschlagen",
+    "charge.dispute.created": "Rückbuchung (Dispute) eröffnet – Frist im Stripe-Dashboard beachten",
+    "radar.early_fraud_warning.created": "Betrugswarnung zu einer Zahlung",
+  };
+  await meldeBetreiber({
+    betreff: `Stripe: ${titel[event.type] ?? event.type}`,
+    titel: titel[event.type] ?? event.type,
+    zeilen: [
+      ["Ereignis", event.type],
+      ["Objekt", String(o.id ?? "–")],
+      ["Kunde", String((typeof o.customer_email === "string" && o.customer_email) || o.customer || "–")],
+      ["Betrag", betrag !== null ? euroAusCent(betrag, typeof o.currency === "string" ? o.currency : "eur") : "–"],
+      ["Zeit", datumZeit(new Date(event.created * 1000))],
+      ["Stripe", `https://dashboard.stripe.com/events/${event.id}`],
+    ],
+  });
+}

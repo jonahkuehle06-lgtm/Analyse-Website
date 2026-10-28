@@ -77,12 +77,8 @@ erkannt und nicht doppelt angelegt.
 
 ### 3.2 Zahlungsarten
 
-`STRIPE_PAYMENT_METHODS` steuert, was im Bezahlvorgang angeboten wird:
-
-| Wert | Bedeutung |
-|---|---|
-| `card,paypal,sepa_debit` | Voreinstellung: Karte, PayPal, SEPA-Lastschrift |
-| `auto` | Die im Stripe-Dashboard aktivierten Methoden werden automatisch verwendet |
+Die Zahlungsarten kommen aus dem Stripe-Dashboard (*Einstellungen → Zahlungsmethoden*);
+der Code legt keine Liste fest. So zeigt Stripe jedem Kunden die passenden Methoden.
 
 In Deutschland stehen für **Abonnements** über Stripe zusätzlich zur Verfügung:
 
@@ -103,8 +99,12 @@ bleiben bewusst außen vor.
 Im Stripe-Dashboard unter *Entwickler → Webhooks* einen Endpunkt anlegen:
 
 - URL: `https://DEINE-DOMAIN/api/stripe/webhook`
-- Events: `checkout.session.completed`, `customer.subscription.created`,
-  `customer.subscription.updated`, `customer.subscription.deleted`
+- Events: `checkout.session.completed`, `checkout.session.async_payment_succeeded`,
+  `checkout.session.async_payment_failed`, `customer.subscription.created`,
+  `customer.subscription.updated`, `customer.subscription.deleted`,
+  `invoice.payment_failed`, `charge.dispute.created`, `radar.early_fraud_warning.created`
+- Die letzten drei sowie eine fehlgeschlagene Lastschrift meldet die Seite per Mail an
+  `MAIL_NOTIFY`. Kunden informiert Stripe selbst (*Einstellungen → E-Mails*).
 
 Das ausgegebene *Signing secret* als `STRIPE_WEBHOOK_SECRET` hinterlegen.
 
