@@ -267,3 +267,12 @@ Umsetzung:
       Logo unter der Insel, Bühne bündig, Menü ab 123 px, Chat/Cookie 34 px über der Home-Leiste; Querformat
       (links/rechts 59) Inhalt neben der Notch; PC unverändert; Sprungmarke versteckt, mit Tab sichtbar
 - [x] Freigabe „passt“ am 25.10.2026 – live; auf dem echten iPhone prüfen (Inhaber)
+
+# Warteliste für den Start (28.10.2026, Auftrag: „bau die Warteliste für den allgemeinen Start“ – zur Probe)
+- [x] Supabase-Tabelle `warteliste` (RLS an, ohne Policies), Schema in supabase-schema.sql
+- [x] Seite /warteliste (Vorname optional, E-Mail; `?quelle=insta` wird gespeichert), Drosselung je IP/Adresse
+- [x] Double-Opt-in: Bestätigungsmail, /warteliste/bestaetigen; Abmelden per Knopf auf /warteliste/abmelden (löscht)
+- [x] Admin: Anzahl bestätigter Einträge, CSV-Download /admin/warteliste (nur angemeldet)
+- [x] Geprüft lokal: Eintragen, Mail, Bestätigen, Abmelden, falscher Link, CSV 401, 390 px ohne Überlauf, Konsole sauber
+- [ ] Texte freigeben; Abschnitt Datenschutzerklärung (Vorschlag im Chat, anwaltlich prüfen)
+- [ ] Freigabe, dann live

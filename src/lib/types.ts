@@ -64,6 +64,17 @@ export type SubscriptionStatus =
   | "incomplete"
   | "none";
 
+export interface WartelistenEintrag {
+  id: string;
+  email: string;
+  vorname: string | null;
+  /** Herkunft aus dem Link, z. B. "insta" */
+  quelle: string | null;
+  token: string;
+  bestaetigtAm: string | null;
+  createdAt: string;
+}
+
 export interface User {
   id: string;
   email: string;

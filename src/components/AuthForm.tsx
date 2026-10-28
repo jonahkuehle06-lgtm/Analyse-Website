@@ -29,6 +29,8 @@ export default function AuthForm({
     autoComplete?: string;
     defaultValue?: string;
     readOnly?: boolean;
+    /** Feld darf leer bleiben */
+    optional?: boolean;
   }[];
   hidden?: Record<string, string>;
 }) {
@@ -53,7 +55,7 @@ export default function AuthForm({
             autoComplete={field.autoComplete}
             defaultValue={field.defaultValue}
             readOnly={field.readOnly}
-            required
+            required={!field.optional}
             className="field"
           />
         </div>

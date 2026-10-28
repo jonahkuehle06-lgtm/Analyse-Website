@@ -2,7 +2,7 @@ import "server-only";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
-import type { Analysis, AnalysisInput, PlanId, SubscriptionStatus, User } from "./types";
+import type { Analysis, AnalysisInput, PlanId, SubscriptionStatus, User, WartelistenEintrag } from "./types";
 
 /**
  * Datenschicht mit zwei Treibern:
@@ -56,6 +56,7 @@ function lokalSchreibenPruefen(): void {
 interface LocalStore {
   analyses: Analysis[];
   users: User[];
+  warteliste?: WartelistenEintrag[];
 }
 
 const STORE_PATH = path.join(process.cwd(), "data", "store.local.json");
@@ -420,4 +421,127 @@ function stripUndefined<T extends object>(obj: T): Partial<T> {
   return Object.fromEntries(
     Object.entries(obj).filter(([, v]) => v !== undefined),
   ) as Partial<T>;
+}
+
+/* ------------------------------ Warteliste -------------------------------- */
+
+function eintragFromRow(row: any): WartelistenEintrag {
+  return {
+    id: row.id,
+    email: row.email,
+    vorname: row.vorname ?? null,
+    quelle: row.quelle ?? null,
+    token: row.token,
+    bestaetigtAm: row.bestaetigt_am ?? null,
+    createdAt: row.created_at,
+  };
+}
+
+/**
+ * Trägt eine Adresse ein (noch unbestätigt) oder liefert den vorhandenen
+ * Eintrag. Ein unbestätigter Eintrag behält seinen Token, damit ein früher
+ * verschickter Link gültig bleibt.
+ */
+export async function wartelisteEintragen(
+  email: string,
+  vorname: string | null,
+  quelle: string | null,
+  token: string,
+): Promise<WartelistenEintrag> {
+  const normalized = email.trim().toLowerCase();
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { data: vorhanden, error } = await sb
+      .from("warteliste")
+      .select("*")
+      .eq("email", normalized)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (vorhanden) return eintragFromRow(vorhanden);
+    const { data, error: fehler } = await sb
+      .from("warteliste")
+      .insert({ email: normalized, vorname, quelle, token })
+      .select("*")
+      .single();
+    if (fehler) throw new Error(fehler.message);
+    return eintragFromRow(data);
+  }
+  lokalSchreibenPruefen();
+  const store = await readLocal();
+  const liste = (store.warteliste ??= []);
+  const vorhanden = liste.find((e) => e.email === normalized);
+  if (vorhanden) return vorhanden;
+  const eintrag: WartelistenEintrag = {
+    id: randomUUID(),
+    email: normalized,
+    vorname,
+    quelle,
+    token,
+    bestaetigtAm: null,
+    createdAt: new Date().toISOString(),
+  };
+  liste.push(eintrag);
+  await writeLocal(store);
+  return eintrag;
+}
+
+/** Bestätigt den Eintrag zum Token - false, wenn es ihn nicht gibt. */
+export async function wartelisteBestaetigen(token: string): Promise<boolean> {
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { data, error } = await sb
+      .from("warteliste")
+      .select("id, bestaetigt_am")
+      .eq("token", token)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!data) return false;
+    if (!data.bestaetigt_am) {
+      const { error: fehler } = await sb
+        .from("warteliste")
+        .update({ bestaetigt_am: new Date().toISOString() })
+        .eq("id", data.id);
+      if (fehler) throw new Error(fehler.message);
+    }
+    return true;
+  }
+  lokalSchreibenPruefen();
+  const store = await readLocal();
+  const eintrag = store.warteliste?.find((e) => e.token === token);
+  if (!eintrag) return false;
+  eintrag.bestaetigtAm ??= new Date().toISOString();
+  await writeLocal(store);
+  return true;
+}
+
+/** Löscht den Eintrag zum Token (Abmeldung) - false, wenn es ihn nicht gibt. */
+export async function wartelisteAbmelden(token: string): Promise<boolean> {
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { data, error } = await sb.from("warteliste").delete().eq("token", token).select("id");
+    if (error) throw new Error(error.message);
+    return (data?.length ?? 0) > 0;
+  }
+  lokalSchreibenPruefen();
+  const store = await readLocal();
+  const vorher = store.warteliste?.length ?? 0;
+  store.warteliste = (store.warteliste ?? []).filter((e) => e.token !== token);
+  await writeLocal(store);
+  return store.warteliste.length < vorher;
+}
+
+/** Bestätigte Einträge, älteste zuerst. */
+export async function listWarteliste(): Promise<WartelistenEintrag[]> {
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { data, error } = await sb
+      .from("warteliste")
+      .select("*")
+      .not("bestaetigt_am", "is", null)
+      .order("created_at", { ascending: true });
+    if (error) throw new Error(error.message);
+    return (data ?? []).map(eintragFromRow);
+  }
+  const store = await readLocal();
+  return (store.warteliste ?? []).filter((e) => e.bestaetigtAm);
 }

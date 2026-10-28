@@ -86,3 +86,21 @@ alter table public.analyses
   add column if not exists scenario_worst_price       numeric(14,4),
   add column if not exists scenario_worst_probability numeric(5,2),
   add column if not exists scenario_worst_note        text default '';
+
+-- ---------------------------------------------------------------------------
+-- Nachtrag: Warteliste fuer den Start
+--
+-- Eintraege zaehlen erst mit bestaetigt_am (Double-Opt-in per E-Mail). Der
+-- Token steht im Bestaetigungs- und Abmeldelink; Abmelden loescht die Zeile.
+-- ---------------------------------------------------------------------------
+create table if not exists public.warteliste (
+  id            uuid primary key default gen_random_uuid(),
+  email         text        not null unique,
+  vorname       text,
+  quelle        text,
+  token         text        not null unique,
+  bestaetigt_am timestamptz,
+  created_at    timestamptz not null default now()
+);
+
+alter table public.warteliste enable row level security;

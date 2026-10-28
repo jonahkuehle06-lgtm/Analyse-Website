@@ -4,7 +4,7 @@ import Wordmark from "@/components/Wordmark";
 import { adminLogoutAction } from "@/lib/actions/auth";
 import { deleteAnalysisAction } from "@/lib/actions/analyses";
 import { isAdmin } from "@/lib/auth";
-import { activeDriver, istLiveSeite, listAnalyses } from "@/lib/db";
+import { activeDriver, istLiveSeite, listAnalyses, listWarteliste } from "@/lib/db";
 import { SIGNALS } from "@/lib/config";
 import { stripeConfigured } from "@/lib/stripe";
 
@@ -18,7 +18,11 @@ export default async function AdminPage({
   if (!(await isAdmin())) redirect("/admin/login");
 
   const { gespeichert, geloescht } = await searchParams;
-  const analyses = await listAnalyses();
+  const [analyses, warteliste] = await Promise.all([
+    listAnalyses(),
+    // Fehlt die Tabelle noch, bleibt die Verwaltung trotzdem nutzbar
+    listWarteliste().catch(() => null),
+  ]);
   const driver = activeDriver();
 
   const counts = analyses.reduce<Record<number, number>>((acc, a) => {
@@ -86,6 +90,21 @@ export default async function AdminPage({
             <strong className="font-semibold">Stripe ist nicht verbunden.</strong> Ohne{" "}
             <code>STRIPE_SECRET_KEY</code> und Preis-IDs lässt sich kein Paket buchen.
           </div>
+        )}
+      </div>
+
+      {/* Warteliste */}
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[var(--radius-card)] border border-[var(--color-line)] px-5 py-4">
+        <p className="text-sm text-[var(--color-mist)]">
+          <strong className="font-semibold text-[var(--color-platinum)]">Warteliste:</strong>{" "}
+          {warteliste === null
+            ? "nicht verfügbar (Tabelle fehlt)"
+            : `${warteliste.length} bestätigte Einträge`}
+        </p>
+        {warteliste && warteliste.length > 0 && (
+          <a href="/admin/warteliste" className="btn-ghost !w-auto !min-h-0 !py-2 text-sm">
+            Als Liste herunterladen (CSV)
+          </a>
         )}
       </div>
 

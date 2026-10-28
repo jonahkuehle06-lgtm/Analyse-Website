@@ -572,6 +572,27 @@ export function zugangslinkMail(link: string): FertigeMail {
   });
 }
 
+/** Bitte um Bestätigung der Eintragung in die Warteliste (Double-Opt-in). */
+export function wartelisteMail(vorname: string, bestaetigen: string, abmelden: string): FertigeMail {
+  return render({
+    betreff: "Bitte bestätige deine Eintragung",
+    vorschau: "Ein Klick, dann stehst du auf der Warteliste von PAX Solutions.",
+    titel: "Eintragung bestätigen",
+    anrede: hallo(vorname),
+    bausteine: [
+      {
+        art: "absatz",
+        text: "schön, dass du beim Start von PAX Solutions dabei sein willst. Bitte bestätige noch kurz deine E-Mail-Adresse – erst dann stehst du auf der Warteliste.",
+      },
+      { art: "knopf", text: "Eintragung bestätigen", href: bestaetigen },
+      {
+        art: "klein",
+        text: `Du hast dich nicht eingetragen? Dann ignoriere diese E-Mail – ohne Bestätigung speichern wir nichts weiter. Abmelden kannst du dich jederzeit: ${abmelden}`,
+      },
+    ],
+  });
+}
+
 /* ------------------------------------------------------------------------ */
 /* Interne Meldung an den Betreiber                                         */
 /* ------------------------------------------------------------------------ */
