@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { PLANS, PLAN_ORDER, STEUERHINWEIS, YEARLY_DISCOUNT_MONTHS } from "@/lib/config";
+import { PLANS, PLAN_ORDER, YEARLY_DISCOUNT_MONTHS } from "@/lib/config";
 import { laufzeitKurz } from "@/lib/legal/vertrag";
 import type { BillingInterval, PlanId } from "@/lib/types";
 
@@ -99,7 +99,7 @@ export default function PricingSection({
               ))}
             </div>
             <p className="text-xs text-[var(--color-muted)]">
-              {STEUERHINWEIS} Bei jährlicher Zahlung entfallen{" "}
+              Alle Preise sind Endpreise. Bei jährlicher Zahlung entfallen{" "}
               {YEARLY_DISCOUNT_MONTHS} Monatsbeiträge.
             </p>
           </div>

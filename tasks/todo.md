@@ -279,8 +279,8 @@ Umsetzung:
 
 # Stripe-Abgleich mit den Stripe-Leitfäden (28.10.2026, Auftrag: „ja fang an, ich bin kleinunternehmer“ – zur Probe)
 Plan aus dem Review (Stripe-Plugin installiert; MCP/Planer in der Cloud-Session nicht nutzbar → Leitfäden von docs.stripe.com)
-- [x] Kleinunternehmer: `STEUERHINWEIS` „Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.“ in Preisen, Bestellung, AGB
-      (Stand 28.10.2026), Mails, Chat; USt-IdNr. nur noch, wenn gesetzt. Stripe Tax bleibt aus
+- [x] Kleinunternehmer (Nutzer: „soll nirgends stehen, wo es nicht zwingend stehen muss“): Seite, AGB, Mails sagen nur noch „Endpreis(e)“,
+      kein „inkl. USt“ mehr (AGB-Stand 28.10.2026); § 19-Hinweis nur auf den Stripe-Rechnungen; USt-IdNr. nur, wenn gesetzt
 - [x] Feste Zahlungsarten-Liste (`STRIPE_PAYMENT_METHODS`) entfernt – Auswahl im Stripe-Dashboard
 - [x] Webhook: async_payment_succeeded/failed abgleichen; invoice.payment_failed, charge.dispute.created,
       radar.early_fraud_warning.created als Meldung an den Betreiber

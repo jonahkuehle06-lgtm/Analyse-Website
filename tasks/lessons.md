@@ -28,3 +28,5 @@ what went wrong, and the rule that prevents it.
   **Rule:** Radien nach dem Canva-Beispiel: Karten 16 px, Felder 12 px, Knöpfe, Filter und Etiketten als Pille – auch in neuen Bausteinen.
 - **Pattern:** Unteragenten wurden nicht genutzt, obwohl die CLAUDE.md es vorsieht; der Nutzer will damit sein Nutzungslimit schonen.
   **Rule:** Immer dann Unteragenten einsetzen, wenn es einen Vorteil bringt (Recherche, Exploration, Prüfläufe, parallele Aufgaben) – auch wenn ein Unteragent etwas besser oder schneller kann als der Hauptagent. Im Zweifel delegieren, damit der Hauptkontext und das Limit des Nutzers geschont werden.
+- **Pattern:** Der Kleinunternehmer-Hinweis (§ 19 UStG) wurde überall eingebaut; der Nutzer will ihn nur, wo er zwingend ist.
+  **Rule:** Pflicht- und Steuerhinweise nur dort einsetzen, wo sie vorgeschrieben sind (z. B. Rechnungen), nicht in Werbe- und Seitentexte streuen.

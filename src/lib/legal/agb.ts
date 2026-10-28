@@ -1,4 +1,4 @@
-import { COMPANY, PLANS, PLAN_ORDER, siteUrl, STEUERHINWEIS } from "@/lib/config";
+import { COMPANY, PLANS, PLAN_ORDER, siteUrl } from "@/lib/config";
 import type { LegalDoc } from "./types";
 import { typografischesDokument } from "./typografie";
 import { RECHTSTEXTE_STAND, anschrift, euro, sitzOrt, urlZu } from "./vertrag";
@@ -96,7 +96,7 @@ export function agb(): LegalDoc {
           {
             type: "clauses",
             items: [
-              `Es gelten die zum Zeitpunkt der Bestellung auf unserer Website angegebenen Preise. Alle Preise sind Endpreise. ${STEUERHINWEIS}`,
+              `Es gelten die zum Zeitpunkt der Bestellung auf unserer Website angegebenen Preise. Alle Preise sind Endpreise.`,
               "Das Entgelt ist jeweils im Voraus für den Abrechnungszeitraum zu zahlen – beim Monatsabo für einen Monat, beim Jahresabo für zwölf Monate. Die erste Zahlung ist mit Vertragsschluss fällig, jede weitere zu Beginn des folgenden Abrechnungszeitraums.",
               "Die Zahlung wird über den Zahlungsdienstleister Stripe Payments Europe, Ltd., Dublin, Irland, abgewickelt. Es stehen die im Bezahlvorgang angezeigten Zahlungsarten zur Verfügung.",
               "Schlägt eine fällige Zahlung fehl, können wir Ihren Zugang sperren, bis die Zahlung erfolgt ist.",

@@ -1,6 +1,5 @@
 "use client";
 
-import { STEUERHINWEIS } from "@/lib/config";
 import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
@@ -79,7 +78,7 @@ export default function BestellForm({
               </span>
               <span className="text-[0.9375rem] text-[var(--color-mist)]">{angaben.preisEinheit}</span>
             </p>
-            <p className="mt-2 text-xs text-[var(--color-muted)]">Endpreis. {STEUERHINWEIS}</p>
+            <p className="mt-2 text-xs text-[var(--color-muted)]">Endpreis.</p>
           </div>
         </div>
 
