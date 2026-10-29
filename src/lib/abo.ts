@@ -171,10 +171,21 @@ function fruehestesEnde(abo: Stripe.Subscription, eingang: Date): Vertragsende {
 }
 
 /** Ein bereits geplantes Ende aus Stripe lesen. */
-function geplantesEnde(abo: Stripe.Subscription): Date | null {
+export function geplantesEnde(abo: Stripe.Subscription): Date | null {
   if (abo.cancel_at) return zeitpunkt(abo.cancel_at);
   if (abo.cancel_at_period_end) return periode(abo).ende;
   return null;
+}
+
+/** Geplantes Vertragsende eines Abos für die Kontoseite - null, wenn keins geplant oder Stripe nicht erreichbar. */
+export async function vertragsendeLesen(subscriptionId: string): Promise<Date | null> {
+  if (!stripeConfigured()) return null;
+  try {
+    return geplantesEnde(await stripe().subscriptions.retrieve(subscriptionId));
+  } catch (error) {
+    console.error(`[Konto] Abo ${subscriptionId} nicht lesbar:`, error);
+    return null;
+  }
 }
 
 /** Setzt das Vertragsende bei Stripe und vermerkt die Kündigung im Abo. */

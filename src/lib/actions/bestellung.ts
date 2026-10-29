@@ -109,6 +109,8 @@ export async function bestellenAction(
     allow_promotion_codes: true,
     billing_address_collection: "required",
     automatic_tax: { enabled: false },
+    // Immer in Euro abrechnen - die Seite nennt Endpreise in Euro
+    adaptive_pricing: { enabled: false },
     metadata,
     subscription_data: { metadata },
     custom_text: {

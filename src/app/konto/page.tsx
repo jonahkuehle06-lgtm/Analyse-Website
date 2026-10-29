@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { redirect } from "next/navigation";
+import { vertragsendeLesen } from "@/lib/abo";
+import { datumKurz } from "@/lib/format";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { logoutAction } from "@/lib/actions/auth";
 import { openPortalAction } from "@/lib/actions/billing";
@@ -36,6 +38,8 @@ export default async function KontoPage({
   const active = hasActiveSubscription(user);
   const plan = user.plan ? PLANS[user.plan] : null;
   const total = (await listAnalyses()).length;
+  // Gekündigte Abos laufen bis zum Vertragsende weiter - das soll man hier sehen
+  const ende = active && user.subscriptionId ? await vertragsendeLesen(user.subscriptionId) : null;
 
   return (
     <div className="frame">
@@ -53,7 +57,12 @@ export default async function KontoPage({
         {[
           ["E-Mail-Adresse", user.email],
           ["Paket", plan ? plan.name : "—"],
-          ["Status", STATUS_LABEL[user.subscriptionStatus] ?? user.subscriptionStatus],
+          [
+            "Status",
+            ende
+              ? `Gekündigt zum ${datumKurz(ende)} – bis dahin hast du vollen Zugang.`
+              : (STATUS_LABEL[user.subscriptionStatus] ?? user.subscriptionStatus),
+          ],
           [
             "Freigeschaltete Analysen",
             active && plan ? `${Math.min(plan.limit, total)} von ${total}` : "—",
