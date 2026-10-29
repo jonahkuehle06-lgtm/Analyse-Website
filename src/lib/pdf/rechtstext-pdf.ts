@@ -1,7 +1,7 @@
 import "server-only";
 import fontkit from "@pdf-lib/fontkit";
 import { PDFDocument, rgb, type PDFFont, type PDFPage } from "pdf-lib";
-import { BRAND, COMPANY, siteUrl } from "@/lib/config";
+import { BRAND, COMPANY, anbieter, siteUrl } from "@/lib/config";
 import { DOVE_PATH, DOVE_VIEWBOX } from "@/lib/dove-path";
 import type { LegalBlock, LegalDoc } from "@/lib/legal/types";
 import { FRAUNCES_REGULAR, HANKEN_REGULAR, HANKEN_SEMIBOLD } from "./schriften";
@@ -368,7 +368,7 @@ function rahmen(seiten: PDFPage[], doc: LegalDoc, f: Schriften) {
       thickness: 0.5,
       color: FARBE.linie,
     });
-    const links = `${COMPANY.name} · ${COMPANY.street} · ${COMPANY.city} · ${siteUrl().replace(/^https?:\/\//, "")}`;
+    const links = `${anbieter()} · ${COMPANY.street} · ${COMPANY.city} · ${siteUrl().replace(/^https?:\/\//, "")}`;
     seite.drawText(links, { x: RAND.links, y: fussY, size: 7.2, font: f.text, color: FARBE.gedimmt });
     const zaehler = `Seite ${i + 1} von ${seiten.length}`;
     seite.drawText(zaehler, {

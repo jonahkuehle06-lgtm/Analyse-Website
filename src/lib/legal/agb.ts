@@ -1,4 +1,4 @@
-import { COMPANY, PLANS, PLAN_ORDER, siteUrl } from "@/lib/config";
+import { COMPANY, PLANS, PLAN_ORDER, anbieter, siteUrl } from "@/lib/config";
 import type { LegalDoc } from "./types";
 import { typografischesDokument } from "./typografie";
 import { RECHTSTEXTE_STAND, anschrift, euro, sitzOrt, urlZu } from "./vertrag";
@@ -31,7 +31,7 @@ export function agb(): LegalDoc {
           {
             type: "clauses",
             items: [
-              `Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge über den entgeltlichen Zugang zu den Aktienanalysen, die über die Website ${siteUrl()} zwischen der ${COMPANY.name}, ${anschrift()} (nachfolgend „wir“), und Ihnen als Kundin oder Kunde (nachfolgend „Sie“) geschlossen werden.`,
+              `Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge über den entgeltlichen Zugang zu den Aktienanalysen, die über die Website ${siteUrl()} zwischen ${anbieter()}, ${anschrift()} (nachfolgend „wir“), und Ihnen als Kundin oder Kunde (nachfolgend „Sie“) geschlossen werden.`,
               "Verbraucher ist jede natürliche Person, die ein Rechtsgeschäft zu Zwecken abschließt, die überwiegend weder ihrer gewerblichen noch ihrer selbständigen beruflichen Tätigkeit zugerechnet werden können (§ 13 BGB).",
               "Unser Angebot richtet sich an volljährige Personen.",
               "Abweichende Bedingungen des Kunden werden nicht Vertragsbestandteil, es sei denn, wir stimmen ihrer Geltung ausdrücklich zu.",

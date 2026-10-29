@@ -1,4 +1,4 @@
-import { COMPANY } from "@/lib/config";
+import { COMPANY, anbieter } from "@/lib/config";
 import type { LegalDoc } from "./types";
 import { typografischesDokument } from "./typografie";
 import { RECHTSTEXTE_STAND, anschrift, urlZu } from "./vertrag";
@@ -18,7 +18,7 @@ import { RECHTSTEXTE_STAND, anschrift, urlZu } from "./vertrag";
  * EGBGB. Der Hinweis zum Erlöschen steht bewusst außerhalb des Musters.
  */
 export function widerrufsbelehrung(): LegalDoc {
-  const kontakt = `${COMPANY.name}, ${anschrift()}, Telefon: ${COMPANY.phone}, E-Mail: ${COMPANY.email}`;
+  const kontakt = `${anbieter()}, ${anschrift()}, Telefon: ${COMPANY.phone}, E-Mail: ${COMPANY.email}`;
 
   return typografischesDokument({
     slug: "Widerrufsbelehrung",
@@ -88,7 +88,7 @@ export function widerrufsbelehrung(): LegalDoc {
           {
             type: "form",
             lines: [
-              `– An ${COMPANY.name}, ${anschrift()}, E-Mail: ${COMPANY.email}:`,
+              `– An ${anbieter()}, ${anschrift()}, E-Mail: ${COMPANY.email}:`,
               "– Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/die Erbringung der folgenden Dienstleistung (*)",
               "– Bestellt am (*)/erhalten am (*)",
               "– Name des/der Verbraucher(s)",

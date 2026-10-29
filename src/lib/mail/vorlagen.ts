@@ -1,5 +1,5 @@
 import "server-only";
-import { BRAND, COMPANY, PLANS, siteUrl } from "@/lib/config";
+import { BRAND, COMPANY, PLANS, anbieter, siteUrl } from "@/lib/config";
 import { datum, datumZeit, euroAusCent } from "@/lib/format";
 import {
   RECHTSTEXTE_STAND,
@@ -81,11 +81,23 @@ const SERIF = "Fraunces, Georgia, 'Times New Roman', serif";
 
 function pflichtangaben(): string[] {
   return [
-    `${COMPANY.name} · ${anschrift()}`,
-    `Rechtsform: ${COMPANY.legalForm} · Sitz: ${sitzOrt()} · ${COMPANY.register}`,
-    `Geschäftsführung: ${COMPANY.managingDirector}${COMPANY.vatId ? ` · USt-IdNr.: ${COMPANY.vatId}` : ""}`,
+    `${anbieter()} · ${anschrift()}`,
+    // Rechtsform, Sitz, Register und Geschäftsführung nur bei einer Gesellschaft
+    zeile(
+      COMPANY.legalForm && `Rechtsform: ${COMPANY.legalForm}`,
+      COMPANY.legalForm && `Sitz: ${sitzOrt()}`,
+      COMPANY.register,
+    ),
+    zeile(
+      COMPANY.managingDirector && `Geschäftsführung: ${COMPANY.managingDirector}`,
+      COMPANY.vatId && `USt-IdNr.: ${COMPANY.vatId}`,
+    ),
     `${COMPANY.email} · ${COMPANY.phone} · ${siteUrl().replace(/^https?:\/\//, "")}`,
-  ];
+  ].filter(Boolean);
+}
+
+function zeile(...teile: string[]): string {
+  return teile.filter(Boolean).join(" · ");
 }
 
 function bausteinHtml(b: Baustein): string {
@@ -286,7 +298,7 @@ export interface VertragsDaten {
 export function vertragsbestaetigung(v: VertragsDaten): FertigeMail {
   const jahr = v.interval === "yearly";
   const zeilen: [string, string][] = [
-    ["Vertragspartner", `${COMPANY.name}, ${anschrift()}`],
+    ["Vertragspartner", `${anbieter()}, ${anschrift()}`],
     ["Kunde", `${v.name}\n${v.email}`],
     ["Bestellnummer", v.nummer],
     ["Vertragsschluss", datumZeit(v.vertragsschluss)],

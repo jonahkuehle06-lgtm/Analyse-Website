@@ -9,8 +9,8 @@ import type { BillingInterval, PlanId } from "@/lib/types";
  */
 
 /** Stand von AGB und Widerrufsbelehrung. Bei jeder inhaltlichen Aenderung anpassen. */
-export const RECHTSTEXTE_STAND_ISO = "2026-10-28";
-export const RECHTSTEXTE_STAND = "28. Oktober 2026";
+export const RECHTSTEXTE_STAND_ISO = "2026-10-29";
+export const RECHTSTEXTE_STAND = "29. Oktober 2026";
 
 /**
  * Zustimmung und Kenntnisnahme nach § 356 Abs. 5 Nr. 2 BGB. Ohne dieses

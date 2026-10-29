@@ -135,19 +135,25 @@ export function priceFor(plan: PlanId, interval: BillingInterval): number {
 
 export const COMPANY = {
   name: process.env.NEXT_PUBLIC_COMPANY_NAME || "PAX Solutions",
-  legalForm:
-    process.env.NEXT_PUBLIC_COMPANY_LEGAL_FORM || "Gesellschaft mit beschränkter Haftung",
+  // Einzelunternehmen: Inhaber mit vollem Namen. Rechtsform, Geschäftsführung und
+  // Register nur bei einer Gesellschaft angeben - leere Angaben erscheinen nirgends.
+  owner: process.env.NEXT_PUBLIC_COMPANY_OWNER || "",
+  legalForm: process.env.NEXT_PUBLIC_COMPANY_LEGAL_FORM || "",
   street: process.env.NEXT_PUBLIC_COMPANY_STREET || "Musterstraße 1",
   city: process.env.NEXT_PUBLIC_COMPANY_CITY || "70178 Stuttgart",
   country: process.env.NEXT_PUBLIC_COMPANY_COUNTRY || "Deutschland",
   email: process.env.NEXT_PUBLIC_COMPANY_EMAIL || "kontakt@example.com",
   phone: process.env.NEXT_PUBLIC_COMPANY_PHONE || "+49 711 0000000",
-  managingDirector:
-    process.env.NEXT_PUBLIC_COMPANY_MANAGING_DIRECTOR || "Max Mustermann",
-  register: process.env.NEXT_PUBLIC_COMPANY_REGISTER || "Amtsgericht Stuttgart, HRB 000000",
+  managingDirector: process.env.NEXT_PUBLIC_COMPANY_MANAGING_DIRECTOR || "",
+  register: process.env.NEXT_PUBLIC_COMPANY_REGISTER || "",
   // Nur angeben, wenn vorhanden
   vatId: process.env.NEXT_PUBLIC_COMPANY_VAT_ID || "",
 };
+
+/** Wer rechtlich anbietet - bei einem Einzelunternehmen mit dem Namen des Inhabers. */
+export function anbieter(): string {
+  return COMPANY.owner ? `${COMPANY.name}, Inhaber ${COMPANY.owner}` : COMPANY.name;
+}
 
 export const BRAND = {
   name: "PAX",

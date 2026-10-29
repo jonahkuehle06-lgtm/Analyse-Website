@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import LegalReviewNote from "@/components/LegalReviewNote";
 import Wordmark from "@/components/Wordmark";
-import { BRAND, COMPANY } from "@/lib/config";
+import { BRAND, COMPANY, anbieter } from "@/lib/config";
 import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -56,7 +56,10 @@ const PARAGRAPHS: { heading?: string; body: React.ReactNode }[] = [
     body: (
       <>
         <strong>
-          {COMPANY.name}, ihre Geschäftsführung und ihre Mitarbeiter können zum Zeitpunkt
+          {COMPANY.owner
+            ? `${COMPANY.owner} als Inhaber von ${COMPANY.name} kann`
+            : `${COMPANY.name}, ihre Geschäftsführung und ihre Mitarbeiter können`}{" "}
+          zum Zeitpunkt
           der Veröffentlichung einer Analyse selbst Anteile, Aktien oder sonstige
           Finanzinstrumente der besprochenen Unternehmen halten, erwerben oder veräußern.
         </strong>{" "}
@@ -101,7 +104,7 @@ const PARAGRAPHS: { heading?: string; body: React.ReactNode }[] = [
     heading: "Verantwortlich für die Erstellung der Publikation",
     body: (
       <>
-        {COMPANY.name}, {COMPANY.street}, {COMPANY.city}, {COMPANY.country}. An der
+        {anbieter()}, {COMPANY.street}, {COMPANY.city}, {COMPANY.country}. An der
         Erstellung der Publikationen Beteiligte: [Platzhalter — Namen und Funktionen aller
         beteiligten Personen eintragen]. Der jeweils verantwortliche Ersteller wird
         zusätzlich bei jeder einzelnen Analyse genannt.
@@ -150,7 +153,7 @@ export default function HaftungsausschlussPage() {
         <footer className="relative mt-12 border-t border-[var(--color-line)] pt-8">
           <p className="text-xs leading-relaxed text-[var(--color-muted)]">
             Stand: {new Intl.DateTimeFormat("de-DE", { dateStyle: "long" }).format(new Date())}{" "}
-            · {BRAND.name} {BRAND.suffix} ist ein Angebot der {COMPANY.name}. Ergänzende
+            · {BRAND.name} {BRAND.suffix} ist ein Angebot {COMPANY.owner ? `von ${COMPANY.owner}` : `der ${COMPANY.name}`}. Ergänzende
             Angaben finden Sie im{" "}
             <Link href="/impressum" className="underline underline-offset-2">
               Impressum

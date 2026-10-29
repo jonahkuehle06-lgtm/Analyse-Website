@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import LegalPage, { LegalSection } from "@/components/LegalPage";
-import { BRAND, COMPANY } from "@/lib/config";
+import { BRAND, COMPANY, anbieter } from "@/lib/config";
 import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -19,10 +19,20 @@ export default function ImpressumPage() {
     >
       <LegalSection title="Anbieter">
         <p>
+          {COMPANY.owner && (
+            <>
+              {COMPANY.owner}
+              <br />
+            </>
+          )}
           {COMPANY.name}
           <br />
-          {COMPANY.legalForm}
-          <br />
+          {COMPANY.legalForm && (
+            <>
+              {COMPANY.legalForm}
+              <br />
+            </>
+          )}
           {COMPANY.street}
           <br />
           {COMPANY.city}
@@ -31,9 +41,11 @@ export default function ImpressumPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="Vertretungsberechtigt">
-        <p>Geschäftsführung: {COMPANY.managingDirector}</p>
-      </LegalSection>
+      {COMPANY.managingDirector && (
+        <LegalSection title="Vertretungsberechtigt">
+          <p>Geschäftsführung: {COMPANY.managingDirector}</p>
+        </LegalSection>
+      )}
 
       <LegalSection title="Kontakt">
         <p>
@@ -46,21 +58,21 @@ export default function ImpressumPage() {
         </p>
       </LegalSection>
 
-      <LegalSection title="Registereintrag">
-        <p>
-          {COMPANY.register}
-          {COMPANY.vatId && (
-            <>
-              <br />
-              Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: {COMPANY.vatId}
-            </>
-          )}
-        </p>
-      </LegalSection>
+      {COMPANY.register && (
+        <LegalSection title="Registereintrag">
+          <p>{COMPANY.register}</p>
+        </LegalSection>
+      )}
+
+      {COMPANY.vatId && (
+        <LegalSection title="Umsatzsteuer-ID">
+          <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: {COMPANY.vatId}</p>
+        </LegalSection>
+      )}
 
       <LegalSection title="Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV">
         <p>
-          {COMPANY.managingDirector}
+          {COMPANY.owner || COMPANY.managingDirector}
           <br />
           {COMPANY.street}
           <br />
@@ -70,7 +82,7 @@ export default function ImpressumPage() {
 
       <LegalSection title="Für die Erstellung der Publikationen verantwortlich">
         <p>
-          {COMPANY.name}, {COMPANY.street}, {COMPANY.city}
+          {anbieter()}, {COMPANY.street}, {COMPANY.city}
         </p>
         <p>
           An der Erstellung der Publikationen beteiligt: [Platzhalter — bitte alle

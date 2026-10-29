@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import LegalPage, { LegalSection } from "@/components/LegalPage";
-import { COMPANY } from "@/lib/config";
+import { COMPANY, anbieter } from "@/lib/config";
 import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default function DatenschutzPage() {
     >
       <LegalSection title="1. Verantwortlicher">
         <p>
-          {COMPANY.name}, {COMPANY.street}, {COMPANY.city}, {COMPANY.country}
+          {anbieter()}, {COMPANY.street}, {COMPANY.city}, {COMPANY.country}
           <br />
           E-Mail: {COMPANY.email} · Telefon: {COMPANY.phone}
         </p>
