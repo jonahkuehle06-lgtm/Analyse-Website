@@ -4,7 +4,11 @@ import { listWarteliste } from "@/lib/db";
 /** Bestätigte Einträge der Warteliste als CSV (Excel-tauglich, Semikolon). */
 export async function GET() {
   if (!(await isAdmin())) return new Response("Nicht angemeldet", { status: 401 });
-  const zelle = (v: string | null) => `"${(v ?? "").replace(/"/g, '""')}"`;
+  // Werte, die mit = + - @ beginnen, würde Excel als Formel ausführen: entschärfen.
+  const zelle = (v: string | null) => {
+    const t = v ?? "";
+    return `"${(/^[=+\-@\t\r]/.test(t) ? "'" + t : t).replace(/"/g, '""')}"`;
+  };
   const zeilen = (await listWarteliste()).map((e) =>
     [e.email, e.vorname, e.quelle, e.bestaetigtAm].map(zelle).join(";"),
   );
