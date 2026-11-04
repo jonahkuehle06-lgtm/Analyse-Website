@@ -177,17 +177,6 @@ export function geplantesEnde(abo: Stripe.Subscription): Date | null {
   return null;
 }
 
-/** Geplantes Vertragsende eines Abos für die Kontoseite - null, wenn keins geplant oder Stripe nicht erreichbar. */
-export async function vertragsendeLesen(subscriptionId: string): Promise<Date | null> {
-  if (!stripeConfigured()) return null;
-  try {
-    return geplantesEnde(await stripe().subscriptions.retrieve(subscriptionId));
-  } catch (error) {
-    console.error(`[Konto] Abo ${subscriptionId} nicht lesbar:`, error);
-    return null;
-  }
-}
-
 /** Setzt das Vertragsende bei Stripe und vermerkt die Kündigung im Abo. */
 async function endePlanen(
   abo: Stripe.Subscription,
@@ -641,7 +630,21 @@ export async function aboBeendet(aboId: string): Promise<void> {
  */
 export async function zahlungsproblemMelden(event: Stripe.Event): Promise<void> {
   const o = event.data.object as unknown as Record<string, unknown>;
-  const betrag = typeof o.amount === "number" ? o.amount : typeof o.amount_due === "number" ? o.amount_due : null;
+  // Zahlung/Rückbuchung: amount, Rechnung: amount_due, Checkout: amount_total
+  const betrag = [o.amount, o.amount_due, o.amount_total].find((v): v is number => typeof v === "number") ?? null;
+  const zahlungId = typeof o.charge === "string" ? o.charge : null;
+  const details = o.customer_details as { email?: unknown } | null | undefined;
+  let kunde = [o.customer_email, details?.email, o.customer].find(
+    (v): v is string => typeof v === "string" && v !== "",
+  );
+  // Rückbuchung und Betrugswarnung nennen nur die Zahlung - der Kunde steht dort.
+  // Ohne Leserecht des Schlüssels auf Zahlungen bleibt es bei der Zahlungs-ID.
+  if (!kunde && zahlungId) {
+    const zahlung = await stripe().charges.retrieve(zahlungId).catch(() => null);
+    kunde =
+      zahlung?.billing_details.email ??
+      (typeof zahlung?.customer === "string" ? zahlung.customer : undefined);
+  }
   const titel: Record<string, string> = {
     "invoice.payment_failed": "Zahlung einer Abo-Rechnung fehlgeschlagen",
     "checkout.session.async_payment_failed": "Lastschrift nach der Bestellung fehlgeschlagen",
@@ -654,7 +657,7 @@ export async function zahlungsproblemMelden(event: Stripe.Event): Promise<void> 
     zeilen: [
       ["Ereignis", event.type],
       ["Objekt", String(o.id ?? "–")],
-      ["Kunde", String((typeof o.customer_email === "string" && o.customer_email) || o.customer || "–")],
+      ["Kunde", kunde ?? (zahlungId ? `siehe Zahlung ${zahlungId}` : "–")],
       ["Betrag", betrag !== null ? euroAusCent(betrag, typeof o.currency === "string" ? o.currency : "eur") : "–"],
       ["Zeit", datumZeit(new Date(event.created * 1000))],
       ["Stripe", `https://dashboard.stripe.com/events/${event.id}`],

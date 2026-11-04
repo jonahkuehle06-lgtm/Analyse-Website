@@ -91,8 +91,11 @@ export default function SiteFooter() {
             verlässlicher Indikator für künftige Ergebnisse. Die auf dieser Seite
             veröffentlichten Analysen stellen keine individuelle Anlageberatung dar und
             berücksichtigen weder persönliche Verhältnisse noch Anlageziele einzelner
-            Nutzer. {COMPANY.name} und ihre Mitarbeiter können Anteile an besprochenen
-            Unternehmen halten. Ausführliche Hinweise im{" "}
+            Nutzer.{" "}
+            {COMPANY.owner
+              ? `${COMPANY.owner} als Inhaber von ${COMPANY.name} kann`
+              : `${COMPANY.name} und ihre Mitarbeiter können`}{" "}
+            Anteile an besprochenen Unternehmen halten. Ausführliche Hinweise im{" "}
             <Link href="/haftungsausschluss" className="text-link">
               Haftungsausschluss
             </Link>

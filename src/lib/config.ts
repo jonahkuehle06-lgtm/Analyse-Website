@@ -131,22 +131,42 @@ export function priceFor(plan: PlanId, interval: BillingInterval): number {
   return interval === "monthly" ? PLANS[plan].priceMonthly : PLANS[plan].priceYearly;
 }
 
+/**
+ * Pflichtangabe für Impressum, Mails und PDFs. Live darf sie nicht fehlen: Der
+ * Build bricht dann ab, statt still Musterdaten zu veröffentlichen. Lokal und in
+ * Vorschauen bleibt der Musterwert sichtbar, damit die Lücke auffällt.
+ */
+function pflicht(wert: string | undefined, muster: string, name: string): string {
+  if (wert) return wert;
+  if (process.env.VERCEL_ENV === "production") {
+    throw new Error(`${name} fehlt in den Umgebungsvariablen der Live-Seite.`);
+  }
+  return muster;
+}
+
 export const COMPANY = {
   name: process.env.NEXT_PUBLIC_COMPANY_NAME || "PAX Solutions",
   // Einzelunternehmen: Inhaber mit vollem Namen. Rechtsform, Geschäftsführung und
   // Register nur bei einer Gesellschaft angeben - leere Angaben erscheinen nirgends.
   owner: process.env.NEXT_PUBLIC_COMPANY_OWNER || "",
   legalForm: process.env.NEXT_PUBLIC_COMPANY_LEGAL_FORM || "",
-  street: process.env.NEXT_PUBLIC_COMPANY_STREET || "Musterstraße 1",
-  city: process.env.NEXT_PUBLIC_COMPANY_CITY || "70178 Stuttgart",
+  street: pflicht(process.env.NEXT_PUBLIC_COMPANY_STREET, "Musterstraße 1", "NEXT_PUBLIC_COMPANY_STREET"),
+  city: pflicht(process.env.NEXT_PUBLIC_COMPANY_CITY, "70178 Stuttgart", "NEXT_PUBLIC_COMPANY_CITY"),
   country: process.env.NEXT_PUBLIC_COMPANY_COUNTRY || "Deutschland",
-  email: process.env.NEXT_PUBLIC_COMPANY_EMAIL || "kontakt@example.com",
-  phone: process.env.NEXT_PUBLIC_COMPANY_PHONE || "+49 711 0000000",
+  email: pflicht(process.env.NEXT_PUBLIC_COMPANY_EMAIL, "kontakt@example.com", "NEXT_PUBLIC_COMPANY_EMAIL"),
+  phone: pflicht(process.env.NEXT_PUBLIC_COMPANY_PHONE, "+49 711 0000000", "NEXT_PUBLIC_COMPANY_PHONE"),
   managingDirector: process.env.NEXT_PUBLIC_COMPANY_MANAGING_DIRECTOR || "",
   register: process.env.NEXT_PUBLIC_COMPANY_REGISTER || "",
   // Nur angeben, wenn vorhanden
   vatId: process.env.NEXT_PUBLIC_COMPANY_VAT_ID || "",
 };
+
+/** Verantwortlich nach § 18 Abs. 2 MStV: der Inhaber oder die Geschäftsführung. */
+export const VERANTWORTLICH = pflicht(
+  COMPANY.owner || COMPANY.managingDirector,
+  "Max Mustermann",
+  "NEXT_PUBLIC_COMPANY_OWNER (oder NEXT_PUBLIC_COMPANY_MANAGING_DIRECTOR)",
+);
 
 /** Wer rechtlich anbietet - bei einem Einzelunternehmen mit dem Namen des Inhabers. */
 export function anbieter(): string {

@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { aboBeendet, aboGeaendert, sendeVertragsbestaetigung, zahlungsproblemMelden } from "@/lib/abo";
+import {
+  aboBeendet,
+  aboGeaendert,
+  geplantesEnde,
+  sendeVertragsbestaetigung,
+  zahlungsproblemMelden,
+} from "@/lib/abo";
 import { findUserByStripeCustomerId, upsertUser } from "@/lib/db";
 import { mapStatus, periodEnd, planFromPriceId, stripe, stripeConfigured } from "@/lib/stripe";
 import type { PlanId } from "@/lib/types";
@@ -15,7 +21,8 @@ export const dynamic = "force-dynamic";
  * Einzurichten unter  <deine-domain>/api/stripe/webhook  mit den Events
  *   checkout.session.completed      -> Vertragsbestätigung mit AGB und Widerrufsbelehrung
  *   checkout.session.async_payment_succeeded / _failed
- *                                   -> Ergebnis einer Lastschrift nach der Bestellung
+ *                                   -> Ergebnis einer Lastschrift nach der Bestellung;
+ *                                      bei Lastschrift kommt die Vertragsbestätigung erst hier
  *   customer.subscription.created
  *   customer.subscription.updated   -> Kündigungen aus dem Kundenportal bestätigen
  *   customer.subscription.deleted   -> anteilige Erstattung beim Jahresabo
@@ -85,15 +92,24 @@ export async function POST(request: Request) {
           currentPeriodEnd: end,
         });
 
-        // Annahme der Bestellung: Vertragsbestätigung (§ 312f BGB) - idempotent
-        if (subscriptionId && event.type === "checkout.session.completed") {
-          await sendeVertragsbestaetigung(session.id);
-        }
+        // Annahme der Bestellung: Vertragsbestätigung (§ 312f BGB) - idempotent.
+        // Eine Lastschrift ist bei "completed" noch offen (unpaid) - dann erst,
+        // wenn sie eingegangen ist
+        const bezahlt =
+          event.type === "checkout.session.async_payment_succeeded" ||
+          (event.type === "checkout.session.completed" && session.payment_status !== "unpaid");
+        if (subscriptionId && bezahlt) await sendeVertragsbestaetigung(session.id);
         if (event.type === "checkout.session.async_payment_failed") await zahlungsproblemMelden(event);
         break;
       }
 
       case "invoice.payment_failed":
+        // Die erste Rechnung gehört zum Checkout: Eine abgelehnte Karte korrigiert
+        // der Kunde dort selbst, eine geplatzte Lastschrift meldet async_payment_failed
+        if (event.data.object.billing_reason === "subscription_create") break;
+        await zahlungsproblemMelden(event);
+        break;
+
       case "charge.dispute.created":
       case "radar.early_fraud_warning.created":
         await zahlungsproblemMelden(event);
@@ -135,6 +151,7 @@ export async function POST(request: Request) {
           plan: deleted ? null : plan,
           subscriptionStatus: deleted ? "canceled" : mapStatus(subscription.status),
           currentPeriodEnd: deleted ? null : periodEnd(subscription),
+          cancelAt: deleted ? null : (geplantesEnde(subscription)?.toISOString() ?? null),
         });
 
         if (event.type === "customer.subscription.updated") await aboGeaendert(subscription.id);

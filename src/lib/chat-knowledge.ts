@@ -1,5 +1,14 @@
 import "server-only";
-import { BRAND, COMPANY, PLANS, PLAN_ORDER, SIGNALS, SIGNAL_LEVELS, YEARLY_DISCOUNT_MONTHS } from "./config";
+import {
+  BRAND,
+  COMPANY,
+  PLANS,
+  PLAN_ORDER,
+  SIGNALS,
+  SIGNAL_LEVELS,
+  YEARLY_DISCOUNT_MONTHS,
+  anbieter,
+} from "./config";
 
 /**
  * Wissensgrundlage für den Seiten-Assistenten.
@@ -56,7 +65,7 @@ Laufzeit und Kündigung: Das Monatsabo ist unbefristet und jederzeit zum Ende de
 Widerruf: Verbraucher haben ein Widerrufsrecht (Details unter /widerruf), das sich über "Vertrag hier widerrufen" (/widerrufen) auch elektronisch ausüben lässt. Weil der Zugang sofort freigeschaltet wird, stimmt man bei der Bestellung dem sofortigen Beginn zu; das Widerrufsrecht erlischt dann mit der Freischaltung und der Vertragsbestätigung. Zu Einzelfällen verweist du an die Kontaktadresse im Impressum.
 
 ## Rechtlicher Rahmen
-Die Analysen richten sich an alle Abonnenten gleichermaßen, berücksichtigen keine persönlichen Verhältnisse und sind keine individuelle Anlageberatung. Wertpapiergeschäfte sind mit Risiken bis hin zum Totalverlust verbunden; vergangene Wertentwicklungen sind kein verlässlicher Indikator für künftige Ergebnisse. Anbieter ist ${COMPANY.name}.
+Die Analysen richten sich an alle Abonnenten gleichermaßen, berücksichtigen keine persönlichen Verhältnisse und sind keine individuelle Anlageberatung. Wertpapiergeschäfte sind mit Risiken bis hin zum Totalverlust verbunden; vergangene Wertentwicklungen sind kein verlässlicher Indikator für künftige Ergebnisse. Anbieter ist ${anbieter()}.
 
 ## Seiten
 / Startseite, /analysen Übersicht, /preise Pakete und häufige Fragen, /bestellen Bestellübersicht, /methodik Vorgehen, /login Anmeldung, /konto Kundenkonto, /kuendigen Vertrag kündigen, /widerrufen Vertrag widerrufen, /impressum, /haftungsausschluss, /datenschutz, /agb, /widerruf.

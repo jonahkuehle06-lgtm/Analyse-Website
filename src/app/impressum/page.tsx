@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import LegalPage, { LegalSection } from "@/components/LegalPage";
-import { BRAND, COMPANY, anbieter } from "@/lib/config";
+import { BRAND, COMPANY, VERANTWORTLICH, anbieter } from "@/lib/config";
 import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -72,7 +72,7 @@ export default function ImpressumPage() {
 
       <LegalSection title="Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV">
         <p>
-          {COMPANY.owner || COMPANY.managingDirector}
+          {VERANTWORTLICH}
           <br />
           {COMPANY.street}
           <br />

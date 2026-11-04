@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { redirect } from "next/navigation";
-import { vertragsendeLesen } from "@/lib/abo";
 import { datumKurz } from "@/lib/format";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { logoutAction } from "@/lib/actions/auth";
@@ -39,7 +38,7 @@ export default async function KontoPage({
   const plan = user.plan ? PLANS[user.plan] : null;
   const total = (await listAnalyses()).length;
   // Gekündigte Abos laufen bis zum Vertragsende weiter - das soll man hier sehen
-  const ende = active && user.subscriptionId ? await vertragsendeLesen(user.subscriptionId) : null;
+  const ende = active && user.cancelAt ? new Date(user.cancelAt) : null;
 
   return (
     <div className="frame">

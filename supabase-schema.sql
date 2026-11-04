@@ -104,3 +104,14 @@ create table if not exists public.warteliste (
 );
 
 alter table public.warteliste enable row level security;
+
+-- ---------------------------------------------------------------------------
+-- Nachtrag: geplantes Vertragsende
+--
+-- Nach einer Kündigung läuft das Abo bis cancel_at weiter. Der Webhook
+-- schreibt den Termin, die Kontoseite zeigt ihn an.
+--
+-- Bei einer bestehenden Datenbank einmalig im SQL Editor ausfuehren.
+-- ---------------------------------------------------------------------------
+alter table public.users
+  add column if not exists cancel_at timestamptz;

@@ -84,5 +84,7 @@ export interface User {
   subscriptionStatus: SubscriptionStatus;
   subscriptionId: string | null;
   currentPeriodEnd: string | null;
+  /** Geplantes Vertragsende nach einer Kündigung - das Abo läuft bis dahin weiter */
+  cancelAt: string | null;
   createdAt: string;
 }

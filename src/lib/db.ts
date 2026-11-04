@@ -194,6 +194,7 @@ function userFromRow(row: any): User {
     subscriptionStatus: (row.subscription_status ?? "none") as SubscriptionStatus,
     subscriptionId: row.subscription_id ?? null,
     currentPeriodEnd: row.current_period_end ?? null,
+    cancelAt: row.cancel_at ?? null,
     createdAt: row.created_at,
   };
 }
@@ -346,6 +347,7 @@ export interface UserPatch {
   subscriptionStatus?: SubscriptionStatus;
   subscriptionId?: string | null;
   currentPeriodEnd?: string | null;
+  cancelAt?: string | null;
 }
 
 function patchToRow(patch: UserPatch) {
@@ -356,6 +358,7 @@ function patchToRow(patch: UserPatch) {
   if ("subscriptionStatus" in patch) row.subscription_status = patch.subscriptionStatus;
   if ("subscriptionId" in patch) row.subscription_id = patch.subscriptionId;
   if ("currentPeriodEnd" in patch) row.current_period_end = patch.currentPeriodEnd;
+  if ("cancelAt" in patch) row.cancel_at = patch.cancelAt;
   return row;
 }
 
@@ -404,6 +407,7 @@ export async function upsertUser(email: string, patch: UserPatch = {}): Promise<
       subscriptionStatus: "none",
       subscriptionId: null,
       currentPeriodEnd: null,
+      cancelAt: null,
       createdAt: now,
       ...stripUndefined(patch),
     };
