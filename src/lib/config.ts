@@ -66,7 +66,6 @@ export interface PlanMeta {
   priceMonthly: number;
   priceYearly: number;
   features: string[];
-  highlight?: boolean;
 }
 
 export const PLANS: Record<PlanId, PlanMeta> = {
@@ -91,7 +90,6 @@ export const PLANS: Record<PlanId, PlanMeta> = {
     limit: 25,
     priceMonthly: 24,
     priceYearly: 240,
-    highlight: true,
     features: [
       "Zugriff auf 25 Analysen",
       "Signalstärke inkl. Farbcode",

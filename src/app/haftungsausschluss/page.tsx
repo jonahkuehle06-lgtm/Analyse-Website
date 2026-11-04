@@ -105,8 +105,7 @@ const PARAGRAPHS: { heading?: string; body: React.ReactNode }[] = [
     body: (
       <>
         {anbieter()}, {COMPANY.street}, {COMPANY.city}, {COMPANY.country}. An der
-        Erstellung der Publikationen Beteiligte: [Platzhalter — Namen und Funktionen aller
-        beteiligten Personen eintragen]. Der jeweils verantwortliche Ersteller wird
+        Erstellung der Publikationen Beteiligte: Jonah Kühle (Inhaber, Analyst). Der jeweils verantwortliche Ersteller wird
         zusätzlich bei jeder einzelnen Analyse genannt.
       </>
     ),

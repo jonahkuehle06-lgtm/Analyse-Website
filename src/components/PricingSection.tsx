@@ -116,15 +116,8 @@ export default function PricingSection({
                 key={plan.id}
                 className={`relative flex flex-col p-7 sm:p-9 ${
                   index > 0 ? "border-t border-[var(--color-line)] md:border-t-0 md:border-l" : ""
-                } ${plan.highlight ? "bg-[var(--color-anthracite)]" : ""}`}
+                }`}
               >
-                {plan.highlight && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-x-0 -top-px h-0.5 bg-[var(--color-platinum)]"
-                  />
-                )}
-
                 <h3 className="display text-[length:var(--step-h3)] font-normal text-[var(--color-platinum)]">
                   {plan.name}
                 </h3>
@@ -183,14 +176,14 @@ export default function PricingSection({
                     <button
                       type="button"
                       disabled
-                      className={`w-full ${plan.highlight ? "btn-platinum" : "btn-ghost"}`}
+                      className="btn-ghost w-full"
                     >
                       Aktuelles Paket
                     </button>
                   ) : (
                     <Link
                       href={`/bestellen?paket=${plan.id}&abrechnung=${abrechnung}`}
-                      className={`w-full ${plan.highlight ? "btn-platinum" : "btn-ghost"}`}
+                      className="btn-ghost w-full"
                     >
                       {plan.name} buchen
                     </Link>

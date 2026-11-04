@@ -85,10 +85,8 @@ export default function ImpressumPage() {
           {anbieter()}, {COMPANY.street}, {COMPANY.city}
         </p>
         <p>
-          An der Erstellung der Publikationen beteiligt: [Platzhalter — bitte alle
-          beteiligten Personen mit Namen und Funktion eintragen, z. B. „Max Mustermann
-          (Geschäftsführer), Erika Muster (Senior Analystin)“]. Die Angabe des jeweiligen
-          Erstellers erfolgt zusätzlich bei jeder einzelnen Analyse.
+          An der Erstellung der Publikationen beteiligt: Jonah Kühle (Inhaber, Analyst). Die
+          Angabe des jeweiligen Erstellers erfolgt zusätzlich bei jeder einzelnen Analyse.
         </p>
       </LegalSection>
 
