@@ -195,7 +195,7 @@ export default function PricingSection({
         </div>
 
         <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-[var(--color-muted)]">
-          <span>Zahlung über Stripe</span>
+          <span>Über Stripe</span>
           <span aria-hidden="true">·</span>
           <span>Kredit- und Debitkarte</span>
           <span aria-hidden="true">·</span>
