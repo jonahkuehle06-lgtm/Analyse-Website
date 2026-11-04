@@ -199,11 +199,11 @@ export default function PricingSection({
           <span aria-hidden="true">·</span>
           <span>Kredit- und Debitkarte</span>
           <span aria-hidden="true">·</span>
-          <span>PayPal</span>
+          <span>Google Pay</span>
+          <span aria-hidden="true">·</span>
+          <span>Apple Pay</span>
           <span aria-hidden="true">·</span>
           <span>SEPA-Lastschrift</span>
-          <span aria-hidden="true">·</span>
-          <span>Klarna &amp; Link (optional)</span>
         </div>
       </div>
     </section>
