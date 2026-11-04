@@ -23,7 +23,7 @@ const FAQ = [
   },
   {
     q: "Welche Zahlungsarten gibt es?",
-    a: "Die Zahlungsabwicklung läuft vollständig über Stripe: Kredit- und Debitkarte, Google Pay, Apple Pay und SEPA-Lastschrift. Google Pay und Apple Pay erscheinen, wenn dein Gerät sie unterstützt.",
+    a: "Du kannst mit Kredit- und Debitkarte, Google Pay, Apple Pay oder SEPA-Lastschrift bezahlen. Google Pay und Apple Pay erscheinen, wenn dein Gerät sie unterstützt.",
   },
   {
     q: "Wie kündige ich?",

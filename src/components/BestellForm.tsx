@@ -184,8 +184,7 @@ export default function BestellForm({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
           <Absenden />
           <p className="text-xs text-[var(--color-muted)]">
-            Im nächsten Schritt hinterlegst du dein Zahlungsmittel bei unserem
-            Zahlungsdienstleister Stripe.
+            Im nächsten Schritt hinterlegst du dein Zahlungsmittel.
           </p>
         </div>
       </div>

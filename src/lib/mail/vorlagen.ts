@@ -246,7 +246,7 @@ export function eingangsbestaetigung(b: BestellDaten): FertigeMail {
       },
       {
         art: "hinweis",
-        text: "Bitte beachte: Diese E-Mail bestätigt nur den Eingang deiner Bestellung und ist noch keine Annahme. Der Vertrag kommt zustande, sobald du die Zahlung bei unserem Zahlungsdienstleister Stripe abgeschlossen hast und wir dir die Vertragsbestätigung senden oder deinen Zugang freischalten. Schließt du die Zahlung nicht innerhalb von 24 Stunden ab, kommt kein Vertrag zustande und es entstehen dir keine Kosten.",
+        text: "Bitte beachte: Diese E-Mail bestätigt nur den Eingang deiner Bestellung und ist noch keine Annahme. Der Vertrag kommt zustande, sobald du die Zahlung abgeschlossen hast und wir dir die Vertragsbestätigung senden oder deinen Zugang freischalten. Schließt du die Zahlung nicht innerhalb von 24 Stunden ab, kommt kein Vertrag zustande und es entstehen dir keine Kosten.",
       },
       {
         art: "tabelle",
@@ -309,7 +309,7 @@ export function vertragsbestaetigung(v: VertragsDaten): FertigeMail {
   if (v.ersteZahlungCent !== null) {
     zeilen.push(["Erste Zahlung", `${euroAusCent(v.ersteZahlungCent, v.waehrung)} am ${datum(v.vertragsschluss)}`]);
   }
-  zeilen.push(["Abrechnung", `${intervallName(v.interval)}, ${abrechnungText(v.interval)} über Stripe`]);
+  zeilen.push(["Abrechnung", `${intervallName(v.interval)}, ${abrechnungText(v.interval)}`]);
   if (v.naechsteAbbuchung) {
     zeilen.push([
       jahr ? "Ende der Mindestlaufzeit" : "Nächste Abbuchung",

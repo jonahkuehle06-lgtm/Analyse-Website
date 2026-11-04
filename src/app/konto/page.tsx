@@ -48,8 +48,8 @@ export default async function KontoPage({
 
       {fehler === "kein-kunde" && (
         <p className="mt-8 text-[0.9375rem] text-[var(--color-danger)]" role="alert">
-          Zu diesem Konto ist noch kein Stripe-Kunde hinterlegt. Bitte zunächst ein Paket
-          buchen.
+          Zu diesem Konto sind noch keine Zahlungsdaten hinterlegt. Bitte zunächst ein
+          Paket buchen.
         </p>
       )}
 
@@ -122,7 +122,7 @@ export default async function KontoPage({
       </div>
 
       <p className="mt-12 max-w-[70ch] text-xs leading-relaxed text-[var(--color-muted)]">
-        Über „Abo verwalten“ öffnet sich das Stripe-Kundenportal. Dort änderst du
+        Über „Abo verwalten“ öffnet sich das Kundenportal. Dort änderst du
         Zahlungsmittel und lädst Rechnungen herunter. Kündigen kannst du jederzeit über
         „Verträge hier kündigen“; den Eingang bestätigen wir dir sofort per E-Mail. Deinen
         Vertrag widerrufen kannst du{" "}
