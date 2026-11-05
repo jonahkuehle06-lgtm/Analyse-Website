@@ -184,11 +184,12 @@ body {
   font-style: italic;
   background: var(--color-platinum);
   color: var(--color-ink);
-  padding: 0 0.12em 0.02em;
+  /* Schmaler Streifen: Höhe nach der Zeilenhöhe statt nach der vollen Schrifthöhe */
+  display: inline-block;
+  line-height: 0.92;
+  padding: 0.02em 0.1em 0.06em;
   margin: 0 0.03em;
   border-radius: 0.12em;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
 }
 
 /* Frueher Verlaufstext - jetzt ruhiges Platin, damit nichts flackert */
