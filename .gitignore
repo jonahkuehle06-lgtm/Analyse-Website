@@ -13,3 +13,4 @@ data/*.local.json
 # Lokaler Postausgang (E-Mails ohne SMTP)
 data/outbox/
 .claude/worktrees/
+AGENTS.md
