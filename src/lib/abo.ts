@@ -9,13 +9,15 @@ import { betreiberPostfach, sendeMail, type Versand } from "@/lib/mail/versand";
 import {
   erstattungsbestaetigung,
   interneMeldung,
+  kuendigungBestaetigenMail,
   kuendigungsbestaetigung,
   vertragsbestaetigung,
   widerrufsbestaetigung,
   type KuendigungsDaten,
   type WiderrufsDaten,
 } from "@/lib/mail/vorlagen";
-import { intervallName } from "@/lib/legal/vertrag";
+import { intervallName, urlZu } from "@/lib/legal/vertrag";
+import { leseNachweis, signiereNachweis } from "@/lib/auth";
 import { planFromPriceId, stripe, stripeConfigured } from "@/lib/stripe";
 import type { BillingInterval, PlanId } from "@/lib/types";
 
@@ -259,6 +261,10 @@ export interface KuendigungsAntrag {
   email: string;
   vertrag: string;
   wunsch: "naechstmoeglich" | Date;
+  /** Eingang der Erklärung - bei bestätigten Kündigungen das Absenden des Formulars */
+  eingang?: Date;
+  /** Referenznummer aus der Bitte um Bestätigung */
+  nummer?: string;
 }
 
 export interface KuendigungsErgebnis {
@@ -268,8 +274,8 @@ export interface KuendigungsErgebnis {
 }
 
 export async function kuendigen(antrag: KuendigungsAntrag): Promise<KuendigungsErgebnis> {
-  const eingang = new Date();
-  const nummer = referenz("K", eingang);
+  const eingang = antrag.eingang ?? new Date();
+  const nummer = antrag.nummer ?? referenz("K", eingang);
 
   let abo: Stripe.Subscription | null = null;
   const nutzer = await findUserByEmail(antrag.email);
@@ -368,6 +374,53 @@ export async function kuendigen(antrag: KuendigungsAntrag): Promise<KuendigungsE
   });
 
   return { daten, automatisch, mailVersendet: angekommen(versand) };
+}
+
+/**
+ * Kündigung ohne Anmeldung: Erst der Link in der E-Mail an die Adresse des
+ * Abos macht sie wirksam - sonst könnte jeder mit einer fremden Adresse ein
+ * Abo kündigen. Der Eingang bleibt der Zeitpunkt des Formulars.
+ */
+export async function kuendigungAnfragen(
+  antrag: KuendigungsAntrag,
+): Promise<{ nummer: string; eingang: Date; mailVersendet: boolean }> {
+  const eingang = new Date();
+  const nummer = referenz("K", eingang);
+  const token = await signiereNachweis(
+    "kuendigung",
+    {
+      art: antrag.art,
+      grund: antrag.grund,
+      name: antrag.name,
+      email: antrag.email,
+      vertrag: antrag.vertrag,
+      wunsch: antrag.wunsch === "naechstmoeglich" ? "naechstmoeglich" : antrag.wunsch.toISOString(),
+      eingang: eingang.toISOString(),
+      nummer,
+    },
+    "7d",
+  );
+  const link = urlZu(`/kuendigen/bestaetigen?t=${encodeURIComponent(token)}`);
+  const versand = await versuche(antrag.email, kuendigungBestaetigenMail({ nummer, eingang, link }));
+  return { nummer, eingang, mailVersendet: angekommen(versand) };
+}
+
+/** Liest eine Bitte um Bestätigung - null, wenn der Link ungültig oder abgelaufen ist. */
+export async function kuendigungAusLink(token: string): Promise<KuendigungsAntrag | null> {
+  if (token.length > 6000) return null;
+  const d = await leseNachweis(token, "kuendigung");
+  if (!d || typeof d.email !== "string" || typeof d.eingang !== "string") return null;
+  const text = (v: unknown) => (typeof v === "string" ? v : "");
+  return {
+    art: d.art === "ausserordentlich" ? "ausserordentlich" : "ordentlich",
+    grund: text(d.grund),
+    name: text(d.name),
+    email: d.email,
+    vertrag: text(d.vertrag),
+    wunsch: d.wunsch === "naechstmoeglich" || typeof d.wunsch !== "string" ? "naechstmoeglich" : new Date(d.wunsch),
+    eingang: new Date(d.eingang),
+    nummer: text(d.nummer) || undefined,
+  };
 }
 
 /* ------------------------------------------------------------------------ */

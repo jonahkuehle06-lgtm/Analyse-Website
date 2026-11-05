@@ -497,7 +497,6 @@ export function widerrufsbestaetigung(w: WiderrufsDaten): FertigeMail {
     ["Vertrag", w.vertrag],
   ];
   if (w.bestelltAm) zeilen.push(["Bestellt am", w.bestelltAm]);
-  if (w.nachricht) zeilen.push(["Deine Nachricht", w.nachricht]);
   zeilen.push(["Referenznummer", w.nummer]);
 
   return render({
@@ -556,6 +555,30 @@ export function erstattungsbestaetigung(e: ErstattungsDaten): FertigeMail {
       },
       { art: "absatz", text: "Danke, dass du dabei warst." },
       FRAGEN,
+    ],
+  });
+}
+
+/**
+ * Bitte um Bestätigung einer Kündigung ohne Anmeldung. Bewusst ohne Name und
+ * Freitext aus dem Formular - die Adresse ist noch nicht bestätigt.
+ */
+export function kuendigungBestaetigenMail(k: { nummer: string; eingang: Date; link: string }): FertigeMail {
+  return render({
+    betreff: `Bitte bestätige deine Kündigung (${k.nummer})`,
+    vorschau: "Ein Klick, dann ist deine Kündigung wirksam.",
+    titel: "Kündigung bestätigen",
+    anrede: hallo(""),
+    bausteine: [
+      {
+        art: "absatz",
+        text: `über unsere Website ist am ${datumZeit(k.eingang)} eine Kündigung für das Abo zu dieser E-Mail-Adresse eingegangen. Damit niemand Fremdes dein Abo kündigen kann, bestätige sie bitte mit dem Knopf. Für die Frist zählt der Eingang, nicht der Zeitpunkt deiner Bestätigung.`,
+      },
+      { art: "knopf", text: "Kündigung bestätigen", href: k.link },
+      {
+        art: "klein",
+        text: `Der Link ist sieben Tage gültig. Referenznummer: ${k.nummer}. Du hast nichts gekündigt? Dann ignoriere diese E-Mail – dein Abo läuft unverändert weiter.`,
+      },
     ],
   });
 }
