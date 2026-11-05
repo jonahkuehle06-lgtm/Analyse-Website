@@ -123,7 +123,7 @@ export default function CookiesPage() {
           <p>
             Beim ersten Besuch werden Sie um eine Entscheidung gebeten. Ablehnen ist
             dabei genauso einfach wie Zustimmen, und keine Auswahl ist vorangekreuzt. Sie
-            können Ihre Entscheidung jederzeit über „Cookie-Einstellungen" in der Fußzeile
+            können Ihre Entscheidung jederzeit über „Cookie-Einstellungen&quot; in der Fußzeile
             ändern oder vollständig widerrufen (Art. 7 Abs. 3 DSGVO).
           </p>
           <p>
@@ -179,7 +179,7 @@ export default function CookiesPage() {
         <p>
           Sie können Cookies jederzeit im Browser löschen oder deren Speicherung
           einschränken. Die Einstellung findet sich üblicherweise unter „Einstellungen →
-          Datenschutz und Sicherheit". Blockieren Sie die hier beschriebenen Cookies,
+          Datenschutz und Sicherheit&quot;. Blockieren Sie die hier beschriebenen Cookies,
           können Sie sich nicht mehr anmelden und die gebuchten Inhalte nicht aufrufen —
           die übrigen Seiten bleiben uneingeschränkt nutzbar.
         </p>

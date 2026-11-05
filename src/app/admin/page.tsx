@@ -1,3 +1,5 @@
+/* Datei-Download (CSV-Route), daher bewusst <a> statt <Link /> */
+/* eslint-disable @next/next/no-html-link-for-pages */
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import Wordmark from "@/components/Wordmark";
