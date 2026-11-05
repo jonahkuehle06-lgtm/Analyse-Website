@@ -13,11 +13,33 @@ const CSP = [
   "frame-ancestors 'none'",
 ].join("; ");
 
+/*
+ * Die alte Adresse analyse-website.vercel.app liefert dieselbe Seite wie die Live-Domain -
+ * Google sähe doppelte Inhalte. Sie leitet daher dauerhaft (308) auf die Live-Domain um, mit
+ * Pfad und Parametern. Nur dieser eine Host: Vorschau-Adressen (…-git-…vercel.app) bleiben
+ * erreichbar. /api bleibt ausgenommen, damit Webhooks (z. B. von Stripe, folgt keinen
+ * Weiterleitungen) auch über eine alte Adresse ankommen.
+ */
+const LIVE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "").replace(/\/$/, "");
+const ALTER_HOST = "analyse-website.vercel.app";
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   // Die Seite nutzt keine Bildoptimierung - der Endpunkt bleibt damit zu
   images: { unoptimized: true },
+  async redirects() {
+    // Nur mit https-Adresse (live); lokal und in Vorschauen ohne Umleitung
+    if (!LIVE_URL.startsWith("https://") || LIVE_URL.includes(ALTER_HOST)) return [];
+    return [
+      {
+        source: "/:path((?!api/).*)",
+        has: [{ type: "host", value: ALTER_HOST }],
+        destination: `${LIVE_URL}/:path`,
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

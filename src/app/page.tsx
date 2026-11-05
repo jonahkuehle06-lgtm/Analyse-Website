@@ -14,6 +14,8 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: { absolute: `Aktienanalysen mit Value-Ansatz — ${BRAND.name} ${BRAND.suffix}` },
+  description:
+    "Aktienanalysen mit langfristigem Value-Ansatz: Fundamentalanalyse, Bewertungsmodelle und Charttechnik. Mit Kurzbegründung, Kursziel und Signalstärke je Titel.",
   ...kanonisch("/"),
 };
 

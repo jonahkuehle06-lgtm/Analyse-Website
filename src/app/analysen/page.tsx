@@ -7,7 +7,8 @@ import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { PLANS, PLAN_ORDER, SIGNAL_LEVELS, planLimit } from "@/lib/config";
 import type { SignalLevel } from "@/lib/types";
-import { kanonisch } from "@/lib/seo";
+import { brotkrumen, kanonisch } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +51,7 @@ export default async function AnalysenPage({
 
   return (
     <div className="frame">
+      <JsonLd daten={brotkrumen("Aktienanalysen", "/analysen")} />
       <div className="py-14 sm:py-20">
         <PageHeader
           label="Research"

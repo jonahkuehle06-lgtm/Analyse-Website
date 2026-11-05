@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import PricingSection from "@/components/PricingSection";
 import { currentUser } from "@/lib/auth";
 import { PLANS, YEARLY_DISCOUNT_MONTHS } from "@/lib/config";
-import { kanonisch } from "@/lib/seo";
+import { brotkrumen, faqDaten, kanonisch, paketDaten } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Pakete und Preise",
-  description: `${PLANS.basic.name}, ${PLANS.black.name} und ${PLANS.platin.name}: Zugang zu ${PLANS.basic.limit}, ${PLANS.black.limit} oder ${PLANS.platin.limit} Aktienanalysen – monatlich oder jährlich mit ${YEARLY_DISCOUNT_MONTHS} Monaten gratis.`,
+  description: `${PLANS.basic.name}, ${PLANS.black.name} und ${PLANS.platin.name}: Zugang zu ${PLANS.basic.limit}, ${PLANS.black.limit} oder ${PLANS.platin.limit} Aktienanalysen von PAX Solutions – monatlich oder jährlich mit ${YEARLY_DISCOUNT_MONTHS} Monaten gratis.`,
   ...kanonisch("/preise"),
 };
 
@@ -40,6 +41,9 @@ export default async function PreisePage() {
 
   return (
     <>
+      <JsonLd daten={brotkrumen("Pakete und Preise", "/preise")} />
+      <JsonLd daten={paketDaten()} />
+      <JsonLd daten={faqDaten(FAQ)} />
       <PricingSection currentPlan={user?.plan ?? null} headingTag="h1" />
 
       <section>

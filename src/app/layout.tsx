@@ -48,6 +48,7 @@ export const metadata: Metadata = {
     "Aktienanalysen auf Basis fundamentaler und technischer Methoden – mit langfristigem Value-Ansatz. Kurzbegründung, Kursziel und Signalstärke je Titel.",
   robots: { index: true, follow: true },
   openGraph: OPEN_GRAPH,
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {

@@ -8,7 +8,7 @@ import { kanonisch } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "Haftungsausschluss",
   description:
-    "Risikohinweise, Haftungsausschluss und Hinweise zu möglichen Interessenkonflikten.",
+    "Risikohinweise, Haftungsausschluss und Hinweise zu möglichen Interessenkonflikten bei den Aktienanalysen von PAX Solutions.",
   ...kanonisch("/haftungsausschluss"),
 };
 

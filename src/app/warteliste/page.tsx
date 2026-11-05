@@ -8,6 +8,8 @@ import { kanonisch } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "Warteliste",
   description: "Trag dich auf die Warteliste von PAX Solutions ein und erfahre als Erstes vom Start.",
+  // Eintragsformular ohne eigenen Inhalt, nirgends verlinkt - nicht für die Suche gedacht
+  robots: { index: false, follow: true },
   ...kanonisch("/warteliste"),
 };
 

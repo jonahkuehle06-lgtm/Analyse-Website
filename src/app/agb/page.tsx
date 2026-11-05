@@ -6,7 +6,7 @@ import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "AGB",
-  description: "Allgemeine Geschäftsbedingungen für das Abonnement der Analysen.",
+  description: "Allgemeine Geschäftsbedingungen für das Abonnement der Aktienanalysen von PAX Solutions: Leistungen, Preise und Zahlung, Laufzeit und Kündigung.",
   ...kanonisch("/agb"),
 };
 
