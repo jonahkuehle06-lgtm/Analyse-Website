@@ -76,7 +76,7 @@ export default function ConsentBanner() {
             Für den Betrieb der Seite und deine Anmeldung setzen wir technisch notwendige
             Cookies — die brauchen keine Einwilligung. Darüber hinaus möchten wir messen, wie
             die Seite genutzt wird. Das geschieht nur, wenn du zustimmst. Du kannst deine
-            Wahl jederzeit über „Cookie-Einstellungen" in der Fußzeile ändern.
+            Wahl jederzeit über „Cookie-Einstellungen&quot; in der Fußzeile ändern.
           </p>
 
           <p className="mt-2 text-xs text-[var(--color-muted)]">
