@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const TITEL = "Finanzielle Freiheit ist für jeden.";
 
 const EINLEITUNG =
-  "Wir bei Pax Solutions haben es uns zur Aufgabe gemacht, hohe Renditen und finanzielle Bildung für jeden zugänglich zu machen. Denn jeder Mensch sollte die Möglichkeit haben, ein finanziell freies und somit selbstbestimmtes Leben zu führen. Die richtigen Investmententscheidungen lassen sich nur mit den richtigen Informationen treffen. Wir bereiten diese Informationen so auf, dass fundierte Entscheidungen in kurzer Zeit getroffen werden können.";
+  "Wir bei PAX Solutions haben es uns zur Aufgabe gemacht, hohe Renditen und finanzielle Bildung für jeden zugänglich zu machen. Denn jeder Mensch sollte die Möglichkeit haben, ein finanziell freies und somit selbstbestimmtes Leben zu führen. Die richtigen Investmententscheidungen lassen sich nur mit den richtigen Informationen treffen. Wir bereiten diese Informationen so auf, dass fundierte Entscheidungen in kurzer Zeit getroffen werden können.";
 
 const ABSCHNITTE: { titel: string; absaetze: string[] }[] = [
   {
@@ -29,9 +29,9 @@ const ABSCHNITTE: { titel: string; absaetze: string[] }[] = [
     ],
   },
   {
-    titel: "Pax Solutions",
+    titel: "PAX Solutions",
     absaetze: [
-      "Wir bei Pax setzen auf langfristige Investments, häufig in Unternehmen, die wir im Idealfall niemals wieder verkaufen müssen.",
+      "Wir bei PAX Solutions setzen auf langfristige Investments, häufig in Unternehmen, die wir im Idealfall niemals wieder verkaufen müssen.",
       "Wir analysieren Bilanzen und bewerten, ob ein Unternehmen vom Markt angemessen bewertet ist. Dabei beziehen wir auch technische Indikatoren ein. Zur Einschätzung möglicher künftiger Kursentwicklungen nutzen wir Bewertungsmodelle sowie Elliott-Wellen.",
       "Unser Augenmerk liegt stets auf dem Value eines Unternehmens und dem wirtschaftlichen Mehrwert, den es bietet. Eine große Inspiration sind dabei die Methoden von Warren Buffett und Benjamin Graham, deren Ansätze wir teilweise bis heute verfolgen.",
       "Wir sind uns der Verantwortung, die mit finanziellen Entscheidungen einhergeht, mehr als bewusst und gehen entsprechend sorgfältig damit um.",
