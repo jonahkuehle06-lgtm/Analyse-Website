@@ -27,8 +27,8 @@ export async function wartelisteAction(_prev: FormState, data: FormData): Promis
   if (!gueltigeEmail(email)) return { error: "Bitte gib eine gültige E-Mail-Adresse an." };
 
   if (
-    gedrosselt(`warteliste:${await clientIp()}`, 5, 15 * 60_000) ||
-    gedrosselt(`warteliste:${email}`, 3, 60 * 60_000)
+    (await gedrosselt(`warteliste:${await clientIp()}`, 5, 15 * 60_000)) ||
+    (await gedrosselt(`warteliste:${email}`, 3, 60 * 60_000))
   ) {
     return { error: "Zu viele Versuche in kurzer Zeit. Bitte warte ein paar Minuten." };
   }

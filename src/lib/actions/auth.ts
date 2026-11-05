@@ -48,7 +48,8 @@ export async function loginAction(
   // Gegen Passwort-Raten: höchstens 10 Fehlversuche je Gerät und je Adresse
   // in 15 Minuten. Erfolgreiche Anmeldungen zählen nicht.
   const schluessel = [`login:${await clientIp()}`, `login:${email.toLowerCase()}`];
-  if (schluessel.some((k) => ueberGrenze(k, 10, 15 * 60_000))) {
+  const gesperrt = await Promise.all(schluessel.map((k) => ueberGrenze(k, 10, 15 * 60_000)));
+  if (gesperrt.some(Boolean)) {
     return { error: ZU_VIELE };
   }
 
@@ -57,7 +58,7 @@ export async function loginAction(
     ? await verifyPassword(password, user.passwordHash)
     : await verifyPasswordBlind(password);
   if (!user || !korrekt) {
-    schluessel.forEach(vermerke);
+    await Promise.all(schluessel.map(vermerke));
     return { error: "E-Mail-Adresse oder Passwort ist nicht korrekt." };
   }
 
@@ -113,8 +114,8 @@ export async function zugangslinkAction(
   if (!gueltigeEmail(email)) return { error: "Bitte gib eine gültige E-Mail-Adresse an." };
 
   if (
-    gedrosselt(`zugangslink:${await clientIp()}`, 5, 15 * 60_000) ||
-    gedrosselt(`zugangslink:${email}`, 3, 60 * 60_000)
+    (await gedrosselt(`zugangslink:${await clientIp()}`, 5, 15 * 60_000)) ||
+    (await gedrosselt(`zugangslink:${email}`, 3, 60 * 60_000))
   ) {
     return { error: ZU_VIELE };
   }
@@ -157,11 +158,11 @@ export async function adminLoginAction(
     };
   }
   const schluessel = `admin:${await clientIp()}`;
-  if (ueberGrenze(schluessel, 5, 15 * 60_000)) {
+  if (await ueberGrenze(schluessel, 5, 15 * 60_000)) {
     return { error: ZU_VIELE };
   }
   if (!(await verifyAdminCredentials(email, password))) {
-    vermerke(schluessel);
+    await vermerke(schluessel);
     return { error: "Zugangsdaten sind nicht korrekt." };
   }
 

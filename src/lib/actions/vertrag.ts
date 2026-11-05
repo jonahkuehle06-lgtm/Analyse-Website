@@ -1,6 +1,7 @@
 "use server";
 
-import { kuendigen, widerrufen } from "@/lib/abo";
+import { kuendigen, kuendigungAnfragen, kuendigungAusLink, widerrufen, type KuendigungsErgebnis } from "@/lib/abo";
+import { currentUser } from "@/lib/auth";
 import { clientIp, gedrosselt, gueltigeEmail } from "@/lib/drossel";
 import { datum, datumZeit } from "@/lib/format";
 import { vertragsOptionen } from "@/lib/legal/vertrag";
@@ -73,37 +74,84 @@ export async function kuendigenAction(
     wunsch = d;
   }
 
-  if (gedrosselt(`kuendigung:${await clientIp()}`, 5, 10 * 60_000)) {
+  if (
+    (await gedrosselt(`kuendigung:${await clientIp()}`, 5, 10 * 60_000)) ||
+    (await gedrosselt(`kuendigung:${email}`, 3, 60 * 60_000))
+  ) {
     return { fehler: "Zu viele Anfragen in kurzer Zeit. Bitte versuche es in ein paar Minuten erneut." };
   }
 
-  const ergebnis = await kuendigen({ art, grund, name, email, vertrag, wunsch });
+  const antrag = { art, grund, name, email, vertrag, wunsch } as const;
+
+  // Angemeldet und eigene Adresse: sofort wirksam. Sonst erst über den Link in
+  // der E-Mail - damit niemand mit einer fremden Adresse ein Abo kündigen kann
+  const user = await currentUser();
+  if (user?.email !== email) {
+    const anfrage = await kuendigungAnfragen(antrag);
+    return {
+      quittung: {
+        titel: "Bitte bestätige deine Kündigung",
+        nummer: anfrage.nummer,
+        eingang: datumZeit(anfrage.eingang),
+        zeilen: quittungsZeilen(antrag),
+        hinweis:
+          "Wir haben dir eine E-Mail mit einem Bestätigungslink geschickt. Erst mit deiner Bestätigung wird die Kündigung wirksam – für die Frist zählt aber der Eingang oben. Der Link ist sieben Tage gültig.",
+        mailVersendet: anfrage.mailVersendet,
+      },
+    };
+  }
+
+  return { quittung: kuendigungsQuittung(antrag, await kuendigen(antrag)) };
+}
+
+/** Bestätigung über den Link aus der E-Mail. */
+export async function kuendigungBestaetigenAction(
+  _prev: VertragsZustand,
+  data: FormData,
+): Promise<VertragsZustand> {
+  const antrag = await kuendigungAusLink(str(data, "t", 6000));
+  if (!antrag) return { fehler: "Der Link ist ungültig oder abgelaufen. Bitte kündige erneut über das Formular." };
+  return { quittung: kuendigungsQuittung(antrag, await kuendigen(antrag)) };
+}
+
+function quittungsZeilen(a: {
+  art: "ordentlich" | "ausserordentlich";
+  grund: string;
+  name: string;
+  email: string;
+  vertrag: string;
+  wunsch: "naechstmoeglich" | Date;
+}): [string, string][] {
+  const zeilen: [string, string][] = [
+    ["Abgegeben über", "Schaltfläche „jetzt kündigen“"],
+    ["Art der Kündigung", a.art === "ordentlich" ? "Ordentliche Kündigung" : "Außerordentliche Kündigung"],
+  ];
+  if (a.art === "ausserordentlich") zeilen.push(["Kündigungsgrund", a.grund]);
+  zeilen.push(
+    ["Name", a.name],
+    ["E-Mail-Adresse", a.email],
+    ["Vertrag", a.vertrag],
+    ["Gewünschtes Vertragsende", a.wunsch === "naechstmoeglich" ? "Zum nächstmöglichen Zeitpunkt" : `Zum ${datum(a.wunsch)}`],
+  );
+  return zeilen;
+}
+
+function kuendigungsQuittung(
+  antrag: Parameters<typeof quittungsZeilen>[0],
+  ergebnis: KuendigungsErgebnis,
+): Quittung {
   const d = ergebnis.daten;
 
   // Die Quittung zeigt nur, was hier eingegeben wurde. Paket und Vertragsende
   // gehen per E-Mail an die Adresse - sonst ließe sich über das Formular
   // ablesen, ob und welches Abo zu einer fremden Adresse gehört.
-  const zeilen: [string, string][] = [
-    ["Abgegeben über", "Schaltfläche „jetzt kündigen“"],
-    ["Art der Kündigung", art === "ordentlich" ? "Ordentliche Kündigung" : "Außerordentliche Kündigung"],
-  ];
-  if (art === "ausserordentlich") zeilen.push(["Kündigungsgrund", grund]);
-  zeilen.push(
-    ["Name", name],
-    ["E-Mail-Adresse", email],
-    ["Vertrag", vertrag],
-    ["Gewünschtes Vertragsende", wunsch === "naechstmoeglich" ? "Zum nächstmöglichen Zeitpunkt" : `Zum ${datum(wunsch)}`],
-  );
-
   return {
-    quittung: {
-      titel: "Deine Kündigung ist eingegangen",
-      nummer: d.nummer,
-      eingang: datumZeit(d.eingang),
-      zeilen,
-      hinweis: "Wir prüfen deine Kündigung und bestätigen dir das genaue Vertragsende umgehend per E-Mail.",
-      mailVersendet: ergebnis.mailVersendet,
-    },
+    titel: "Deine Kündigung ist eingegangen",
+    nummer: d.nummer,
+    eingang: datumZeit(d.eingang),
+    zeilen: quittungsZeilen(antrag),
+    hinweis: "Wir prüfen deine Kündigung und bestätigen dir das genaue Vertragsende umgehend per E-Mail.",
+    mailVersendet: ergebnis.mailVersendet,
   };
 }
 
@@ -124,7 +172,10 @@ export async function widerrufenAction(
   const fehler = pruefeKontakt(name, email);
   if (fehler) return { fehler };
 
-  if (gedrosselt(`widerruf:${await clientIp()}`, 5, 10 * 60_000)) {
+  if (
+    (await gedrosselt(`widerruf:${await clientIp()}`, 5, 10 * 60_000)) ||
+    (await gedrosselt(`widerruf:${email}`, 3, 60 * 60_000))
+  ) {
     return { fehler: "Zu viele Anfragen in kurzer Zeit. Bitte versuche es in ein paar Minuten erneut." };
   }
 

@@ -1,23 +1,25 @@
 import "server-only";
+import { createHash } from "node:crypto";
 import { headers } from "next/headers";
+import { drosselPruefen } from "./db";
 
 /**
- * Einfache Drosselung je Schlüssel (meist IP-Adresse) für Formulare, die
- * E-Mails auslösen. Hält nur innerhalb einer Serverinstanz - genug, um
- * Missbrauch und Mail-Fluten zu bremsen, ohne gemeinsamen Speicher.
+ * Drosselung je Schlüssel (IP-Adresse oder Empfängeradresse) für Formulare, die
+ * E-Mails auslösen, und für Anmeldungen. Gezählt wird in der Datenbank, damit
+ * die Grenze über alle Serverinstanzen gilt; Schlüssel werden nur gehasht
+ * gespeichert. Ohne Datenbank (lokal) oder bei einem Ausfall zählt der Speicher
+ * der Instanz.
  */
 const treffer = new Map<string, number[]>();
 /** Längstes Zeitfenster, das irgendwo verwendet wird - fürs Aufräumen */
 const MAX_FENSTER = 60 * 60_000;
 
-/** Ist die Grenze erreicht? Zählt selbst nicht mit. */
-export function ueberGrenze(schluessel: string, max: number, fensterMs: number): boolean {
+function imSpeicherUeber(schluessel: string, max: number, fensterMs: number): boolean {
   const grenze = Date.now() - fensterMs;
   return (treffer.get(schluessel) ?? []).filter((t) => t > grenze).length >= max;
 }
 
-/** Einen Versuch zählen, z. B. eine fehlgeschlagene Anmeldung. */
-export function vermerke(schluessel: string): void {
+function imSpeicherVermerken(schluessel: string): void {
   const jetzt = Date.now();
   const zeiten = (treffer.get(schluessel) ?? []).filter((t) => t > jetzt - MAX_FENSTER);
   zeiten.push(jetzt);
@@ -30,10 +32,26 @@ export function vermerke(schluessel: string): void {
   }
 }
 
+const gehasht = (schluessel: string) => createHash("sha256").update(schluessel).digest("hex");
+
+/** Ist die Grenze erreicht? Zählt selbst nicht mit. */
+export async function ueberGrenze(schluessel: string, max: number, fensterMs: number): Promise<boolean> {
+  const db = await drosselPruefen(gehasht(schluessel), max, Math.ceil(fensterMs / 1000), false);
+  return db ?? imSpeicherUeber(schluessel, max, fensterMs);
+}
+
+/** Einen Versuch zählen, z. B. eine fehlgeschlagene Anmeldung. */
+export async function vermerke(schluessel: string): Promise<void> {
+  imSpeicherVermerken(schluessel);
+  await drosselPruefen(gehasht(schluessel), 2 ** 31 - 1, 3600, true);
+}
+
 /** Prüfen und zählen in einem: true, wenn die Grenze schon erreicht war. */
-export function gedrosselt(schluessel: string, max: number, fensterMs: number): boolean {
-  if (ueberGrenze(schluessel, max, fensterMs)) return true;
-  vermerke(schluessel);
+export async function gedrosselt(schluessel: string, max: number, fensterMs: number): Promise<boolean> {
+  const db = await drosselPruefen(gehasht(schluessel), max, Math.ceil(fensterMs / 1000), true);
+  if (db !== null) return db;
+  if (imSpeicherUeber(schluessel, max, fensterMs)) return true;
+  imSpeicherVermerken(schluessel);
   return false;
 }
 

@@ -77,7 +77,6 @@ export const PLANS: Record<PlanId, PlanMeta> = {
     priceMonthly: 9,
     priceYearly: 90,
     features: [
-      "Zugriff auf 10 Analysen",
       "Signalstärke inkl. Farbcode",
       "Kurzbegründung je Titel",
       "Monatlich kündbar",
@@ -91,7 +90,6 @@ export const PLANS: Record<PlanId, PlanMeta> = {
     priceMonthly: 24,
     priceYearly: 240,
     features: [
-      "Zugriff auf 25 Analysen",
       "Signalstärke inkl. Farbcode",
       "Kurzbegründung je Titel",
       "Kursziel und Anlagehorizont",
@@ -106,7 +104,6 @@ export const PLANS: Record<PlanId, PlanMeta> = {
     priceMonthly: 49,
     priceYearly: 490,
     features: [
-      "Zugriff auf 50 Analysen",
       "Signalstärke inkl. Farbcode",
       "Kurzbegründung je Titel",
       "Kursziel und Anlagehorizont",

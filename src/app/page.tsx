@@ -53,7 +53,14 @@ const KENNZAHLEN = [
 ];
 
 export default async function HomePage() {
-  const [analyses, user] = await Promise.all([listAnalyses(), currentUser()]);
+  // Ein Datenbank-Aussetzer soll die Startseite nicht lahmlegen - dann eben ohne Vorschau
+  const [analyses, user] = await Promise.all([
+    listAnalyses().catch((error) => {
+      console.error("[Startseite] Analysen nicht geladen:", error);
+      return [];
+    }),
+    currentUser().catch(() => null),
+  ]);
   const preview = analyses.slice(0, 3);
   const unlocked = hasActiveSubscription(user);
 

@@ -62,7 +62,10 @@ export async function bestellenAction(
     };
   }
 
-  if (gedrosselt(`bestellung:${await clientIp()}`, 6, 10 * 60_000)) {
+  if (
+    (await gedrosselt(`bestellung:${await clientIp()}`, 6, 10 * 60_000)) ||
+    (await gedrosselt(`bestellung:${email}`, 3, 60 * 60_000))
+  ) {
     return { fehler: "Zu viele Bestellversuche in kurzer Zeit. Bitte versuche es in ein paar Minuten erneut." };
   }
 

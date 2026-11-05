@@ -369,17 +369,15 @@ export async function upsertUser(email: string, patch: UserPatch = {}): Promise<
 
   if (activeDriver() === "supabase") {
     const sb = await supabase();
-    const existing = await findUserByEmail(normalized);
-    if (existing) {
-      const { data, error } = await sb
-        .from("users")
-        .update(patchToRow(patch))
-        .eq("id", existing.id)
-        .select()
-        .single();
+    const aktualisieren = async (id: string) => {
+      const { data, error } = await sb.from("users").update(patchToRow(patch)).eq("id", id).select().single();
       if (error) throw new Error(error.message);
       return userFromRow(data);
-    }
+    };
+
+    const existing = await findUserByEmail(normalized);
+    if (existing) return aktualisieren(existing.id);
+
     const { data, error } = await sb
       .from("users")
       .insert({
@@ -390,8 +388,15 @@ export async function upsertUser(email: string, patch: UserPatch = {}): Promise<
       })
       .select()
       .single();
-    if (error) throw new Error(error.message);
-    return userFromRow(data);
+    if (!error) return userFromRow(data);
+
+    // Rückleitung und Webhook legen denselben Neukunden manchmal gleichzeitig
+    // an - dann hat der andere gewonnen, und wir aktualisieren seinen Eintrag
+    if (error.code === "23505") {
+      const gewonnen = await findUserByEmail(normalized);
+      if (gewonnen) return aktualisieren(gewonnen.id);
+    }
+    throw new Error(error.message);
   }
 
   lokalSchreibenPruefen();
@@ -548,4 +553,36 @@ export async function listWarteliste(): Promise<WartelistenEintrag[]> {
   }
   const store = await readLocal();
   return (store.warteliste ?? []).filter((e) => e.bestaetigtAm);
+}
+
+/* ------------------------------------------------------------------------ */
+/* Drosselung über alle Serverinstanzen                                     */
+/* ------------------------------------------------------------------------ */
+
+/**
+ * Prüft (und zählt) einen Versuch in der gemeinsamen Tabelle. true = Grenze
+ * erreicht. null, wenn keine Datenbank angebunden ist oder sie nicht antwortet -
+ * dann entscheidet die Drosselung im Speicher.
+ */
+export async function drosselPruefen(
+  schluessel: string,
+  max: number,
+  fensterSekunden: number,
+  zaehlen: boolean,
+): Promise<boolean | null> {
+  if (activeDriver() !== "supabase") return null;
+  try {
+    const sb = await supabase();
+    const { data, error } = await sb.rpc("drossel_pruefen", {
+      p_schluessel: schluessel,
+      p_max: max,
+      p_fenster_sekunden: fensterSekunden,
+      p_zaehlen: zaehlen,
+    });
+    if (error) throw new Error(error.message);
+    return data === true;
+  } catch (error) {
+    console.error("[Drossel] Gemeinsame Zählung nicht erreichbar:", error);
+    return null;
+  }
 }

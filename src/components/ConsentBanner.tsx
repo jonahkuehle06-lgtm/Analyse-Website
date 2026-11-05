@@ -61,51 +61,42 @@ export default function ConsentBanner() {
       className="fixed inset-x-0 bottom-0 z-[80] print:hidden px-[max(0.75rem,env(safe-area-inset-left),env(safe-area-inset-right))] pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:px-[max(1.25rem,env(safe-area-inset-left),env(safe-area-inset-right))] sm:pb-[calc(1.25rem+env(safe-area-inset-bottom))]"
     >
       <div
-        className="surface mx-auto max-w-3xl p-6 shadow-[var(--shadow-overlay)] sm:p-8"
+        className="surface mx-auto max-w-6xl p-4 shadow-[var(--shadow-overlay)] sm:p-5 lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-x-10 lg:px-7"
       >
-        <p className="mono-label">Datenschutz</p>
-        <h2
-          id="consent-titel"
-          className="display mt-3 text-[length:var(--step-h4)] font-normal text-[var(--color-platinum)]"
-        >
-          Deine Entscheidung über Cookies
-        </h2>
+        <div>
+          <p className="mono-label hidden sm:block">Datenschutz</p>
+          <h2
+            id="consent-titel"
+            className="display text-lg font-normal text-[var(--color-platinum)] sm:mt-2 sm:text-xl"
+          >
+            Deine Entscheidung über Cookies
+          </h2>
 
-        <p className="mt-3 text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
-          Für den Betrieb der Seite und deine Anmeldung setzen wir technisch notwendige
-          Cookies — die brauchen keine Einwilligung. Darüber hinaus möchten wir messen, wie
-          die Seite genutzt wird. Das geschieht nur, wenn du zustimmst. Du kannst deine
-          Wahl jederzeit über „Cookie-Einstellungen" in der Fußzeile ändern.
-        </p>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--color-mist)]">
+            Für den Betrieb der Seite und deine Anmeldung setzen wir technisch notwendige
+            Cookies — die brauchen keine Einwilligung. Darüber hinaus möchten wir messen, wie
+            die Seite genutzt wird. Das geschieht nur, wenn du zustimmst. Du kannst deine
+            Wahl jederzeit über „Cookie-Einstellungen" in der Fußzeile ändern.
+          </p>
 
-        {details && (
-          <div className="mt-6 divide-y divide-[var(--color-line)] overflow-hidden rounded-[var(--radius-field)] border border-[var(--color-line)]">
-            <Zweck
-              titel="Technisch notwendig"
-              text="Anmeldung, Sitzungsverwaltung und Sicherheit. Ohne diese Cookies funktioniert der Kundenbereich nicht."
-              an
-              fest
-            />
-            <Zweck
-              titel="Statistik"
-              text="Anonyme Auswertung, welche Seiten aufgerufen werden, um das Angebot zu verbessern."
-              an={analytics}
-              onChange={setAnalytics}
-            />
-            <Zweck
-              titel="Marketing"
-              text="Messung des Erfolgs von Werbung und Wiedererkennung über Websites hinweg."
-              an={ads}
-              onChange={setAds}
-            />
-          </div>
-        )}
+          <p className="mt-2 text-xs text-[var(--color-muted)]">
+            Mehr dazu in den{" "}
+            <Link href="/cookies" className="underline underline-offset-2">
+              Cookie-Hinweisen
+            </Link>{" "}
+            und der{" "}
+            <Link href="/datenschutz" className="underline underline-offset-2">
+              Datenschutzerklärung
+            </Link>
+            .
+          </p>
+        </div>
 
         {/* Zustimmen und Ablehnen muessen gleich leicht sein - gleiche Groesse,
             gleiche Ebene, gleiche Gestaltung. Ein hervorgehobener
             Zustimmen-Knopf neben einem unscheinbaren Ablehnen-Knopf gilt als
             unzulaessige Beeinflussung der Einwilligung. */}
-        <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-row lg:mt-0 lg:w-64 lg:flex-col">
           <button
             type="button"
             onClick={() => decide({ analytics: false, ads: false })}
@@ -126,7 +117,7 @@ export default function ConsentBanner() {
             <button
               type="button"
               onClick={() => setDetails(true)}
-              className="min-h-12 w-full px-6 text-[0.9375rem] text-[var(--color-mist)] underline decoration-transparent underline-offset-4 transition-colors hover:text-[var(--color-platinum)] hover:decoration-current sm:flex-1"
+              className="order-last col-span-2 min-h-11 w-full px-6 text-[0.9375rem] text-[var(--color-mist)] underline decoration-transparent underline-offset-4 transition-colors hover:text-[var(--color-platinum)] hover:decoration-current sm:order-none sm:flex-1"
             >
               Einstellungen
             </button>
@@ -141,17 +132,28 @@ export default function ConsentBanner() {
           </button>
         </div>
 
-        <p className="mt-5 text-xs text-[var(--color-muted)]">
-          Mehr dazu in den{" "}
-          <Link href="/cookies" className="underline underline-offset-2">
-            Cookie-Hinweisen
-          </Link>{" "}
-          und der{" "}
-          <Link href="/datenschutz" className="underline underline-offset-2">
-            Datenschutzerklärung
-          </Link>
-          .
-        </p>
+        {details && (
+          <div className="mt-4 divide-y divide-[var(--color-line)] overflow-hidden rounded-[var(--radius-field)] border border-[var(--color-line)]">
+            <Zweck
+              titel="Technisch notwendig"
+              text="Anmeldung, Sitzungsverwaltung und Sicherheit. Ohne diese Cookies funktioniert der Kundenbereich nicht."
+              an
+              fest
+            />
+            <Zweck
+              titel="Statistik"
+              text="Anonyme Auswertung, welche Seiten aufgerufen werden, um das Angebot zu verbessern."
+              an={analytics}
+              onChange={setAnalytics}
+            />
+            <Zweck
+              titel="Marketing"
+              text="Messung des Erfolgs von Werbung und Wiedererkennung über Websites hinweg."
+              an={ads}
+              onChange={setAds}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
