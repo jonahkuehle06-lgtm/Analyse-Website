@@ -133,10 +133,9 @@ export default function CookiesPage() {
             und wird nicht übertragen; löschen Sie die Browserdaten, ist sie entfernt.
           </p>
           <p>
-            [Platzhalter — sobald konkrete Dienste über den Tag Manager eingebunden werden
-            (etwa Google Analytics oder Werbe-Tags), sind sie hier einzeln mit Zweck,
-            Anbieter, Speicherdauer und etwaiger Drittlandsübermittlung aufzuführen. Diese
-            Angaben sind zusammen mit dem Einwilligungsfenster zu ergänzen.]
+            Derzeit sind über den Google Tag Manager keine Dienste zur Reichweitenmessung
+            oder Werbung eingebunden. Kommen solche Dienste hinzu, führen wir sie hier mit
+            Zweck, Anbieter und Speicherdauer auf.
           </p>
         </LegalSection>
       ) : (

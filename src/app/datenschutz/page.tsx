@@ -23,10 +23,6 @@ export default function DatenschutzPage() {
           <br />
           E-Mail: {COMPANY.email} · Telefon: {COMPANY.phone}
         </p>
-        <p>
-          [Platzhalter — sofern ein Datenschutzbeauftragter bestellt ist, hier dessen
-          Kontaktdaten ergänzen.]
-        </p>
       </LegalSection>
 
       <LegalSection title="2. Aufruf der Website">
@@ -92,10 +88,37 @@ export default function DatenschutzPage() {
 
       <LegalSection title="6. Hosting und Datenbank">
         <p>
-          [Platzhalter — die tatsächlich eingesetzten Dienstleister eintragen, z. B.
-          Vercel Inc. für das Hosting und Supabase für die Datenbank, jeweils mit Hinweis
-          auf den Auftragsverarbeitungsvertrag und — bei Drittlandsbezug — auf die
-          Standardvertragsklauseln.]
+          Die Website wird bei der Vercel Inc. (USA) betrieben; die Server, die die Seiten
+          ausliefern, stehen in Frankfurt am Main. Kundenkonten und Warteliste speichern wir
+          in einer Datenbank der Supabase Inc.; der Datenbankserver steht in London
+          (Vereinigtes Königreich). E-Mails versenden und empfangen wir über Google
+          Workspace der Google Ireland Limited, Dublin, Irland. Rechtsgrundlage ist Art. 6
+          Abs. 1 lit. b und f DSGVO. Einzelheiten:{" "}
+          <a
+            href="https://vercel.com/legal/privacy-policy"
+            className="underline underline-offset-2"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Vercel
+          </a>,{" "}
+          <a
+            href="https://supabase.com/privacy"
+            className="underline underline-offset-2"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Supabase
+          </a>,{" "}
+          <a
+            href="https://policies.google.com/privacy"
+            className="underline underline-offset-2"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Google
+          </a>
+          .
         </p>
       </LegalSection>
 
