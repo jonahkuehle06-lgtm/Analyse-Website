@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { BRAND, siteUrl } from "./config";
+import { BRAND, PLANS, PLAN_ORDER, siteUrl } from "./config";
 
 const SEITENNAME = `${BRAND.name} ${BRAND.suffix}`;
+
+const BESCHREIBUNG =
+  "Aktienanalysen auf Basis fundamentaler und technischer Methoden – mit langfristigem Value-Ansatz.";
 
 /** Vorschau beim Teilen (Open Graph) - auf allen Seiten gleich, nur die Adresse wechselt. */
 export const OPEN_GRAPH = {
@@ -43,6 +46,8 @@ export function strukturierteDaten() {
         name: SEITENNAME,
         url: `${url}/`,
         logo: `${url}/apple-icon.png`,
+        description: BESCHREIBUNG,
+        slogan: BRAND.claim,
       },
       {
         "@type": "WebSite",
@@ -50,8 +55,60 @@ export function strukturierteDaten() {
         name: SEITENNAME,
         url: `${url}/`,
         inLanguage: "de-DE",
+        description: BESCHREIBUNG,
         publisher: { "@id": `${url}/#organisation` },
       },
     ],
+  };
+}
+
+/** Brotkrumen-Pfad einer Unterseite (Startseite → Seite). */
+export function brotkrumen(name: string, pfad: string) {
+  const url = siteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SEITENNAME, item: `${url}/` },
+      { "@type": "ListItem", position: 2, name, item: `${url}${pfad}` },
+    ],
+  };
+}
+
+/** Häufige Fragen als FAQPage - nur mit Fragen, die auf der Seite sichtbar stehen. */
+export function faqDaten(fragen: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: fragen.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  };
+}
+
+/** Die Pakete mit ihren echten Preisen aus config.ts (monatlich und jährlich). */
+export function paketDaten() {
+  const url = siteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@graph": PLAN_ORDER.map((id) => {
+      const plan = PLANS[id];
+      const angebot = (name: string, preis: number) => ({
+        "@type": "Offer",
+        name,
+        price: preis,
+        priceCurrency: "EUR",
+        url: `${url}/preise`,
+      });
+      return {
+        "@type": "Product",
+        name: `${SEITENNAME} ${plan.name}`,
+        description: `${plan.tagline} Zugriff auf ${plan.limit} Aktienanalysen.`,
+        brand: { "@id": `${url}/#organisation` },
+        offers: [angebot("Monatsabo", plan.priceMonthly), angebot("Jahresabo", plan.priceYearly)],
+      };
+    }),
   };
 }

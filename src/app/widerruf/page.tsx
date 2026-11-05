@@ -7,7 +7,7 @@ import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Widerrufsbelehrung",
-  description: "Widerrufsrecht für Verbraucher bei digitalen Inhalten, mit Muster-Widerrufsformular.",
+  description: "Widerrufsbelehrung von PAX Solutions: Widerrufsrecht für Verbraucher bei digitalen Inhalten, mit Muster-Widerrufsformular.",
   ...kanonisch("/widerruf"),
 };
 

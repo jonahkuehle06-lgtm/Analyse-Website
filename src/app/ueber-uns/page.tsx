@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
-import { kanonisch } from "@/lib/seo";
+import { brotkrumen, kanonisch } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "Über uns",
   description:
-    "Finanzielle Freiheit ist für jeden. Analysen und Research zu Aktien.",
+    "Wer hinter PAX Solutions steht: Jonah Kühle und sein Value-Ansatz bei Aktienanalysen – mit dem Ziel, finanzielle Bildung für jeden zugänglich zu machen.",
   ...kanonisch("/ueber-uns"),
 };
 
@@ -45,6 +46,7 @@ const SCHLUSS = "Viel Spaß beim Investieren!";
 export default function UeberUnsPage() {
   return (
     <div className="frame">
+      <JsonLd daten={brotkrumen("Über uns", "/ueber-uns")} />
       <div className="py-14 sm:py-20">
         <PageHeader label="Über uns" title={TITEL} lead={EINLEITUNG} />
 

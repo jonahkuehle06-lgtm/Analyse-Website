@@ -6,7 +6,7 @@ import { kanonisch } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Impressum",
-  description: "Anbieterkennzeichnung nach § 5 DDG und § 18 Abs. 2 MStV.",
+  description: "Anbieterkennzeichnung nach § 5 DDG und § 18 Abs. 2 MStV: Angaben zum Anbieter PAX Solutions, Kontaktmöglichkeiten und inhaltlich Verantwortlichem.",
   ...kanonisch("/impressum"),
 };
 

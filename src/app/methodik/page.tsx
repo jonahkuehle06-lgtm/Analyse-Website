@@ -7,12 +7,13 @@ import ScenarioChart from "@/components/ScenarioChart";
 import PriceZones from "@/components/PriceZones";
 import { BEISPIEL_ANALYSE } from "@/lib/beispiel";
 import { SIGNALS, SIGNAL_LEVELS } from "@/lib/config";
-import { kanonisch } from "@/lib/seo";
+import { brotkrumen, kanonisch } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Methodik: So entstehen unsere Analysen",
+  title: "Methodik: So entstehen unsere Aktienanalysen",
   description:
-    "Bilanzanalyse, Bewertungsmodelle, technische Indikatoren und Elliott-Wellen: So entstehen die Aktienanalysen von PAX Solutions und ihre Signalstärke.",
+    "Fundamentalanalyse, Unternehmensbewertung (DCF, Multiples), Charttechnik und Risikomanagement: So entstehen die Aktienanalysen von PAX Solutions.",
   ...kanonisch("/methodik"),
 };
 
@@ -53,6 +54,7 @@ const PILLARS = [
 export default function MethodikPage() {
   return (
     <div className="frame">
+      <JsonLd daten={brotkrumen("Methodik", "/methodik")} />
       <div className="py-14 sm:py-20">
         <PageHeader
           label="Vorgehen"
