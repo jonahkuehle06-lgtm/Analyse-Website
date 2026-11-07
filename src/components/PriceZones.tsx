@@ -140,12 +140,9 @@ export default function PriceZones({ analysis }: { analysis: Analysis }) {
       {/* Legende */}
       <ul className="mt-6 grid gap-x-6 gap-y-2.5 border-t border-[var(--color-line)] pt-5 @xl:grid-cols-2">
         {([1, 2, 3, 4, 5] as SignalLevel[]).map((stufe) => {
-          const bereich =
-            stufe === 1
-              ? `unter ${zahl(grenzen[0])}`
-              : stufe === 5
-                ? `über ${zahl(grenzen[3])}`
-                : `${zahl(grenzen[stufe - 2])} – ${zahl(grenzen[stufe - 1])}`;
+          // Ein- und Ausstieg gelten ab der jeweiligen Grenze, Neutral liegt dazwischen
+          const [g1, g2, g3, g4] = grenzen.map(zahl);
+          const bereich = { 1: `ab ${g1}`, 2: `ab ${g2}`, 3: `${g2} – ${g3}`, 4: `ab ${g3}`, 5: `ab ${g4}` }[stufe];
           return (
             <li key={stufe} className="flex items-center justify-between gap-3 text-sm">
               <span className="flex items-center gap-2.5">

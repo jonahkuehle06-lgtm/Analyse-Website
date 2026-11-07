@@ -226,10 +226,10 @@ export default function AnalysisForm({
 
         <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            ["zoneStrongEntryTo", "Starker Einstieg bis", "bis zu diesem Kurs", 1],
-            ["zoneEntryTo", "Einstieg bis", "darüber bis", 2],
-            ["zoneNeutralTo", "Neutral bis", "darüber bis", 3],
-            ["zoneExitTo", "Ausstieg bis", "darüber: starker Ausstieg", 4],
+            ["zoneStrongEntryTo", "Starker Einstieg ab", "ab diesem Kurs abwärts", 1],
+            ["zoneEntryTo", "Einstieg ab", "ab diesem Kurs abwärts", 2],
+            ["zoneNeutralTo", "Ausstieg ab", "ab diesem Kurs aufwärts; dazwischen neutral", 4],
+            ["zoneExitTo", "Starker Ausstieg ab", "ab diesem Kurs aufwärts", 5],
           ].map(([name, label, hinweis, stufe]) => (
             <div key={name as string}>
               <label className="field-label flex items-center gap-2" htmlFor={name as string}>
