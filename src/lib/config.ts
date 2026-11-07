@@ -24,7 +24,7 @@ export const SIGNALS: Record<SignalLevel, SignalMeta> = {
     label: "Einstiegssignal",
     short: "Einstieg",
     description:
-      "Aktie leicht unterbewertet. Ein erster Einstieg mit einem Drittel des geplanten Kapitals ist möglich.",
+      "Aktie leicht unterbewertet. Ein erster Einstieg mit einem Teil des Kapitals ist möglich.",
     color: "#7BE3A1",
     glow: "rgba(123, 227, 161, 0.35)",
   },
