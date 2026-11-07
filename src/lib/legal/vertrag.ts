@@ -60,7 +60,7 @@ export function preisText(plan: PlanId, interval: BillingInterval): string {
 
 /** Wesentliche Eigenschaften der Leistung in einem Satz. */
 export function leistungText(plan: PlanId): string {
-  return `Online-Zugang zu den ${PLANS[plan].limit} jeweils aktuellsten Aktienanalysen von ${COMPANY.name} mit Signalstärke, Kurzbegründung und – soweit angegeben – Kursziel, Anlagehorizont, Szenarien und Kurszonen.`;
+  return `Online-Zugang zu den ${PLANS[plan].limit} jeweils aktuellsten Aktienanalysen von ${COMPANY.name} mit Signalstärke, Kurzbegründung und – soweit angegeben – Kursziel, Anlagehorizont und Szenarien.`;
 }
 
 /** Ort des Geschäftssitzes ohne Postleitzahl, z. B. "Stuttgart". */

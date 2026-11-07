@@ -45,7 +45,7 @@ export function agb(): LegalDoc {
           {
             type: "clauses",
             items: [
-              "Wir stellen Ihnen im Kundenbereich unserer Website Aktienanalysen zum Abruf bereit. Eine Analyse enthält insbesondere den Aktientitel, den Kurs zum Zeitpunkt der Analyse, eine Signalstärke auf einer fünfstufigen Skala, eine Kurzbegründung sowie – soweit angegeben – Kursziel, Anlagehorizont, Szenarien und Kurszonen.",
+              "Wir stellen Ihnen im Kundenbereich unserer Website Aktienanalysen zum Abruf bereit. Eine Analyse enthält insbesondere den Aktientitel, den Kurs zum Zeitpunkt der Analyse, eine Signalstärke auf einer fünfstufigen Skala, eine Kurzbegründung sowie – soweit angegeben – Kursziel, Anlagehorizont und Szenarien.",
               "Der Umfang Ihres Zugangs richtet sich nach dem gebuchten Paket. Freigeschaltet sind jeweils die aktuellsten Analysen unseres Bestands in der Anzahl Ihres Pakets:",
             ],
           },
