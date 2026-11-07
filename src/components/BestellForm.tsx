@@ -137,6 +137,21 @@ export default function BestellForm({
           An diese Adresse senden wir die Eingangs- und die Vertragsbestätigung mit AGB und
           Widerrufsbelehrung als PDF.
         </p>
+
+        <div className="mt-5 sm:max-w-xs">
+          <label className="field-label" htmlFor="rabattcode">
+            Rabattcode (optional)
+          </label>
+          <input
+            id="rabattcode"
+            name="rabattcode"
+            className="field uppercase"
+            autoComplete="off"
+            autoCapitalize="characters"
+            spellCheck={false}
+            maxLength={40}
+          />
+        </div>
       </section>
 
       <section aria-labelledby="zustimmung-titel" className="border-y border-[var(--color-line)] py-7">

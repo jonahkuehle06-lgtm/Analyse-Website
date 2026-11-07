@@ -87,6 +87,22 @@ export async function bestellenAction(
     };
   }
 
+  // Rabattcode: muss bei Stripe als aktiver Aktionscode angelegt sein
+  const rabattcode = str(data, "rabattcode").toUpperCase();
+  let aktionscode: string | null = null;
+  if (rabattcode) {
+    if (!/^[A-Z0-9_-]{2,40}$/.test(rabattcode)) {
+      return { fehler: "Dieser Rabattcode ist ungültig oder abgelaufen." };
+    }
+    try {
+      const treffer = await stripe().promotionCodes.list({ code: rabattcode, active: true, limit: 1 });
+      aktionscode = treffer.data[0]?.id ?? null;
+    } catch (error) {
+      console.error("[Bestellung] Rabattcode konnte nicht geprüft werden:", error);
+    }
+    if (!aktionscode) return { fehler: "Dieser Rabattcode ist ungültig oder abgelaufen." };
+  }
+
   const bestelltAm = new Date();
   const nummer = referenz("PAX", bestelltAm);
   const abrechnung = interval === "monthly" ? "monatlich" : "jaehrlich";
@@ -124,6 +140,13 @@ export async function bestellenAction(
     },
   };
 
+  // Ein bereits eingegebener Code wird direkt angewendet - Stripe erlaubt
+  // dann kein zweites Codefeld auf der Zahlungsseite.
+  if (aktionscode) {
+    params.discounts = [{ promotion_code: aktionscode }];
+    delete params.allow_promotion_codes;
+  }
+
   if (user?.stripeCustomerId) {
     params.customer = user.stripeCustomerId;
     params.customer_update = { address: "auto", name: "auto" };
@@ -137,6 +160,10 @@ export async function bestellenAction(
     url = session.url;
   } catch (error) {
     console.error("[Bestellung] Checkout konnte nicht erstellt werden:", error);
+    // Stripe lehnt Codes ab, die für dieses Paket oder diesen Kunden nicht gelten
+    if (aktionscode) {
+      return { fehler: "Dieser Rabattcode gilt nicht für das gewählte Paket." };
+    }
   }
   if (!url) {
     return { fehler: "Die Zahlung konnte gerade nicht gestartet werden. Bitte versuche es erneut." };
