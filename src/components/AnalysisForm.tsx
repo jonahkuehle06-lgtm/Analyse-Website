@@ -213,48 +213,11 @@ export default function AnalysisForm({
         </div>
       </fieldset>
 
-      {/* --------------------------- Kurszonen --------------------------- */}
-      <fieldset
-        className="surface p-6 sm:p-7"
-        style={{ borderRadius: "var(--radius-card)" }}
-      >
-        <legend className="mono-label px-2">Kurszonen</legend>
-        <p className="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">
-          Vier Kursgrenzen, die die fünf Signalbereiche trennen — von unten nach oben.
-          Die Detailansicht zeigt daraus einen Balken mit dem aktuellen Kurs. Lässt du
-          die Felder leer, erscheint dort kein Balken.
-        </p>
-
-        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            ["zoneStrongEntryTo", "Starker Einstieg ab", "ab diesem Kurs abwärts", 1],
-            ["zoneEntryTo", "Einstieg ab", "ab diesem Kurs abwärts", 2],
-            ["zoneNeutralTo", "Ausstieg ab", "ab diesem Kurs aufwärts; dazwischen neutral", 4],
-            ["zoneExitTo", "Starker Ausstieg ab", "ab diesem Kurs aufwärts", 5],
-          ].map(([name, label, hinweis, stufe]) => (
-            <div key={name as string}>
-              <label className="field-label flex items-center gap-2" htmlFor={name as string}>
-                <span
-                  aria-hidden="true"
-                  className="inline-block h-2 w-2 shrink-0 rounded-full"
-                  style={{ backgroundColor: SIGNALS[stufe as SignalLevel].color }}
-                />
-                {label}
-              </label>
-              <input
-                id={name as string}
-                name={name as string}
-                className="field"
-                inputMode="decimal"
-                defaultValue={
-                  (analysis?.[name as keyof Analysis] as number | null | undefined) ?? ""
-                }
-              />
-              <p className="mt-1.5 text-xs text-[var(--color-muted)]">{hinweis}</p>
-            </div>
-          ))}
-        </div>
-      </fieldset>
+      {/* Kurszonen werden nicht mehr angezeigt. Vorhandene Werte bleiben
+          unverändert gespeichert, falls sie später wieder gebraucht werden. */}
+      {(["zoneStrongEntryTo", "zoneEntryTo", "zoneNeutralTo", "zoneExitTo"] as const).map((feld) => (
+        <input key={feld} type="hidden" name={feld} defaultValue={analysis?.[feld] ?? ""} />
+      ))}
 
       {/* --------------------------- Szenarien --------------------------- */}
       <fieldset

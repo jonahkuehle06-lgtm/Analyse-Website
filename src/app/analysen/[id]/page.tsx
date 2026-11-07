@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import SignalIndicator from "@/components/SignalIndicator";
-import PriceZones from "@/components/PriceZones";
 import ScenarioChart, { zeitraeumeMitSzenarien } from "@/components/ScenarioChart";
 import ZeitraumAnsichten from "@/components/ZeitraumAnsichten";
 import { getAnalysis, listAnalyses } from "@/lib/db";
@@ -133,10 +132,9 @@ export default async function AnalyseDetail({
           </p>
         </section>
 
-        {/* Szenarien und Kurszonen — jeweils nur, wenn gepflegt */}
+        {/* Szenarien — nur, wenn gepflegt */}
         <div className="mt-10 space-y-5">
           {start && <ZeitraumAnsichten ansichten={ansichten} start={start} />}
-          <PriceZones analysis={analysis} />
         </div>
 
         <footer className="mt-10 border-t border-[var(--color-line)] pt-6">
