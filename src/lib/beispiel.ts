@@ -18,6 +18,7 @@ export const BEISPIEL_ANALYSE: Analysis = {
   reason:
     "Hier steht die Kurzbegründung: ein bis zwei Sätze, die den Kern der Einschätzung zusammenfassen.",
   signal: 2,
+  direction: "long",
   horizon: "6–12 Monate",
   author: "Max Mustermann",
   conflictDisclosure: "",

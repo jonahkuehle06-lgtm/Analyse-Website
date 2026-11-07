@@ -86,6 +86,7 @@ function parse(data: FormData): AnalysisInput | { error: string } {
     scenarios: szenarien.werte,
     reason,
     signal: signal as SignalLevel,
+    direction: text(data, "direction") === "short" ? "short" : "long",
     horizon: text(data, "horizon"),
     author: text(data, "author"),
     conflictDisclosure: text(data, "conflictDisclosure"),

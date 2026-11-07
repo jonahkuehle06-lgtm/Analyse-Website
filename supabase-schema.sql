@@ -123,3 +123,10 @@ alter table public.users
 -- ---------------------------------------------------------------------------
 alter table public.analyses
   add column if not exists scenarios jsonb not null default '{}'::jsonb;
+
+-- ---------------------------------------------------------------------------
+-- Nachtrag: Long- oder Short-Einstieg
+-- ---------------------------------------------------------------------------
+alter table public.analyses
+  add column if not exists direction text not null default 'long'
+  check (direction in ('long', 'short'));

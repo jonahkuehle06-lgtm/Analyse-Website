@@ -3,10 +3,11 @@ import PageHeader from "@/components/PageHeader";
 import type { Metadata } from "next";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import SignalFilter from "@/components/SignalFilter";
+import { analysenLink } from "@/lib/analysen-link";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
-import { PLANS, PLAN_ORDER, SIGNAL_LEVELS, planLimit } from "@/lib/config";
-import type { SignalLevel } from "@/lib/types";
+import { PLANS, PLAN_ORDER, RICHTUNGEN, SIGNAL_LEVELS, planLimit } from "@/lib/config";
+import type { Richtung, SignalLevel } from "@/lib/types";
 import { brotkrumen, kanonisch } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
 
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 export default async function AnalysenPage({
   searchParams,
 }: {
-  searchParams: Promise<{ signal?: string }>;
+  searchParams: Promise<{ signal?: string; richtung?: string }>;
 }) {
   const params = await searchParams;
   const [all, user] = await Promise.all([listAnalyses(), currentUser()]);
@@ -41,13 +42,17 @@ export default async function AnalysenPage({
      bleiben beim Filtern ausgeblendet - sonst liesse sich ihre
      Signalstaerke ueber den Filter ablesen. Aus demselben Grund haengen
      Leerhinweis und Paket-Hinweis nie von gesperrten Analysen ab. */
-  const freigeschaltet = all.filter((a) => unlockedIds.has(a.id));
+  /* Long oder Short: die Übersicht zeigt immer nur eine Richtung. Welche
+     Analysen freigeschaltet sind, bestimmt weiterhin der Gesamtbestand. */
+  const richtung: Richtung = params.richtung === "short" ? "short" : "long";
+  const inRichtung = all.filter((a) => a.direction === richtung);
+  const freigeschaltet = inRichtung.filter((a) => unlockedIds.has(a.id));
   const frei = selected
     ? freigeschaltet.filter((a) => a.signal === selected)
     : freigeschaltet;
-  const gesperrt = selected ? [] : all.filter((a) => !unlockedIds.has(a.id));
-  const hinweis = all.length > limit;
-  const leer = all.length === 0 || (selected !== null && frei.length === 0);
+  const gesperrt = selected ? [] : inRichtung.filter((a) => !unlockedIds.has(a.id));
+  const hinweis = inRichtung.some((a) => !unlockedIds.has(a.id));
+  const leer = inRichtung.length === 0 || (selected !== null && frei.length === 0);
 
   return (
     <div className="frame">
@@ -73,6 +78,27 @@ export default async function AnalysenPage({
           )}
         </PageHeader>
 
+        {/* Long / Short */}
+        <nav
+          aria-label="Richtung"
+          className="mt-8 inline-grid grid-cols-2 rounded-full border border-[var(--color-line-strong)] p-1"
+        >
+          {RICHTUNGEN.map((r) => (
+            <Link
+              key={r.id}
+              href={analysenLink(r.id, selected)}
+              aria-current={richtung === r.id ? "page" : undefined}
+              className={`flex min-h-11 items-center justify-center rounded-full px-8 text-[0.9375rem] transition-colors duration-200 ${
+                richtung === r.id
+                  ? "bg-[var(--color-platinum)] font-semibold text-[var(--color-ink)]"
+                  : "text-[var(--color-mist)] hover:text-[var(--color-platinum)]"
+              }`}
+            >
+              {r.name}
+            </Link>
+          ))}
+        </nav>
+
         {/* Status-Leiste */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--color-line)] py-5">
           <p className="text-[0.9375rem] text-[var(--color-mist-2)]">
@@ -94,12 +120,16 @@ export default async function AnalysenPage({
           </Link>
         </div>
 
-        <SignalFilter active={selected} />
+        <SignalFilter active={selected} richtung={richtung} />
 
         {leer && (
           <p className="mt-16 text-center text-[0.9375rem] text-[var(--color-mist)]">
             {all.length === 0
               ? "Es wurden noch keine Analysen veröffentlicht."
+              : inRichtung.length === 0
+                ? richtung === "short"
+                  ? "Aktuell keine Short-Analysen."
+                  : "Aktuell keine Long-Analysen."
               : !active
                 ? "Der Filter durchsucht nur freigeschaltete Analysen – mit einem Paket schaltest du sie frei."
                 : hinweis

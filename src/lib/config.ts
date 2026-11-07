@@ -1,4 +1,4 @@
-import type { BillingInterval, PlanId, SignalLevel, ZeitraumId } from "./types";
+import type { BillingInterval, PlanId, Richtung, SignalLevel, ZeitraumId } from "./types";
 
 export interface SignalMeta {
   level: SignalLevel;
@@ -68,6 +68,12 @@ export const ZEITRAEUME: { id: ZeitraumId; name: string; spanne: string }[] = [
   { id: "lang", name: "Langfristig", spanne: "3–5 Jahre" },
 ];
 export const STANDARD_ZEITRAUM: ZeitraumId = "lang";
+
+/** Umschalter in der Analysen-Übersicht; ohne Auswahl zeigt sie Long. */
+export const RICHTUNGEN: { id: Richtung; name: string }[] = [
+  { id: "long", name: "Long" },
+  { id: "short", name: "Short" },
+];
 
 export interface PlanMeta {
   id: PlanId;

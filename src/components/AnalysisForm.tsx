@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
-import { SIGNALS, SIGNAL_LEVELS, STANDARD_ZEITRAUM, ZEITRAEUME } from "@/lib/config";
+import { RICHTUNGEN, SIGNALS, SIGNAL_LEVELS, STANDARD_ZEITRAUM, ZEITRAEUME } from "@/lib/config";
 import type { AnalysisFormState } from "@/lib/actions/analyses";
 import type { Analysis, SignalLevel, ZeitraumId } from "@/lib/types";
 
@@ -50,7 +50,34 @@ export default function AnalysisForm({
       >
         <legend className="mono-label px-2">Aktie</legend>
 
-        <div className="mt-4 grid gap-5 sm:grid-cols-[2fr_1fr]">
+        <div className="mt-4">
+          <p className="field-label" id="richtung-label">
+            Einstieg *
+          </p>
+          <div
+            role="radiogroup"
+            aria-labelledby="richtung-label"
+            className="inline-grid grid-cols-2 rounded-full border border-[var(--color-line-strong)] p-1"
+          >
+            {RICHTUNGEN.map((r) => (
+              <label
+                key={r.id}
+                className="flex min-h-11 cursor-pointer items-center justify-center rounded-full px-6 text-[0.9375rem] text-[var(--color-mist)] transition-colors hover:text-[var(--color-platinum)] has-[:checked]:bg-[var(--color-platinum)] has-[:checked]:font-semibold has-[:checked]:text-[var(--color-ink)] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--color-platinum)]"
+              >
+                <input
+                  type="radio"
+                  name="direction"
+                  value={r.id}
+                  defaultChecked={(analysis?.direction ?? "long") === r.id}
+                  className="sr-only"
+                />
+                {r.name}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-5 sm:grid-cols-[2fr_1fr]">
           <div>
             <label className="field-label" htmlFor="title">
               Aktientitel *

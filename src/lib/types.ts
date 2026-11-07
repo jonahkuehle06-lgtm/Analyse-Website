@@ -2,6 +2,8 @@ export type SignalLevel = 1 | 2 | 3 | 4 | 5;
 
 export type PlanId = "basic" | "black" | "platin";
 export type BillingInterval = "monthly" | "yearly";
+/** Long: Kauf auf steigende Kurse. Short: Wette auf fallende Kurse. */
+export type Richtung = "long" | "short";
 
 export interface Analysis {
   id: string;
@@ -17,6 +19,8 @@ export interface Analysis {
   /** Kurze Begründung (ein bis zwei Sätze) */
   reason: string;
   signal: SignalLevel;
+  /** Long- oder Short-Einstieg */
+  direction: Richtung;
   /** Anlagehorizont, z.B. "3-6 Monate" */
   horizon: string;
   /** Ersteller der Analyse */

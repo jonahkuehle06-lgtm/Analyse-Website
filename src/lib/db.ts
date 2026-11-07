@@ -91,6 +91,7 @@ async function readLocal(): Promise<LocalStore> {
   memoryStore.analyses = memoryStore.analyses.map((a) => ({
     ...a,
     scenarios: szenarienAusLokal(a),
+    direction: a.direction === "short" ? "short" : "long",
   }));
   if (!memoryStore.users) memoryStore.users = [];
   return memoryStore;
@@ -217,6 +218,7 @@ function analysisFromRow(row: any): Analysis {
     scenarios: szenarienAusRow(row),
     reason: row.reason ?? "",
     signal: Number(row.signal) as Analysis["signal"],
+    direction: row.direction === "short" ? "short" : "long",
     horizon: row.horizon ?? "",
     author: row.author ?? "",
     conflictDisclosure: row.conflict_disclosure ?? "",
@@ -240,6 +242,7 @@ function analysisToRow(input: AnalysisInput) {
     ...szenarienZuRow(input.scenarios),
     reason: input.reason,
     signal: input.signal,
+    direction: input.direction,
     horizon: input.horizon,
     author: input.author,
     conflict_disclosure: input.conflictDisclosure,

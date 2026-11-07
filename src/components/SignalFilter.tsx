@@ -3,9 +3,16 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { SIGNALS, SIGNAL_LEVELS } from "@/lib/config";
-import type { SignalLevel } from "@/lib/types";
+import { analysenLink } from "@/lib/analysen-link";
+import type { Richtung, SignalLevel } from "@/lib/types";
 
-export default function SignalFilter({ active }: { active: SignalLevel | null }) {
+export default function SignalFilter({
+  active,
+  richtung = "long",
+}: {
+  active: SignalLevel | null;
+  richtung?: Richtung;
+}) {
   const leiste = useRef<HTMLDivElement>(null);
 
   // Am Handy ist die Leiste eine Wischzeile. Ohne Nachhilfe laege ein
@@ -44,7 +51,7 @@ export default function SignalFilter({ active }: { active: SignalLevel | null })
       aria-label="Nach Signalstärke filtern"
     >
       <Link
-        href="/analysen"
+        href={analysenLink(richtung, null)}
         aria-current={active === null ? "true" : undefined}
         className={`inline-flex min-h-10 shrink-0 items-center rounded-full border px-4 text-sm whitespace-nowrap transition-colors duration-200 ${
           active === null
@@ -60,7 +67,7 @@ export default function SignalFilter({ active }: { active: SignalLevel | null })
         return (
           <Link
             key={level}
-            href={`/analysen?signal=${level}`}
+            href={analysenLink(richtung, level)}
             aria-current={isActive ? "true" : undefined}
             className={`inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm whitespace-nowrap transition-colors duration-200 ${
               isActive
