@@ -4,7 +4,6 @@ import PageHeader from "@/components/PageHeader";
 import SignalIndicator from "@/components/SignalIndicator";
 import AnalysisCard from "@/components/AnalysisCard";
 import ScenarioChart from "@/components/ScenarioChart";
-import PriceZones from "@/components/PriceZones";
 import { BEISPIEL_ANALYSE } from "@/lib/beispiel";
 import { SIGNALS, SIGNAL_LEVELS } from "@/lib/config";
 import { brotkrumen, kanonisch } from "@/lib/seo";
@@ -158,17 +157,15 @@ export default function MethodikPage() {
         <section data-reveal className="mt-20 sm:mt-24">
           <span className="tag">Detailansicht</span>
           <h2 className="display mt-6 max-w-[18ch] text-[length:var(--step-h2)] text-[var(--color-platinum)]">
-            Szenarien und Kurszonen
+            Szenarien
           </h2>
           <p className="lead mt-5 max-w-[60ch]">
             Ein Klick auf eine Karte öffnet die Detailansicht: drei Szenarien mit Kurszielen
-            und Wahrscheinlichkeiten sowie die Kurszonen vom starken Einstieg bis zum starken
-            Ausstieg.
+            und Wahrscheinlichkeiten.
           </p>
 
-          <div className="mt-10 grid gap-5 lg:grid-cols-2">
+          <div className="mt-10 max-w-4xl">
             <ScenarioChart analysis={BEISPIEL_ANALYSE} />
-            <PriceZones analysis={BEISPIEL_ANALYSE} />
           </div>
           <p className="mt-5 text-xs leading-relaxed text-[var(--color-muted)]">
             Beispielhafte Darstellung mit fiktiven Werten. Darstellung dient ausschließlich der
