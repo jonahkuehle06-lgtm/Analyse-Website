@@ -90,7 +90,8 @@ export default function MethodikPage() {
             Bedeutung der Signalstufen
           </h2>
           <div className="mt-10 divide-y divide-[var(--color-line)] border-y border-[var(--color-line)]">
-            {SIGNAL_LEVELS.map((level) => {
+            {/* Von Ausstieg (oben) nach Einstieg (unten) */}
+            {[...SIGNAL_LEVELS].reverse().map((level) => {
               const meta = SIGNALS[level];
               return (
                 <div key={level} className="grid items-center gap-4 py-6 sm:grid-cols-[17rem_minmax(0,1fr)] sm:gap-12">

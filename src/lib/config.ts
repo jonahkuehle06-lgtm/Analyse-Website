@@ -15,8 +15,7 @@ export const SIGNALS: Record<SignalLevel, SignalMeta> = {
     level: 1,
     label: "Starkes Einstiegssignal",
     short: "Einstieg stark",
-    description:
-      "Höchste Signalstärke für einen Einstieg. Mehrere Analysefaktoren deuten in dieselbe Richtung.",
+    description: "Aktie stark unterbewertet. Chance, eine Position einzugehen oder auszubauen.",
     color: "#00E56A",
     glow: "rgba(0, 229, 106, 0.45)",
   },
@@ -24,7 +23,8 @@ export const SIGNALS: Record<SignalLevel, SignalMeta> = {
     level: 2,
     label: "Einstiegssignal",
     short: "Einstieg",
-    description: "Konstruktives Bild mit überwiegend positiven Faktoren.",
+    description:
+      "Aktie leicht unterbewertet. Ein erster Einstieg mit einem Drittel des geplanten Kapitals ist möglich.",
     color: "#7BE3A1",
     glow: "rgba(123, 227, 161, 0.35)",
   },
@@ -32,7 +32,7 @@ export const SIGNALS: Record<SignalLevel, SignalMeta> = {
     level: 3,
     label: "Neutral / Halten",
     short: "Halten",
-    description: "Kein klares Ungleichgewicht. Beobachtungsposition.",
+    description: "Position halten. Die Aktie liegt weder im Einstiegs- noch im Ausstiegsbereich.",
     color: "#E8C64B",
     glow: "rgba(232, 198, 75, 0.35)",
   },
@@ -40,7 +40,8 @@ export const SIGNALS: Record<SignalLevel, SignalMeta> = {
     level: 4,
     label: "Ausstiegssignal",
     short: "Ausstieg",
-    description: "Überwiegend belastende Faktoren, erhöhtes Rückschlagrisiko.",
+    description:
+      "Aktie leicht überbewertet. Gewinne zu realisieren ist möglich. Langfristige Value-Positionen können gegebenenfalls weitergehalten werden (siehe Hinweis).",
     color: "#F08B8B",
     glow: "rgba(240, 139, 139, 0.35)",
   },
@@ -49,7 +50,7 @@ export const SIGNALS: Record<SignalLevel, SignalMeta> = {
     label: "Starkes Ausstiegssignal",
     short: "Ausstieg stark",
     description:
-      "Höchste Signalstärke für einen Ausstieg. Mehrere Analysefaktoren deuten in dieselbe Richtung.",
+      "Aktie stark überbewertet. Ein starker Bereich, um Gewinne zu realisieren. Langfristige Value-Positionen können gegebenenfalls weitergehalten werden (siehe Hinweis).",
     color: "#FF3B3B",
     glow: "rgba(255, 59, 59, 0.45)",
   },
