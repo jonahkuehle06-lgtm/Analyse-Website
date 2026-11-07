@@ -993,3 +993,19 @@ input[type="radio"] {
   .karten-leinwand,
   .karten-text { display: none; }
 }
+
+/* Blaettern zwischen den Zeitraeumen einer Analyse */
+@keyframes ansicht-rechts {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ansicht-links {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: none; }
+}
+.ansicht-von-rechts { animation: ansicht-rechts 0.28s ease-out; }
+.ansicht-von-links { animation: ansicht-links 0.28s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .ansicht-von-rechts,
+  .ansicht-von-links { animation: none; }
+}

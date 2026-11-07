@@ -3,9 +3,9 @@
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
-import { SIGNALS, SIGNAL_LEVELS } from "@/lib/config";
+import { SIGNALS, SIGNAL_LEVELS, STANDARD_ZEITRAUM, ZEITRAEUME } from "@/lib/config";
 import type { AnalysisFormState } from "@/lib/actions/analyses";
-import type { Analysis, SignalLevel } from "@/lib/types";
+import type { Analysis, SignalLevel, ZeitraumId } from "@/lib/types";
 
 function SaveButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
@@ -37,6 +37,7 @@ export default function AnalysisForm({
 }) {
   const [state, formAction] = useActionState(action, {} as AnalysisFormState);
   const [signal, setSignal] = useState<SignalLevel>(analysis?.signal ?? 3);
+  const [zeitraum, setZeitraum] = useState<ZeitraumId>(STANDARD_ZEITRAUM);
 
   return (
     <form action={formAction} className="space-y-8">
@@ -262,101 +263,109 @@ export default function AnalysisForm({
       >
         <legend className="mono-label px-2">Szenarien</legend>
         <p className="mt-3 text-xs leading-relaxed text-[var(--color-muted)]">
-          Drei Kursziele mit Eintrittswahrscheinlichkeit. Die Detailansicht zeichnet
-          daraus einen Fächer vom heutigen Kurs zu den drei Zielen. Das Diagramm
-          erscheint nur, wenn alle drei Kurse ausgefüllt sind. Die
-          Wahrscheinlichkeiten sollten zusammen 100 ergeben.
+          Je Zeitraum drei Kursziele mit Eintrittswahrscheinlichkeit. Die Detailansicht
+          zeichnet daraus einen Fächer vom heutigen Kurs zu den drei Zielen; Leser blättern
+          zwischen den Zeiträumen, geöffnet wird langfristig. Ein Zeitraum ist entweder leer
+          (dann erscheint er nicht) oder hat alle drei Kursziele – mindestens einer muss
+          ausgefüllt sein. Die Wahrscheinlichkeiten sollten je Zeitraum zusammen 100 ergeben.
         </p>
 
-        <div className="mt-5">
-          <label className="field-label" htmlFor="scenarioHorizon">
-            Zeithorizont der Szenarien
-          </label>
-          <input
-            id="scenarioHorizon"
-            name="scenarioHorizon"
-            className="field sm:max-w-xs"
-            placeholder="12 Monate"
-            defaultValue={analysis?.scenarioHorizon}
-          />
-        </div>
-
-        <div className="mt-6 grid gap-5 lg:grid-cols-3">
-          {[
-            ["Best", "Best Case", "#1baf7a"],
-            ["Base", "Base Case", "#aba59b"],
-            ["Worst", "Worst Case", "#d03b3b"],
-          ].map(([schluessel, titel, farbe]) => (
-            <div
-              key={schluessel}
-              className="rounded-[var(--radius-field)] border border-[var(--color-line)] p-4"
+        <div
+          role="tablist"
+          aria-label="Zeitraum"
+          className="mt-5 grid grid-cols-3 rounded-full border border-[var(--color-line-strong)] p-1"
+        >
+          {ZEITRAEUME.map((z) => (
+            <button
+              key={z.id}
+              type="button"
+              role="tab"
+              aria-selected={zeitraum === z.id}
+              onClick={() => setZeitraum(z.id)}
+              className={`flex min-h-12 flex-col items-center justify-center rounded-full px-2 py-1.5 leading-tight transition-colors ${
+                zeitraum === z.id
+                  ? "bg-[var(--color-platinum)] text-[var(--color-ink)]"
+                  : "text-[var(--color-mist)] hover:text-[var(--color-platinum)]"
+              }`}
             >
-              <p className="flex items-center gap-2.5 text-sm font-medium text-[var(--color-platinum)]">
-                <span
-                  aria-hidden="true"
-                  className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
-                  style={{ backgroundColor: farbe }}
-                />
-                {titel}
-              </p>
-
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <div>
-                  <label className="field-label" htmlFor={`scenario${schluessel}Price`}>
-                    Kursziel
-                  </label>
-                  <input
-                    id={`scenario${schluessel}Price`}
-                    name={`scenario${schluessel}Price`}
-                    className="field"
-                    inputMode="decimal"
-                    defaultValue={
-                      (analysis?.[
-                        `scenario${schluessel}Price` as keyof Analysis
-                      ] as number | null | undefined) ?? ""
-                    }
-                  />
-                </div>
-                <div>
-                  <label
-                    className="field-label"
-                    htmlFor={`scenario${schluessel}Probability`}
-                  >
-                    Wahrsch. %
-                  </label>
-                  <input
-                    id={`scenario${schluessel}Probability`}
-                    name={`scenario${schluessel}Probability`}
-                    className="field"
-                    inputMode="decimal"
-                    defaultValue={
-                      (analysis?.[
-                        `scenario${schluessel}Probability` as keyof Analysis
-                      ] as number | null | undefined) ?? ""
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <label className="field-label" htmlFor={`scenario${schluessel}Note`}>
-                  Kurze Begründung
-                </label>
-                <textarea
-                  id={`scenario${schluessel}Note`}
-                  name={`scenario${schluessel}Note`}
-                  className="field min-h-[104px] resize-y"
-                  maxLength={240}
-                  defaultValue={
-                    (analysis?.[
-                      `scenario${schluessel}Note` as keyof Analysis
-                    ] as string | undefined) ?? ""
-                  }
-                />
-              </div>
-            </div>
+              <span className={`text-sm ${zeitraum === z.id ? "font-semibold" : ""}`}>{z.name}</span>
+              <span className="text-[0.6875rem] opacity-70">{z.spanne}</span>
+            </button>
           ))}
         </div>
+
+        {/* Alle Zeiträume bleiben im Formular - verborgen ist nur die Anzeige */}
+        {ZEITRAEUME.map((z) => {
+          const satz = analysis?.scenarios[z.id];
+          return (
+            <div key={z.id} hidden={zeitraum !== z.id} className="mt-6 grid gap-5 lg:grid-cols-3">
+              {(
+                [
+                  ["best", "Best Case", "#1baf7a"],
+                  ["base", "Base Case", "#aba59b"],
+                  ["worst", "Worst Case", "#d03b3b"],
+                ] as const
+              ).map(([fall, titel, farbe]) => {
+                const feld = (f: string) => `szenario-${z.id}-${fall}${f}`;
+                return (
+                  <div
+                    key={fall}
+                    className="rounded-[var(--radius-field)] border border-[var(--color-line)] p-4"
+                  >
+                    <p className="flex items-center gap-2.5 text-sm font-medium text-[var(--color-platinum)]">
+                      <span
+                        aria-hidden="true"
+                        className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
+                        style={{ backgroundColor: farbe }}
+                      />
+                      {titel}
+                    </p>
+
+                    <div className="mt-4 grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="field-label" htmlFor={feld("Price")}>
+                          Kursziel
+                        </label>
+                        <input
+                          id={feld("Price")}
+                          name={feld("Price")}
+                          className="field"
+                          inputMode="decimal"
+                          defaultValue={satz?.[`${fall}Price`] ?? ""}
+                        />
+                      </div>
+                      <div>
+                        <label className="field-label" htmlFor={feld("Probability")}>
+                          Wahrsch. %
+                        </label>
+                        <input
+                          id={feld("Probability")}
+                          name={feld("Probability")}
+                          className="field"
+                          inputMode="decimal"
+                          defaultValue={satz?.[`${fall}Probability`] ?? ""}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-3">
+                      <label className="field-label" htmlFor={feld("Note")}>
+                        Kurze Begründung
+                      </label>
+                      <textarea
+                        id={feld("Note")}
+                        name={feld("Note")}
+                        className="field min-h-[104px] resize-y"
+                        maxLength={240}
+                        defaultValue={satz?.[`${fall}Note`] ?? ""}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
       </fieldset>
 
       {/* --------------------------- Ersteller --------------------------- */}

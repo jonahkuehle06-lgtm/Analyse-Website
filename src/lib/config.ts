@@ -1,4 +1,4 @@
-import type { BillingInterval, PlanId, SignalLevel } from "./types";
+import type { BillingInterval, PlanId, SignalLevel, ZeitraumId } from "./types";
 
 export interface SignalMeta {
   level: SignalLevel;
@@ -57,6 +57,17 @@ export const SIGNALS: Record<SignalLevel, SignalMeta> = {
 };
 
 export const SIGNAL_LEVELS: SignalLevel[] = [1, 2, 3, 4, 5];
+
+/**
+ * Die drei Zeitraeume einer Analyse - in dieser Reihenfolge zum Blaettern.
+ * Ohne Auswahl oeffnet die Analyse langfristig.
+ */
+export const ZEITRAEUME: { id: ZeitraumId; name: string; spanne: string }[] = [
+  { id: "kurz", name: "Kurzfristig", spanne: "6–12 Monate" },
+  { id: "mittel", name: "Mittelfristig", spanne: "1–3 Jahre" },
+  { id: "lang", name: "Langfristig", spanne: "3–5 Jahre" },
+];
+export const STANDARD_ZEITRAUM: ZeitraumId = "lang";
 
 export interface PlanMeta {
   id: PlanId;

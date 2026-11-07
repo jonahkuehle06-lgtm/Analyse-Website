@@ -1,4 +1,5 @@
-import type { Analysis } from "@/lib/types";
+import { STANDARD_ZEITRAUM, ZEITRAEUME } from "@/lib/config";
+import type { Analysis, ZeitraumId } from "@/lib/types";
 
 /**
  * Szenario-Projektion: drei Kursziele - Best, Base, Worst Case - als Faecher
@@ -32,12 +33,14 @@ interface Szenario {
   notiz: string;
 }
 
-export function szenarienAus(a: Analysis): Szenario[] | null {
+export function szenarienAus(a: Analysis, zeitraum: ZeitraumId): Szenario[] | null {
   if (a.price === null || !Number.isFinite(a.price)) return null;
+  const z = a.scenarios[zeitraum];
+  if (!z) return null;
   const roh: [Fall, string, number | null, number | null, string][] = [
-    ["best", "Best Case", a.scenarioBestPrice, a.scenarioBestProbability, a.scenarioBestNote],
-    ["base", "Base Case", a.scenarioBasePrice, a.scenarioBaseProbability, a.scenarioBaseNote],
-    ["worst", "Worst Case", a.scenarioWorstPrice, a.scenarioWorstProbability, a.scenarioWorstNote],
+    ["best", "Best Case", z.bestPrice, z.bestProbability, z.bestNote],
+    ["base", "Base Case", z.basePrice, z.baseProbability, z.baseNote],
+    ["worst", "Worst Case", z.worstPrice, z.worstProbability, z.worstNote],
   ];
   if (roh.some(([, , kurs]) => kurs === null || !Number.isFinite(kurs))) return null;
   return roh.map(([fall, name, kurs, p, notiz]) => ({
@@ -49,8 +52,20 @@ export function szenarienAus(a: Analysis): Szenario[] | null {
   }));
 }
 
-export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
-  const szenarien = szenarienAus(analysis);
+/** Zeitraeume, fuer die ein vollstaendiges Diagramm vorliegt - in Blaetterreihenfolge. */
+export function zeitraeumeMitSzenarien(a: Analysis): ZeitraumId[] {
+  return ZEITRAEUME.map((z) => z.id).filter((id) => szenarienAus(a, id) !== null);
+}
+
+export default function ScenarioChart({
+  analysis,
+  zeitraum = STANDARD_ZEITRAUM,
+}: {
+  analysis: Analysis;
+  zeitraum?: ZeitraumId;
+}) {
+  const szenarien = szenarienAus(analysis, zeitraum);
+  const spanne = ZEITRAEUME.find((z) => z.id === zeitraum)?.spanne;
   if (!szenarien) return null;
 
   const start = analysis.price as number;
@@ -92,9 +107,7 @@ export default function ScenarioChart({ analysis }: { analysis: Analysis }) {
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <p className="mono-label">Szenarien</p>
         <p className="text-xs text-[var(--color-muted)]">
-          {analysis.scenarioHorizon
-            ? `Horizont: ${analysis.scenarioHorizon}`
-            : "Angaben in " + analysis.currency}
+          {spanne ? `Horizont: ${spanne}` : "Angaben in " + analysis.currency}
         </p>
       </div>
 

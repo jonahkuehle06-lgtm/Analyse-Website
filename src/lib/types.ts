@@ -34,25 +34,32 @@ export interface Analysis {
   zoneNeutralTo: number | null;
   zoneExitTo: number | null;
   /**
-   * Szenarien: drei Kursziele mit Eintrittswahrscheinlichkeit und kurzer
-   * Begruendung. Das Diagramm erscheint nur, wenn alle drei Kurse gepflegt
-   * sind - sonst waere die Projektion unvollstaendig.
+   * Szenarien je Zeitraum (kurz-, mittel-, langfristig): jeweils drei
+   * Kursziele mit Eintrittswahrscheinlichkeit und kurzer Begruendung.
+   * Ein Zeitraum erscheint nur, wenn alle drei Kurse gepflegt sind.
    */
-  scenarioHorizon: string;
-  scenarioBestPrice: number | null;
-  scenarioBestProbability: number | null;
-  scenarioBestNote: string;
-  scenarioBasePrice: number | null;
-  scenarioBaseProbability: number | null;
-  scenarioBaseNote: string;
-  scenarioWorstPrice: number | null;
-  scenarioWorstProbability: number | null;
-  scenarioWorstNote: string;
+  scenarios: Szenarien;
   /** ISO-Datum der Erstellung/Veroeffentlichung */
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
 }
+
+export type ZeitraumId = "kurz" | "mittel" | "lang";
+
+export interface Szenariosatz {
+  bestPrice: number | null;
+  bestProbability: number | null;
+  bestNote: string;
+  basePrice: number | null;
+  baseProbability: number | null;
+  baseNote: string;
+  worstPrice: number | null;
+  worstProbability: number | null;
+  worstNote: string;
+}
+
+export type Szenarien = Partial<Record<ZeitraumId, Szenariosatz>>;
 
 export type AnalysisInput = Omit<Analysis, "id" | "createdAt" | "updatedAt">;
 

@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/auth";
 import { createAnalysis, deleteAnalysis, updateAnalysis } from "@/lib/db";
-import type { AnalysisInput, SignalLevel } from "@/lib/types";
+import { ZEITRAEUME } from "@/lib/config";
+import type { AnalysisInput, SignalLevel, Szenarien, Szenariosatz } from "@/lib/types";
 
 export interface AnalysisFormState {
   error?: string;
@@ -22,6 +23,40 @@ function decimal(data: FormData, key: string): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+/**
+ * Szenarien je Zeitraum. Ein Zeitraum ist entweder leer oder hat alle drei
+ * Kursziele - mindestens einer muss gepflegt sein.
+ */
+function szenarienAus(data: FormData): { werte: Szenarien } | { error: string } {
+  const werte: Szenarien = {};
+  for (const { id, name } of ZEITRAEUME) {
+    const feld = (f: string) => `szenario-${id}-${f}`;
+    const satz: Szenariosatz = {
+      bestPrice: decimal(data, feld("bestPrice")),
+      bestProbability: decimal(data, feld("bestProbability")),
+      bestNote: text(data, feld("bestNote")),
+      basePrice: decimal(data, feld("basePrice")),
+      baseProbability: decimal(data, feld("baseProbability")),
+      baseNote: text(data, feld("baseNote")),
+      worstPrice: decimal(data, feld("worstPrice")),
+      worstProbability: decimal(data, feld("worstProbability")),
+      worstNote: text(data, feld("worstNote")),
+    };
+    const leer = Object.values(satz).every((v) => v === null || v === "");
+    if (leer) continue;
+    if (satz.bestPrice === null || satz.basePrice === null || satz.worstPrice === null) {
+      return {
+        error: `${name}: Bitte alle drei Kursziele angeben oder den Zeitraum ganz leer lassen.`,
+      };
+    }
+    werte[id] = satz;
+  }
+  if (Object.keys(werte).length === 0) {
+    return { error: "Bitte mindestens einen Zeitraum mit allen drei Kurszielen ausfüllen." };
+  }
+  return { werte };
+}
+
 function parse(data: FormData): AnalysisInput | { error: string } {
   const title = text(data, "title");
   const reason = text(data, "reason");
@@ -32,6 +67,9 @@ function parse(data: FormData): AnalysisInput | { error: string } {
   if (![1, 2, 3, 4, 5].includes(signal)) {
     return { error: "Bitte eine Signalstärke auswählen." };
   }
+
+  const szenarien = szenarienAus(data);
+  if ("error" in szenarien) return szenarien;
 
   const publishedAt = text(data, "publishedAt");
 
@@ -45,16 +83,7 @@ function parse(data: FormData): AnalysisInput | { error: string } {
     zoneEntryTo: decimal(data, "zoneEntryTo"),
     zoneNeutralTo: decimal(data, "zoneNeutralTo"),
     zoneExitTo: decimal(data, "zoneExitTo"),
-    scenarioHorizon: text(data, "scenarioHorizon"),
-    scenarioBestPrice: decimal(data, "scenarioBestPrice"),
-    scenarioBestProbability: decimal(data, "scenarioBestProbability"),
-    scenarioBestNote: text(data, "scenarioBestNote"),
-    scenarioBasePrice: decimal(data, "scenarioBasePrice"),
-    scenarioBaseProbability: decimal(data, "scenarioBaseProbability"),
-    scenarioBaseNote: text(data, "scenarioBaseNote"),
-    scenarioWorstPrice: decimal(data, "scenarioWorstPrice"),
-    scenarioWorstProbability: decimal(data, "scenarioWorstProbability"),
-    scenarioWorstNote: text(data, "scenarioWorstNote"),
+    scenarios: szenarien.werte,
     reason,
     signal: signal as SignalLevel,
     horizon: text(data, "horizon"),

@@ -115,3 +115,11 @@ alter table public.warteliste enable row level security;
 -- ---------------------------------------------------------------------------
 alter table public.users
   add column if not exists cancel_at timestamptz;
+
+-- ---------------------------------------------------------------------------
+-- Nachtrag: Szenarien je Zeitraum (kurz-, mittel-, langfristig)
+-- Die Einzelspalten scenario_* bleiben und spiegeln "langfristig" -
+-- Analysen ohne Eintrag in "scenarios" lesen ihre Szenarien von dort.
+-- ---------------------------------------------------------------------------
+alter table public.analyses
+  add column if not exists scenarios jsonb not null default '{}'::jsonb;

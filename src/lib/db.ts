@@ -2,7 +2,17 @@ import "server-only";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
-import type { Analysis, AnalysisInput, PlanId, SubscriptionStatus, User, WartelistenEintrag } from "./types";
+import type {
+  Analysis,
+  AnalysisInput,
+  PlanId,
+  SubscriptionStatus,
+  Szenarien,
+  Szenariosatz,
+  User,
+  WartelistenEintrag,
+} from "./types";
+import { ZEITRAEUME } from "./config";
 
 /**
  * Datenschicht mit zwei Treibern:
@@ -78,6 +88,10 @@ async function readLocal(): Promise<LocalStore> {
     }
   }
   if (!memoryStore.analyses) memoryStore.analyses = [];
+  memoryStore.analyses = memoryStore.analyses.map((a) => ({
+    ...a,
+    scenarios: szenarienAusLokal(a),
+  }));
   if (!memoryStore.users) memoryStore.users = [];
   return memoryStore;
 }
@@ -117,6 +131,74 @@ function zahl(v: unknown): number | null {
   return v === null || v === undefined ? null : Number(v);
 }
 
+/* ----------------------------- Szenarien ---------------------------------- */
+
+const SATZ_FELDER = [
+  "bestPrice", "bestProbability", "bestNote",
+  "basePrice", "baseProbability", "baseNote",
+  "worstPrice", "worstProbability", "worstNote",
+] as const;
+
+/** Ein Szenariosatz aus beliebiger Quelle; null, wenn nichts gepflegt ist. */
+function satzAus(lies: (feld: (typeof SATZ_FELDER)[number]) => unknown): Szenariosatz | null {
+  const text = (v: unknown) => (typeof v === "string" ? v : "");
+  const satz: Szenariosatz = {
+    bestPrice: zahl(lies("bestPrice")),
+    bestProbability: zahl(lies("bestProbability")),
+    bestNote: text(lies("bestNote")),
+    basePrice: zahl(lies("basePrice")),
+    baseProbability: zahl(lies("baseProbability")),
+    baseNote: text(lies("baseNote")),
+    worstPrice: zahl(lies("worstPrice")),
+    worstProbability: zahl(lies("worstProbability")),
+    worstNote: text(lies("worstNote")),
+  };
+  return SATZ_FELDER.some((f) => satz[f] !== null && satz[f] !== "") ? satz : null;
+}
+
+/** bestPrice -> best_price */
+const spalte = (feld: string) => `scenario_${feld.replace(/[A-Z]/g, (c) => `_${c.toLowerCase()}`)}`;
+
+/**
+ * Szenarien aus einer Tabellenzeile. Die Zeitraeume stehen in der
+ * JSON-Spalte "scenarios". Analysen von vor den Zeitraeumen haben ihre
+ * Szenarien noch in den Einzelspalten - die gelten als langfristig.
+ */
+function szenarienAusRow(row: any): Szenarien {
+  const json = row.scenarios && typeof row.scenarios === "object" ? row.scenarios : {};
+  const out: Szenarien = {};
+  for (const id of ZEITRAEUME.map((z) => z.id)) {
+    const satz = json[id] && typeof json[id] === "object" ? satzAus((f) => json[id][f]) : null;
+    if (satz) out[id] = satz;
+  }
+  if (!("lang" in json)) {
+    const alt = satzAus((f) => row[spalte(f)]);
+    if (alt) out.lang = alt;
+  }
+  return out;
+}
+
+/** Wie oben, fuer den lokalen Speicher (Felder in camelCase). */
+function szenarienAusLokal(a: any): Szenarien {
+  if (a.scenarios && typeof a.scenarios === "object") return a.scenarios as Szenarien;
+  const alt = satzAus((f) => a[`scenario${f[0].toUpperCase()}${f.slice(1)}`]);
+  return alt ? { lang: alt } : {};
+}
+
+/**
+ * Zum Speichern: alle Zeitraeume in die JSON-Spalte, langfristig zusaetzlich
+ * in die Einzelspalten - so bleibt ein aelterer Stand der Seite lesbar.
+ */
+function szenarienZuRow(szenarien: Szenarien) {
+  const lang = szenarien.lang;
+  const row: Record<string, unknown> = {
+    scenarios: szenarien,
+    scenario_horizon: lang ? (ZEITRAEUME.find((z) => z.id === "lang")?.spanne ?? "") : "",
+  };
+  for (const f of SATZ_FELDER) row[spalte(f)] = lang ? lang[f] : f.endsWith("Note") ? "" : null;
+  return row;
+}
+
 function analysisFromRow(row: any): Analysis {
   return {
     id: row.id,
@@ -132,16 +214,7 @@ function analysisFromRow(row: any): Analysis {
     zoneEntryTo: zahl(row.zone_entry_to),
     zoneNeutralTo: zahl(row.zone_neutral_to),
     zoneExitTo: zahl(row.zone_exit_to),
-    scenarioHorizon: row.scenario_horizon ?? "",
-    scenarioBestPrice: zahl(row.scenario_best_price),
-    scenarioBestProbability: zahl(row.scenario_best_probability),
-    scenarioBestNote: row.scenario_best_note ?? "",
-    scenarioBasePrice: zahl(row.scenario_base_price),
-    scenarioBaseProbability: zahl(row.scenario_base_probability),
-    scenarioBaseNote: row.scenario_base_note ?? "",
-    scenarioWorstPrice: zahl(row.scenario_worst_price),
-    scenarioWorstProbability: zahl(row.scenario_worst_probability),
-    scenarioWorstNote: row.scenario_worst_note ?? "",
+    scenarios: szenarienAusRow(row),
     reason: row.reason ?? "",
     signal: Number(row.signal) as Analysis["signal"],
     horizon: row.horizon ?? "",
@@ -164,16 +237,7 @@ function analysisToRow(input: AnalysisInput) {
     zone_entry_to: input.zoneEntryTo,
     zone_neutral_to: input.zoneNeutralTo,
     zone_exit_to: input.zoneExitTo,
-    scenario_horizon: input.scenarioHorizon,
-    scenario_best_price: input.scenarioBestPrice,
-    scenario_best_probability: input.scenarioBestProbability,
-    scenario_best_note: input.scenarioBestNote,
-    scenario_base_price: input.scenarioBasePrice,
-    scenario_base_probability: input.scenarioBaseProbability,
-    scenario_base_note: input.scenarioBaseNote,
-    scenario_worst_price: input.scenarioWorstPrice,
-    scenario_worst_probability: input.scenarioWorstProbability,
-    scenario_worst_note: input.scenarioWorstNote,
+    ...szenarienZuRow(input.scenarios),
     reason: input.reason,
     signal: input.signal,
     horizon: input.horizon,

@@ -3,10 +3,11 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import SignalIndicator from "@/components/SignalIndicator";
 import PriceZones from "@/components/PriceZones";
-import ScenarioChart from "@/components/ScenarioChart";
+import ScenarioChart, { zeitraeumeMitSzenarien } from "@/components/ScenarioChart";
+import ZeitraumAnsichten from "@/components/ZeitraumAnsichten";
 import { getAnalysis, listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
-import { PLANS, SIGNALS, planLimit } from "@/lib/config";
+import { SIGNALS, STANDARD_ZEITRAUM, ZEITRAEUME, planLimit } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -64,6 +65,13 @@ export default async function AnalyseDetail({
   if (!frei.has(analysis.id)) redirect("/preise?gesperrt=1");
 
   const meta = SIGNALS[analysis.signal];
+  const zeitraeume = zeitraeumeMitSzenarien(analysis);
+  const ansichten = ZEITRAEUME.filter((z) => zeitraeume.includes(z.id)).map((z) => ({
+    ...z,
+    inhalt: <ScenarioChart analysis={analysis} zeitraum={z.id} />,
+  }));
+  // Langfristig, sonst der laengste gepflegte Zeitraum
+  const start = zeitraeume.includes(STANDARD_ZEITRAUM) ? STANDARD_ZEITRAUM : zeitraeume.at(-1);
 
   return (
     <div className="frame">
@@ -127,7 +135,7 @@ export default async function AnalyseDetail({
 
         {/* Szenarien und Kurszonen — jeweils nur, wenn gepflegt */}
         <div className="mt-10 space-y-5">
-          <ScenarioChart analysis={analysis} />
+          {start && <ZeitraumAnsichten ansichten={ansichten} start={start} />}
           <PriceZones analysis={analysis} />
         </div>
 
