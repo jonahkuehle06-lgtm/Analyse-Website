@@ -6,8 +6,9 @@ import SignalFilter from "@/components/SignalFilter";
 import RichtungUmschalter from "@/components/RichtungUmschalter";
 import { analysenLink } from "@/lib/analysen-link";
 import { listAnalyses } from "@/lib/db";
-import { currentUser, hasActiveSubscription } from "@/lib/auth";
-import { PLANS, PLAN_ORDER, SIGNAL_LEVELS, planLimit } from "@/lib/config";
+import { currentUser } from "@/lib/auth";
+import { PLANS, PLAN_ORDER, SIGNAL_LEVELS } from "@/lib/config";
+import { sichtbarkeitFuer } from "@/lib/freischaltung";
 import type { Richtung, SignalLevel } from "@/lib/types";
 import { brotkrumen, kanonisch } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
@@ -29,12 +30,9 @@ export default async function AnalysenPage({
   const params = await searchParams;
   const [all, user] = await Promise.all([listAnalyses(), currentUser()]);
 
-  const active = hasActiveSubscription(user);
-  /* Ohne Abo ist keine Analyse frei. */
-  const limit = active ? planLimit(user!.plan) : 0;
-
-  /** Freigeschaltet sind immer die N aktuellsten Analysen. */
-  const unlockedIds = new Set(all.slice(0, limit).map((a) => a.id));
+  /* Freigeschaltet sind immer die N aktuellsten Analysen; ohne Abo keine.
+     Dabei wird vermerkt, was freigeschaltet ist - fuer die Historie. */
+  const { aktiv: active, limit, aktuell: unlockedIds } = await sichtbarkeitFuer(user, all);
 
   const wunsch = Number(params.signal) as SignalLevel;
   const selected = SIGNAL_LEVELS.includes(wunsch) ? wunsch : null;
@@ -107,7 +105,25 @@ export default async function AnalysenPage({
           </Link>
         </div>
 
-        <SignalFilter active={selected} richtung={richtung} />
+        {/* Signalfilter, rechts daneben der Weg zu den historischen Analysen */}
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
+          <div className="min-w-0 lg:flex-1">
+            <SignalFilter active={selected} richtung={richtung} />
+          </div>
+          <Link
+            href="/analysen/historisch"
+            className="btn-link shrink-0 self-start text-[0.9375rem] lg:mb-2 lg:self-auto"
+          >
+            {!active && (
+              <svg aria-hidden="true" viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="3" y="7" width="10" height="7" rx="1.5" />
+                <path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" />
+              </svg>
+            )}
+            Historische Analysen
+            <span className="pfeil" aria-hidden="true">→</span>
+          </Link>
+        </div>
 
         {leer && (
           <p className="mt-16 text-center text-[0.9375rem] text-[var(--color-mist)]">

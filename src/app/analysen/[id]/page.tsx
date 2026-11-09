@@ -5,8 +5,9 @@ import SignalIndicator from "@/components/SignalIndicator";
 import ScenarioChart, { zeitraeumeMitSzenarien } from "@/components/ScenarioChart";
 import ZeitraumAnsichten from "@/components/ZeitraumAnsichten";
 import { getAnalysis, listAnalyses } from "@/lib/db";
-import { currentUser, hasActiveSubscription } from "@/lib/auth";
-import { SIGNALS, STANDARD_ZEITRAUM, ZEITRAEUME, planLimit } from "@/lib/config";
+import { currentUser } from "@/lib/auth";
+import { SIGNALS, STANDARD_ZEITRAUM, ZEITRAEUME } from "@/lib/config";
+import { sichtbarkeitFuer } from "@/lib/freischaltung";
 
 export const dynamic = "force-dynamic";
 
@@ -57,11 +58,14 @@ export default async function AnalyseDetail({
   if (!analysis) notFound();
 
   // Dieselbe Prüfung wie in der Übersicht: freigeschaltet sind die N
-  // aktuellsten Analysen. Die Detailseite darf die Paywall nicht umgehen.
-  const aktiv = hasActiveSubscription(user);
-  const limit = aktiv ? planLimit(user!.plan) : 0;
-  const frei = new Set(alle.slice(0, limit).map((a) => a.id));
-  if (!frei.has(analysis.id)) redirect("/preise?gesperrt=1");
+  // aktuellsten Analysen und die früher freigeschalteten (Historie).
+  // Die Detailseite darf die Paywall nicht umgehen.
+  const sicht = await sichtbarkeitFuer(user, alle);
+  const historisch = sicht.historisch.has(analysis.id);
+  if (!sicht.aktuell.has(analysis.id) && !historisch) redirect("/preise?gesperrt=1");
+  const zurueck = historisch
+    ? { href: "/analysen/historisch", text: "Historische Analysen" }
+    : { href: "/analysen", text: "Alle Analysen" };
 
   const meta = SIGNALS[analysis.signal];
   const zeitraeume = zeitraeumeMitSzenarien(analysis);
@@ -75,9 +79,9 @@ export default async function AnalyseDetail({
   return (
     <div className="frame">
       <div className="mx-auto max-w-4xl py-10 sm:py-14">
-        <Link href="/analysen" className="btn-link !border-transparent text-[0.9375rem] text-[var(--color-mist)] hover:!border-[var(--color-mist)] hover:text-[var(--color-platinum)]">
+        <Link href={zurueck.href} className="btn-link !border-transparent text-[0.9375rem] text-[var(--color-mist)] hover:!border-[var(--color-mist)] hover:text-[var(--color-platinum)]">
           <span aria-hidden="true">←</span>
-          Alle Analysen
+          {zurueck.text}
         </Link>
 
         <header className="mt-10 border-b border-[var(--color-line)] pb-10">
@@ -143,9 +147,9 @@ export default async function AnalyseDetail({
           </p>
         </footer>
 
-        <Link href="/analysen" className="btn-ghost mt-10 w-full sm:w-auto">
+        <Link href={zurueck.href} className="btn-ghost mt-10 w-full sm:w-auto">
           <span aria-hidden="true">←</span>
-          Alle Analysen
+          {zurueck.text}
         </Link>
       </div>
     </div>

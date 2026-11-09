@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/auth";
 import { createAnalysis, deleteAnalysis, updateAnalysis } from "@/lib/db";
 import { ZEITRAEUME } from "@/lib/config";
+import { freischaltungenSichern } from "@/lib/freischaltung";
 import type { AnalysisInput, Richtung, SignalLevel, Szenarien, Szenariosatz } from "@/lib/types";
 
 export interface AnalysisFormState {
@@ -116,6 +117,9 @@ export async function createAnalysisAction(
   const parsed = parse(data);
   if ("error" in parsed) return parsed;
 
+  // Vorher sichern, was Kunden gerade freigeschaltet haben - die neue
+  // Analyse schiebt die älteste aus dem Paket in die Historie
+  await freischaltungenSichern();
   try {
     await createAnalysis(parsed);
   } catch (error) {
@@ -138,6 +142,8 @@ export async function updateAnalysisAction(
   const parsed = parse(data);
   if ("error" in parsed) return parsed;
 
+  // Ein geändertes Datum kann die Reihenfolge verschieben
+  await freischaltungenSichern();
   try {
     const updated = await updateAnalysis(id, parsed);
     if (!updated) return { error: "Diese Analyse existiert nicht (mehr)." };

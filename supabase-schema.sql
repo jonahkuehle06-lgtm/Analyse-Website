@@ -130,3 +130,17 @@ alter table public.analyses
 alter table public.analyses
   add column if not exists direction text not null default 'long'
   check (direction in ('long', 'short'));
+
+-- ---------------------------------------------------------------------------
+-- Nachtrag: Freischaltungen (historische Analysen)
+-- Welche Analysen ein Kunde über sein Paket schon einmal freigeschaltet
+-- hatte. Fällt eine Analyse aus den N aktuellsten heraus, bleibt sie
+-- unter „Historische Analysen“ abrufbar, solange das Abo aktiv ist.
+-- ---------------------------------------------------------------------------
+create table if not exists public.freischaltungen (
+  user_id     uuid not null references public.users(id) on delete cascade,
+  analysis_id uuid not null references public.analyses(id) on delete cascade,
+  created_at  timestamptz not null default now(),
+  primary key (user_id, analysis_id)
+);
+alter table public.freischaltungen enable row level security;

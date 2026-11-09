@@ -67,6 +67,7 @@ interface LocalStore {
   analyses: Analysis[];
   users: User[];
   warteliste?: WartelistenEintrag[];
+  freischaltungen?: { userId: string; analysisId: string; createdAt: string }[];
 }
 
 const STORE_PATH = path.join(process.cwd(), "data", "store.local.json");
@@ -361,6 +362,73 @@ export async function deleteAnalysis(id: string): Promise<void> {
   const store = await readLocal();
   store.analyses = store.analyses.filter((a) => a.id !== id);
   await writeLocal(store);
+}
+
+/* ------------------------- Freischaltungen -------------------------------- */
+
+/**
+ * Vermerkt, dass diese Analysen fuer den Nutzer freigeschaltet sind.
+ * Schon vermerkte bleiben unveraendert (erstes Freischaltdatum zaehlt).
+ */
+export async function freischaltungenVermerken(userId: string, analysisIds: string[]): Promise<void> {
+  if (analysisIds.length === 0) return;
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { error } = await sb
+      .from("freischaltungen")
+      .upsert(
+        analysisIds.map((analysis_id) => ({ user_id: userId, analysis_id })),
+        { onConflict: "user_id,analysis_id", ignoreDuplicates: true },
+      );
+    if (error) throw new Error(`Freischaltungen nicht gespeichert: ${error.message}`);
+    return;
+  }
+  const store = await readLocal();
+  const liste = (store.freischaltungen ??= []);
+  const jetzt = new Date().toISOString();
+  for (const analysisId of analysisIds) {
+    if (!liste.some((f) => f.userId === userId && f.analysisId === analysisId)) {
+      liste.push({ userId, analysisId, createdAt: jetzt });
+    }
+  }
+  try {
+    await writeLocal(store);
+  } catch {
+    // Lokal nur Komfort - die Seite soll daran nicht scheitern
+  }
+}
+
+/** Kennungen aller Analysen, die der Nutzer je freigeschaltet hatte. */
+export async function freischaltungenLesen(userId: string): Promise<Set<string>> {
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { data, error } = await sb
+      .from("freischaltungen")
+      .select("analysis_id")
+      .eq("user_id", userId);
+    if (error) throw new Error(`Freischaltungen nicht geladen: ${error.message}`);
+    return new Set((data ?? []).map((r: any) => r.analysis_id as string));
+  }
+  const store = await readLocal();
+  return new Set((store.freischaltungen ?? []).filter((f) => f.userId === userId).map((f) => f.analysisId));
+}
+
+/** Alle Nutzer mit laufendem Abo - fuer das Sichern vor einer neuen Analyse. */
+export async function listAktiveNutzer(): Promise<User[]> {
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { data, error } = await sb
+      .from("users")
+      .select("*")
+      .in("subscription_status", ["active", "trialing"])
+      .not("plan", "is", null);
+    if (error) throw new Error(error.message);
+    return (data ?? []).map(userFromRow);
+  }
+  const store = await readLocal();
+  return store.users.filter(
+    (u) => u.plan && (u.subscriptionStatus === "active" || u.subscriptionStatus === "trialing"),
+  );
 }
 
 /* ----------------------------- Nutzer ------------------------------------- */
