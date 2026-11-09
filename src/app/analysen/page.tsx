@@ -3,10 +3,11 @@ import PageHeader from "@/components/PageHeader";
 import type { Metadata } from "next";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import SignalFilter from "@/components/SignalFilter";
+import RichtungUmschalter from "@/components/RichtungUmschalter";
 import { analysenLink } from "@/lib/analysen-link";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
-import { PLANS, PLAN_ORDER, RICHTUNGEN, SIGNAL_LEVELS, planLimit } from "@/lib/config";
+import { PLANS, PLAN_ORDER, SIGNAL_LEVELS, planLimit } from "@/lib/config";
 import type { Richtung, SignalLevel } from "@/lib/types";
 import { brotkrumen, kanonisch } from "@/lib/seo";
 import JsonLd from "@/components/JsonLd";
@@ -79,25 +80,11 @@ export default async function AnalysenPage({
         </PageHeader>
 
         {/* Long / Short */}
-        <nav
-          aria-label="Richtung"
-          className="mt-8 inline-grid grid-cols-2 rounded-full border border-[var(--color-line-strong)] p-1"
-        >
-          {RICHTUNGEN.map((r) => (
-            <Link
-              key={r.id}
-              href={analysenLink(r.id, selected)}
-              aria-current={richtung === r.id ? "page" : undefined}
-              className={`flex min-h-11 items-center justify-center rounded-full px-8 text-[0.9375rem] transition-colors duration-200 ${
-                richtung === r.id
-                  ? "bg-[var(--color-platinum)] font-semibold text-[var(--color-ink)]"
-                  : "text-[var(--color-mist)] hover:text-[var(--color-platinum)]"
-              }`}
-            >
-              {r.name}
-            </Link>
-          ))}
-        </nav>
+        <RichtungUmschalter
+          aktiv={richtung}
+          links={{ long: analysenLink("long", selected), short: analysenLink("short", selected) }}
+          className="mt-8"
+        />
 
         {/* Status-Leiste */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--color-line)] py-5">

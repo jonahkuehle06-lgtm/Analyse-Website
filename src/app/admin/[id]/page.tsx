@@ -21,7 +21,7 @@ export default async function AnalyseBearbeitenPage({
   return (
     <div className="mx-auto max-w-3xl px-5 py-10 sm:px-8">
       <Link
-        href="/admin"
+        href={analysis.direction === "short" ? "/admin?richtung=short" : "/admin"}
         className="text-sm text-[var(--color-mist)] hover:text-[var(--color-platinum)]"
       >
         ← Zurück zur Übersicht
@@ -30,7 +30,7 @@ export default async function AnalyseBearbeitenPage({
       <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="display text-4xl">
-            <span className="platinum-text">Analyse bearbeiten</span>
+            <span className="platinum-text">{analysis.direction === "short" ? "Short" : "Long"}-Analyse bearbeiten</span>
           </h1>
           <p className="mt-3 text-sm text-[var(--color-mist)]">
             Zuletzt geändert am{" "}
@@ -42,6 +42,7 @@ export default async function AnalyseBearbeitenPage({
 
         <form action={deleteAnalysisAction}>
           <input type="hidden" name="id" value={analysis.id} />
+          <input type="hidden" name="direction" value={analysis.direction} />
           <button
             type="submit"
             className="min-h-11 rounded-full border border-[rgba(240,139,139,0.35)] px-5 text-[0.9375rem] text-[var(--color-danger)] transition-colors hover:border-[var(--color-danger)] hover:bg-[rgba(240,139,139,0.08)]"
@@ -56,6 +57,7 @@ export default async function AnalyseBearbeitenPage({
           action={updateAnalysisAction}
           analysis={analysis}
           submitLabel="Änderungen speichern"
+          richtung={analysis.direction}
         />
       </div>
     </div>

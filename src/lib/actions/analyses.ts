@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/auth";
 import { createAnalysis, deleteAnalysis, updateAnalysis } from "@/lib/db";
 import { ZEITRAEUME } from "@/lib/config";
-import type { AnalysisInput, SignalLevel, Szenarien, Szenariosatz } from "@/lib/types";
+import type { AnalysisInput, Richtung, SignalLevel, Szenarien, Szenariosatz } from "@/lib/types";
 
 export interface AnalysisFormState {
   error?: string;
@@ -96,6 +96,11 @@ function parse(data: FormData): AnalysisInput | { error: string } {
   };
 }
 
+/** Zurück in den Bereich (Long oder Short), aus dem man kam. */
+function adminLink(richtung: Richtung, meldung: "gespeichert" | "geloescht"): string {
+  return `/admin?${richtung === "short" ? "richtung=short&" : ""}${meldung}=1`;
+}
+
 function refresh() {
   revalidatePath("/");
   revalidatePath("/analysen");
@@ -118,7 +123,7 @@ export async function createAnalysisAction(
   }
 
   refresh();
-  redirect("/admin?gespeichert=1");
+  redirect(adminLink(parsed.direction, "gespeichert"));
 }
 
 export async function updateAnalysisAction(
@@ -141,7 +146,7 @@ export async function updateAnalysisAction(
   }
 
   refresh();
-  redirect("/admin?gespeichert=1");
+  redirect(adminLink(parsed.direction, "gespeichert"));
 }
 
 export async function deleteAnalysisAction(data: FormData): Promise<void> {
@@ -151,5 +156,5 @@ export async function deleteAnalysisAction(data: FormData): Promise<void> {
   if (id) await deleteAnalysis(id);
 
   refresh();
-  redirect("/admin?geloescht=1");
+  redirect(adminLink(text(data, "direction") === "short" ? "short" : "long", "geloescht"));
 }

@@ -9,23 +9,30 @@ import { isAdmin } from "@/lib/auth";
 import { activeDriver, istLiveSeite, listAnalyses, listWarteliste } from "@/lib/db";
 import { SIGNALS } from "@/lib/config";
 import { stripeConfigured } from "@/lib/stripe";
+import RichtungUmschalter from "@/components/RichtungUmschalter";
+import type { Richtung } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ gespeichert?: string; geloescht?: string }>;
+  searchParams: Promise<{ gespeichert?: string; geloescht?: string; richtung?: string }>;
 }) {
   if (!(await isAdmin())) redirect("/admin/login");
 
-  const { gespeichert, geloescht } = await searchParams;
-  const [analyses, warteliste] = await Promise.all([
+  const { gespeichert, geloescht, richtung: wunsch } = await searchParams;
+  const richtung: Richtung = wunsch === "short" ? "short" : "long";
+  const name = richtung === "short" ? "Short" : "Long";
+  const [alle, warteliste] = await Promise.all([
     listAnalyses(),
     // Fehlt die Tabelle noch, bleibt die Verwaltung trotzdem nutzbar
     listWarteliste().catch(() => null),
   ]);
   const driver = activeDriver();
+  // Wie auf der Kundenseite: Long und Short getrennt
+  const analyses = alle.filter((a) => a.direction === richtung);
+  const neu = richtung === "short" ? "/admin/neu?richtung=short" : "/admin/neu";
 
   const counts = analyses.reduce<Record<number, number>>((acc, a) => {
     acc[a.signal] = (acc[a.signal] ?? 0) + 1;
@@ -110,18 +117,24 @@ export default async function AdminPage({
         )}
       </div>
 
-      <div className="mt-10 flex flex-wrap items-end justify-between gap-5">
+      <RichtungUmschalter
+        aktiv={richtung}
+        links={{ long: "/admin", short: "/admin?richtung=short" }}
+        className="mt-10"
+      />
+
+      <div className="mt-8 flex flex-wrap items-end justify-between gap-5">
         <div>
           <h1 className="display text-4xl">
-            <span className="platinum-text">Analysen</span>
+            <span className="platinum-text">{name}-Analysen</span>
           </h1>
           <p className="mt-2 text-sm text-[var(--color-mist)]">
             {analyses.length} Einträge · Änderungen sind sofort auf der Live-Seite
             sichtbar
           </p>
         </div>
-        <Link href="/admin/neu" className="btn-platinum">
-          Neue Analyse
+        <Link href={neu} className="btn-platinum">
+          Neue {name}-Analyse
         </Link>
       </div>
 
@@ -153,10 +166,10 @@ export default async function AdminPage({
           style={{ borderRadius: "var(--radius-card)" }}
         >
           <p className="text-sm text-[var(--color-mist)]">
-            Noch keine Analyse angelegt.
+            Noch keine {name}-Analyse angelegt.
           </p>
-          <Link href="/admin/neu" className="btn-platinum mt-6">
-            Erste Analyse anlegen
+          <Link href={neu} className="btn-platinum mt-6">
+            Erste {name}-Analyse anlegen
           </Link>
         </div>
       ) : (
@@ -210,6 +223,7 @@ export default async function AdminPage({
                   </Link>
                   <form action={deleteAnalysisAction}>
                     <input type="hidden" name="id" value={analysis.id} />
+                    <input type="hidden" name="direction" value={analysis.direction} />
                     <button
                       type="submit"
                       className="text-sm text-[var(--color-muted)] transition-colors hover:text-[var(--color-danger)]"
