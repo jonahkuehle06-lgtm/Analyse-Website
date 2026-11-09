@@ -268,9 +268,9 @@ export default function AnalysisForm({
             <div key={z.id} hidden={zeitraum !== z.id} className="mt-6 grid gap-5 lg:grid-cols-3">
               {(
                 [
-                  ["best", "Best Case", "#1baf7a"],
-                  ["base", "Base Case", "#aba59b"],
-                  ["worst", "Worst Case", "#d03b3b"],
+                  ["best", "Szenario A", "#1baf7a"],
+                  ["base", "Szenario B", "#aba59b"],
+                  ["worst", "Szenario C", "#d03b3b"],
                 ] as const
               ).map(([fall, titel, farbe]) => {
                 const feld = (f: string) => `szenario-${z.id}-${fall}${f}`;

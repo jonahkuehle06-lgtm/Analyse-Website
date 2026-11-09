@@ -6,7 +6,7 @@ import type { Analysis } from "./types";
  * Bewusst kein echtes Unternehmen: Die Darstellung zeigt nur, wie eine
  * Analyse aufgebaut ist, und ist keine Empfehlung. Die Werte sind in sich
  * stimmig - der Kurs liegt im Einstiegsbereich, das Kursziel entspricht
- * dem Base Case und liegt im Ausstiegsbereich.
+ * Szenario B und liegt im Ausstiegsbereich.
  */
 export const BEISPIEL_ANALYSE: Analysis = {
   id: "beispiel",

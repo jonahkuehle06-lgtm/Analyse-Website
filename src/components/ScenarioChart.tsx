@@ -2,14 +2,14 @@ import { STANDARD_ZEITRAUM, ZEITRAEUME } from "@/lib/config";
 import type { Analysis, ZeitraumId } from "@/lib/types";
 
 /**
- * Szenario-Projektion: drei Kursziele - Best, Base, Worst Case - als Faecher
+ * Szenario-Projektion: drei Kursziele - Szenario A, B und C - als Faecher
  * vom heutigen Kurs bis zum Zeithorizont.
  *
  * Bewusst gerade Linien: ein geschwungener Verlauf wuerde einen Kursweg
  * behaupten, den niemand prognostiziert hat. Dargestellt ist nur, wo die
  * Reise in drei Faellen endet.
  *
- * Farbwahl: divergierend um den Base Case. Die beiden Pole sind gegen die
+ * Farbwahl: divergierend um Szenario B. Die beiden Pole sind gegen die
  * Kartenflaeche (#0F0F0F) geprueft - Helligkeitsband, Chroma, Kontrast und
  * Farbfehlsichtigkeit bestehen alle Pruefungen (ΔE 9,9 bei Deuteranopie).
  * Zusaetzlich traegt jede Linie eine eigene Beschriftung, damit die
@@ -38,9 +38,9 @@ export function szenarienAus(a: Analysis, zeitraum: ZeitraumId): Szenario[] | nu
   const z = a.scenarios[zeitraum];
   if (!z) return null;
   const roh: [Fall, string, number | null, number | null, string][] = [
-    ["best", "Best Case", z.bestPrice, z.bestProbability, z.bestNote],
-    ["base", "Base Case", z.basePrice, z.baseProbability, z.baseNote],
-    ["worst", "Worst Case", z.worstPrice, z.worstProbability, z.worstNote],
+    ["best", "Szenario A", z.bestPrice, z.bestProbability, z.bestNote],
+    ["base", "Szenario B", z.basePrice, z.baseProbability, z.baseNote],
+    ["worst", "Szenario C", z.worstPrice, z.worstProbability, z.worstNote],
   ];
   if (roh.some(([, , kurs]) => kurs === null || !Number.isFinite(kurs))) return null;
   return roh.map(([fall, name, kurs, p, notiz]) => ({
