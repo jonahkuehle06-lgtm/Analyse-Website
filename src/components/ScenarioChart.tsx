@@ -38,9 +38,9 @@ export function szenarienAus(a: Analysis, zeitraum: ZeitraumId): Szenario[] | nu
   const z = a.scenarios[zeitraum];
   if (!z) return null;
   const roh: [Fall, string, number | null, number | null, string][] = [
-    ["best", "Szenario A", z.bestPrice, z.bestProbability, z.bestNote],
-    ["base", "Szenario B", z.basePrice, z.baseProbability, z.baseNote],
-    ["worst", "Szenario C", z.worstPrice, z.worstProbability, z.worstNote],
+    ["best", "A", z.bestPrice, z.bestProbability, z.bestNote],
+    ["base", "B", z.basePrice, z.baseProbability, z.baseNote],
+    ["worst", "C", z.worstPrice, z.worstProbability, z.worstNote],
   ];
   if (roh.some(([, , kurs]) => kurs === null || !Number.isFinite(kurs))) return null;
   return roh.map(([fall, name, kurs, p, notiz]) => ({
