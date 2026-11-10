@@ -810,16 +810,16 @@ input[type="radio"] {
      h-16, ab lg 76px) */
   --kopfzeile: calc(4rem + 1px + env(safe-area-inset-top, 0px));
   position: relative;
-  height: 300vh;
-  height: 300svh;
+  height: 230vh;
+  height: 230svh;
 }
 @media (min-width: 64rem) {
   .karten-buehne { --kopfzeile: calc(77px + env(safe-area-inset-top, 0px)); }
 }
 @media (max-aspect-ratio: 1/1) {
   .karten-buehne {
-    height: 340vh;
-    height: 340svh;
+    height: 260vh;
+    height: 260svh;
   }
 }
 

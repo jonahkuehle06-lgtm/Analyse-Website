@@ -886,14 +886,6 @@ function bauBuehne({ buehne, bild, leinwand, intro, kartenTexte }: BuehnenTeile)
 
 /* -------------------------------- Komponente ------------------------------- */
 
-// minimumFractionDigits ausdruecklich auf 0 - aeltere Browser werfen sonst einen RangeError
-const euro = new Intl.NumberFormat("de-DE", {
-  style: "currency",
-  currency: "EUR",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});
-
 // Ohne JavaScript: Buehne wird zur normalen Einleitung
 const OHNE_SKRIPT =
   "<style>.karten-buehne{height:auto}.karten-bild{position:relative;top:auto;height:auto;overflow:visible}.karten-leinwand,.karten-text{display:none}</style>";
@@ -940,13 +932,8 @@ export default function Metallkarten({ currentPlan = null }: { currentPlan?: Pla
               >
                 <p className="display karten-text-name">{plan.name}</p>
                 <p className="karten-text-tagline">{plan.tagline}</p>
+                {/* Die Preise stehen einmal: im Raster direkt darunter */}
                 <p className="karten-text-menge">{plan.limit} Analysen freigeschaltet</p>
-                <p className="karten-text-preis">
-                  <span className="display tabular">
-                    {euro.format(interval === "monthly" ? plan.priceMonthly : plan.priceYearly)}
-                  </span>
-                  <span className="karten-text-einheit">/{interval === "monthly" ? "Monat" : "Jahr"}</span>
-                </p>
               </div>
             );
           })}

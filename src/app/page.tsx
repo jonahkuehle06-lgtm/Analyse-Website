@@ -7,6 +7,10 @@ import HeroAnalyse from "@/components/HeroAnalyse";
 import { heroSaetze } from "@/lib/szenarien";
 import { BEISPIEL_ANALYSE } from "@/lib/beispiel";
 import Vergleich from "@/components/Vergleich";
+import Erklaerer from "@/components/Erklaerer";
+import Dahinter from "@/components/Dahinter";
+import FaqListe from "@/components/FaqListe";
+import { FAQ_ANALYSEN, FAQ_PAKETE } from "@/lib/faq";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { BRAND, PLANS } from "@/lib/config";
@@ -56,6 +60,9 @@ const KENNZAHLEN = [
     body: "Freigeschaltet werden immer die aktuellsten Analysen des Bestands.",
   },
 ];
+
+/** Auszug für die Startseite - alle Fragen stehen unter /hilfe. */
+const FRAGEN_START = [FAQ_ANALYSEN[0], FAQ_ANALYSEN[6], FAQ_PAKETE[1], FAQ_PAKETE[3]];
 
 export default async function HomePage() {
   // Ein Datenbank-Aussetzer soll die Startseite nicht lahmlegen - dann eben ohne Vorschau
@@ -146,6 +153,9 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* --------------------- So liest du eine Analyse --------------------- */}
+      <Erklaerer />
+
       {/* ------------------------------ Grundsätze --------------------------- */}
       <section className="section-paper cv-auto">
         <div className="frame section">
@@ -228,8 +238,32 @@ export default async function HomePage() {
       {/* ---------------------------- Vergleich ----------------------------- */}
       <Vergleich />
 
+      {/* ------------------------- Wer dahintersteht ------------------------ */}
+      <Dahinter />
+
       {/* ------------- Pakete: Metallkarten-Buehne, darunter die Preise ------------- */}
       <Metallkarten currentPlan={user?.plan ?? null} />
+
+      {/* ------------------------- Häufige Fragen --------------------------- */}
+      <section className="cv-auto border-t border-[var(--color-line)]">
+        <div className="frame section">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+            <div data-reveal>
+              <span className="tag">Häufige Fragen</span>
+              <h2 className="display mt-6 text-[length:var(--step-h2)] text-[var(--color-platinum)]">
+                Gut zu wissen
+              </h2>
+              <Link href="/hilfe" className="btn-link mt-8">
+                Alle Fragen und Kontakt
+                <span className="pfeil" aria-hidden="true">→</span>
+              </Link>
+            </div>
+            <div data-reveal>
+              <FaqListe fragen={FRAGEN_START} />
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

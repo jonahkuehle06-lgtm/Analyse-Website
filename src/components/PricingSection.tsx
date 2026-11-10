@@ -153,36 +153,9 @@ export default function PricingSection({
                   <p className="text-[0.9375rem] font-semibold text-[var(--color-platinum)]">
                     {plan.limit} Analysen freigeschaltet
                   </p>
-                  <ul className="mt-4 space-y-3">
-                    {/* Die Kündigungsregel hängt am Abrechnungszeitraum (§ 6 AGB) */}
-                    {[
-                      ...plan.features.filter((f) => !/kündbar/i.test(f)),
-                      laufzeitKurz(interval),
-                    ].map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex items-start gap-3 text-[0.9375rem] text-[var(--color-mist-2)]"
-                      >
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 16 16"
-                          fill="none"
-                          className="mt-[0.3em] shrink-0"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M3 8.5l3.2 3.2L13 5"
-                            stroke="var(--color-mist)"
-                            strokeWidth="1.6"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
+                  <p className="mt-2 text-[0.9375rem] text-[var(--color-mist)]">
+                    {laufzeitKurz(interval)}
+                  </p>
                 </div>
 
                 <div className="mt-auto pt-10">
@@ -206,6 +179,26 @@ export default function PricingSection({
               </div>
             );
           })}
+        </div>
+
+        {/* Was jede Analyse enthält - in allen Paketen gleich, deshalb nur einmal */}
+        <div className="mt-5 rounded-[var(--radius-card)] border border-[var(--color-line)] p-7 sm:p-9">
+          <p className="mono-label">In jedem Paket</p>
+          <ul className="mt-5 grid gap-x-10 gap-y-3 sm:grid-cols-2 xl:grid-cols-4">
+            {PLANS.basic.features
+              .filter((f) => !/kündbar/i.test(f))
+              .map((feature) => (
+                <li
+                  key={feature}
+                  className="flex items-start gap-3 text-[0.9375rem] text-[var(--color-mist-2)]"
+                >
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="mt-[0.3em] shrink-0" aria-hidden="true">
+                    <path d="M3 8.5l3.2 3.2L13 5" stroke="var(--color-mist)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {feature}
+                </li>
+              ))}
+          </ul>
         </div>
 
         <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-[var(--color-muted)]">
