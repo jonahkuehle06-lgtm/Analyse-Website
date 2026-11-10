@@ -18,7 +18,10 @@ const PRODUCT = [
   { href: "/analysen", label: "Analysen" },
   { href: "/preise", label: "Pakete" },
   { href: "/methodik", label: "Methodik" },
+  { href: "/beispielanalyse", label: "Beispielanalyse" },
   { href: "/ueber-uns", label: "Über uns" },
+  { href: "/so-arbeiten-wir", label: "So arbeiten wir" },
+  { href: "/hilfe", label: "Hilfe und Kontakt" },
   { href: "/konto", label: "Mein Konto" },
 ];
 

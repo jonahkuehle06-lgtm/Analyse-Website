@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/config";
 import { listAnalyses } from "@/lib/db";
+import { beispielPfad, listBeispiele } from "@/lib/beispiele";
 import { RECHTSTEXTE_STAND_ISO } from "@/lib/legal/vertrag";
 
 // Stündlich neu erzeugen: neue Analysen setzen das Änderungsdatum von Startseite und Übersicht
@@ -24,6 +25,8 @@ const SEITEN: {
   { pfad: "/preise", priority: 0.9, changeFrequency: "monthly" },
   { pfad: "/methodik", priority: 0.7, changeFrequency: "monthly" },
   { pfad: "/ueber-uns", priority: 0.6, changeFrequency: "yearly" },
+  { pfad: "/so-arbeiten-wir", priority: 0.6, changeFrequency: "yearly" },
+  { pfad: "/hilfe", priority: 0.5, changeFrequency: "monthly" },
   { pfad: "/agb", priority: 0.3, changeFrequency: "yearly", stand: "rechtstexte" },
   { pfad: "/widerruf", priority: 0.3, changeFrequency: "yearly", stand: "rechtstexte" },
   { pfad: "/haftungsausschluss", priority: 0.4, changeFrequency: "yearly" },
@@ -48,10 +51,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const analysen = await letzteAnalyse();
   const rechtstexte = new Date(RECHTSTEXTE_STAND_ISO);
 
-  return SEITEN.map(({ pfad, priority, changeFrequency, stand }) => ({
+  const seiten: MetadataRoute.Sitemap = SEITEN.map(({ pfad, priority, changeFrequency, stand }) => ({
     url: pfad === "/" ? `${base}/` : `${base}${pfad}`,
     lastModified: stand === "analysen" ? analysen : stand === "rechtstexte" ? rechtstexte : undefined,
     changeFrequency,
     priority,
   }));
+
+  // Öffentliche Beispielanalysen - die einzigen Analysen im Suchindex
+  const beispiele = await listBeispiele().catch(() => []);
+  return [
+    ...seiten,
+    ...beispiele.map((a) => ({
+      url: `${base}${beispielPfad(a)}`,
+      lastModified: new Date(a.changelog[0]?.date ?? a.updatedAt ?? a.publishedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+  ];
 }
