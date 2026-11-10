@@ -86,6 +86,19 @@ export interface PlanMeta {
   features: string[];
 }
 
+/**
+ * Was jede Analyse enthaelt - in allen Paketen gleich. Die Pakete
+ * unterscheiden sich allein in der Anzahl freigeschalteter Analysen
+ * (so steht es auch in den AGB).
+ */
+const JEDE_ANALYSE = [
+  "Signalstärke, Kurzbegründung und Kursziel",
+  "Szenarien A, B und C in drei Zeiträumen",
+  "Long- und Short-Analysen",
+  "Archiv deiner früheren Analysen",
+  "Monatlich kündbar",
+];
+
 export const PLANS: Record<PlanId, PlanMeta> = {
   basic: {
     id: "basic",
@@ -94,11 +107,7 @@ export const PLANS: Record<PlanId, PlanMeta> = {
     limit: 10,
     priceMonthly: 9,
     priceYearly: 90,
-    features: [
-      "Signalstärke inkl. Farbcode",
-      "Kurzbegründung je Titel",
-      "Monatlich kündbar",
-    ],
+    features: JEDE_ANALYSE,
   },
   black: {
     id: "black",
@@ -107,12 +116,7 @@ export const PLANS: Record<PlanId, PlanMeta> = {
     limit: 25,
     priceMonthly: 24,
     priceYearly: 240,
-    features: [
-      "Signalstärke inkl. Farbcode",
-      "Kurzbegründung je Titel",
-      "Kursziel und Anlagehorizont",
-      "Monatlich kündbar",
-    ],
+    features: JEDE_ANALYSE,
   },
   platin: {
     id: "platin",
@@ -121,13 +125,7 @@ export const PLANS: Record<PlanId, PlanMeta> = {
     limit: 50,
     priceMonthly: 49,
     priceYearly: 490,
-    features: [
-      "Signalstärke inkl. Farbcode",
-      "Kurzbegründung je Titel",
-      "Kursziel und Anlagehorizont",
-      "Priorität bei neuen Veröffentlichungen",
-      "Monatlich kündbar",
-    ],
+    features: JEDE_ANALYSE,
   },
 };
 

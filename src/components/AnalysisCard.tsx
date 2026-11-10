@@ -132,7 +132,6 @@ export default function AnalysisCard({
     <Link
       href={`/analysen/${analysis.id}`}
       className="group block h-full min-w-0"
-      aria-label={`${analysis.title} — Analyse öffnen`}
     >
       {karte}
     </Link>
@@ -158,7 +157,6 @@ export function LockedAnalysisCard({
     <Link
       href="/preise"
       className="group block h-full min-w-0"
-      aria-label={`${analysis.title} — nicht im Paketumfang enthalten`}
     >
       <article className="surface surface-hover relative flex h-full min-w-0 flex-col p-6 sm:p-7">
         <header className="flex items-start justify-between gap-4">

@@ -57,7 +57,7 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
       }`}
     >
       <div className="frame flex h-16 items-center justify-between gap-6 lg:h-[76px]">
-        <Link href="/" aria-label="Zur Startseite" className="shrink-0">
+        <Link href="/" aria-label="PAX Solutions – zur Startseite" className="shrink-0">
           <Wordmark />
         </Link>
 

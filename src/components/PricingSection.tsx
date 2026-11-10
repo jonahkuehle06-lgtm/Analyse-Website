@@ -12,6 +12,13 @@ const euro = new Intl.NumberFormat("de-DE", {
   maximumFractionDigits: 0,
 });
 
+/** Für den aufs Monat umgerechneten Jahrespreis - dort zählen die Cent */
+const euroCent = new Intl.NumberFormat("de-DE", {
+  style: "currency",
+  currency: "EUR",
+  minimumFractionDigits: 2,
+});
+
 /** Kopf des Paket-Bereichs - auf der Startseite steht er in der Kartenbühne (Metallkarten). */
 export function PaketeKopf({
   className = "max-w-2xl",
@@ -54,6 +61,8 @@ export default function PricingSection({
   const interval = vorgabe ?? eigenes;
   const setInterval = onIntervalChange ?? setEigenes;
   const abrechnung = interval === "monthly" ? "monatlich" : "jaehrlich";
+  // Ueberschriften ohne Luecke: unter einer h1 folgen h2, sonst h3
+  const PaketTitel = headingTag === "h1" ? "h2" : "h3";
 
   return (
     <section id="pakete" className="border-b border-[var(--color-line)]">
@@ -118,9 +127,9 @@ export default function PricingSection({
                   index > 0 ? "border-t border-[var(--color-line)] md:border-t-0 md:border-l" : ""
                 }`}
               >
-                <h3 className="display text-[length:var(--step-h3)] font-normal text-[var(--color-platinum)]">
+                <PaketTitel className="display text-[length:var(--step-h3)] font-normal text-[var(--color-platinum)]">
                   {plan.name}
-                </h3>
+                </PaketTitel>
 
                 <p className="mt-3 min-h-[3.2em] text-[0.9375rem] leading-relaxed text-[var(--color-mist)]">
                   {plan.tagline}
@@ -134,6 +143,11 @@ export default function PricingSection({
                     /{interval === "monthly" ? "Monat" : "Jahr"}
                   </span>
                 </div>
+                {/* Feste Hoehe, damit die Karten beim Umschalten nicht springen */}
+                <p className="mt-2 min-h-[1.25rem] text-sm text-[var(--color-mist)]">
+                  {interval === "yearly" &&
+                    `entspricht ${euroCent.format(plan.priceYearly / 12)} im Monat`}
+                </p>
 
                 <div className="mt-8 border-t border-[var(--color-line)] pt-6">
                   <p className="text-[0.9375rem] font-semibold text-[var(--color-platinum)]">
