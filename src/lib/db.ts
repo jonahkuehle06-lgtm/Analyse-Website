@@ -3,6 +3,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import type {
+  Aenderung,
   Analysis,
   AnalysisInput,
   PlanId,
@@ -12,7 +13,7 @@ import type {
   User,
   WartelistenEintrag,
 } from "./types";
-import { ZEITRAEUME } from "./config";
+import { SIGNAL_LEVELS, ZEITRAEUME } from "./config";
 
 /**
  * Datenschicht mit zwei Treibern:
@@ -93,6 +94,8 @@ async function readLocal(): Promise<LocalStore> {
     ...a,
     scenarios: szenarienAusLokal(a),
     direction: a.direction === "short" ? "short" : "long",
+    isPublic: a.isPublic === true,
+    changelog: aenderungenAus(a.changelog),
   }));
   if (!memoryStore.users) memoryStore.users = [];
   return memoryStore;
@@ -201,6 +204,20 @@ function szenarienZuRow(szenarien: Szenarien) {
   return row;
 }
 
+/** Aenderungsprotokoll aus der JSON-Spalte; Unlesbares faellt weg. */
+function aenderungenAus(v: unknown): Aenderung[] {
+  if (!Array.isArray(v)) return [];
+  return v
+    .filter((e) => e && typeof e.date === "string" && typeof e.note === "string")
+    .map((e) => ({
+      date: e.date,
+      note: e.note,
+      ...(SIGNAL_LEVELS.includes(e.signalFrom) && SIGNAL_LEVELS.includes(e.signalTo)
+        ? { signalFrom: e.signalFrom, signalTo: e.signalTo }
+        : {}),
+    }));
+}
+
 function analysisFromRow(row: any): Analysis {
   return {
     id: row.id,
@@ -220,6 +237,8 @@ function analysisFromRow(row: any): Analysis {
     reason: row.reason ?? "",
     signal: Number(row.signal) as Analysis["signal"],
     direction: row.direction === "short" ? "short" : "long",
+    isPublic: row.is_public === true,
+    changelog: aenderungenAus(row.changelog),
     horizon: row.horizon ?? "",
     author: row.author ?? "",
     conflictDisclosure: row.conflict_disclosure ?? "",
@@ -244,6 +263,8 @@ function analysisToRow(input: AnalysisInput) {
     reason: input.reason,
     signal: input.signal,
     direction: input.direction,
+    is_public: input.isPublic,
+    changelog: input.changelog,
     horizon: input.horizon,
     author: input.author,
     conflict_disclosure: input.conflictDisclosure,

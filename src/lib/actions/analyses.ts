@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/auth";
-import { createAnalysis, deleteAnalysis, updateAnalysis } from "@/lib/db";
+import { createAnalysis, deleteAnalysis, getAnalysis, updateAnalysis } from "@/lib/db";
 import { ZEITRAEUME } from "@/lib/config";
 import { freischaltungenSichern } from "@/lib/freischaltung";
 import type { AnalysisInput, Richtung, SignalLevel, Szenarien, Szenariosatz } from "@/lib/types";
@@ -88,6 +88,9 @@ function parse(data: FormData): AnalysisInput | { error: string } {
     reason,
     signal: signal as SignalLevel,
     direction: text(data, "direction") === "short" ? "short" : "long",
+    isPublic: data.get("isPublic") === "ja",
+    // Das Protokoll fuehrt die Speicher-Aktion fort (siehe updateAnalysisAction)
+    changelog: [],
     horizon: text(data, "horizon"),
     author: text(data, "author"),
     conflictDisclosure: text(data, "conflictDisclosure"),
@@ -104,6 +107,7 @@ function adminLink(richtung: Richtung, meldung: "gespeichert" | "geloescht"): st
 
 function refresh() {
   revalidatePath("/");
+  revalidatePath("/beispielanalyse");
   revalidatePath("/analysen");
   revalidatePath("/admin");
 }
@@ -141,6 +145,24 @@ export async function updateAnalysisAction(
 
   const parsed = parse(data);
   if ("error" in parsed) return parsed;
+
+  // Änderungsprotokoll fortschreiben: ein Eintrag, wenn ein Grund angegeben
+  // ist oder sich das Signal geändert hat. Neueste zuerst.
+  const bisher = await getAnalysis(id).catch(() => null);
+  if (!bisher) return { error: "Diese Analyse existiert nicht (mehr)." };
+  const grund = text(data, "aenderungsgrund").slice(0, 280);
+  const signalGeaendert = bisher.signal !== parsed.signal;
+  parsed.changelog =
+    grund || signalGeaendert
+      ? [
+          {
+            date: new Date().toISOString(),
+            note: grund,
+            ...(signalGeaendert ? { signalFrom: bisher.signal, signalTo: parsed.signal } : {}),
+          },
+          ...bisher.changelog,
+        ]
+      : bisher.changelog;
 
   // Ein geändertes Datum kann die Reihenfolge verschieben
   await freischaltungenSichern();

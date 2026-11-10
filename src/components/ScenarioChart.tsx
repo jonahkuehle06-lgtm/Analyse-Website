@@ -52,6 +52,33 @@ export function szenarienAus(a: Analysis, zeitraum: ZeitraumId): Szenario[] | nu
   }));
 }
 
+/**
+ * Wahrscheinlichkeit als Haeufigkeit: 20 Punkte, davon so viele gefuellt,
+ * wie das Szenario in 20 vergleichbaren Faellen eintraete. Haeufigkeiten
+ * werden verlaesslicher verstanden als Prozentangaben; die Prozentzahl
+ * steht weiterhin daneben.
+ */
+function Haeufigkeit({ prozent, fall }: { prozent: number; fall: Fall }) {
+  const von = 20;
+  const n = Math.max(0, Math.min(von, Math.round((prozent / 100) * von)));
+  return (
+    <p className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+      <span className="flex gap-[3px]" aria-hidden="true">
+        {Array.from({ length: von }, (_, i) => (
+          <span
+            key={i}
+            className="h-1.5 w-1.5 rounded-full"
+            style={{ backgroundColor: i < n ? FARBE[fall] : "var(--color-line-strong)" }}
+          />
+        ))}
+      </span>
+      <span className="text-xs tabular-nums text-[var(--color-muted)]">
+        in etwa {n} von {von} Fällen
+      </span>
+    </p>
+  );
+}
+
 /** Zeitraeume, fuer die ein vollstaendiges Diagramm vorliegt - in Blaetterreihenfolge. */
 export function zeitraeumeMitSzenarien(a: Analysis): ZeitraumId[] {
   return ZEITRAEUME.map((z) => z.id).filter((id) => szenarienAus(a, id) !== null);
@@ -211,6 +238,7 @@ export default function ScenarioChart({
                 )}
               </span>
             </div>
+            {s.wahrscheinlichkeit !== null && <Haeufigkeit prozent={s.wahrscheinlichkeit} fall={s.fall} />}
             {s.notiz && (
               <p className="mt-2 text-sm leading-relaxed text-[var(--color-mist)]">
                 {s.notiz}

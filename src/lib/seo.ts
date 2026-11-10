@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BRAND, PLANS, PLAN_ORDER, siteUrl } from "./config";
+import { BRAND, PLANS, PLAN_ORDER, VERANTWORTLICH, siteUrl } from "./config";
 
 const SEITENNAME = `${BRAND.name} ${BRAND.suffix}`;
 
@@ -62,16 +62,52 @@ export function strukturierteDaten() {
   };
 }
 
-/** Brotkrumen-Pfad einer Unterseite (Startseite → Seite). */
-export function brotkrumen(name: string, pfad: string) {
+/**
+ * Brotkrumen-Pfad einer Unterseite (Startseite → Seite). Mit "ueber" liegt
+ * eine Ebene dazwischen (Startseite → Bereich → Seite).
+ */
+export function brotkrumen(name: string, pfad: string, ueber?: { name: string; pfad: string }) {
   const url = siteUrl();
+  const kette = [...(ueber ? [ueber] : []), { name, pfad }];
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: SEITENNAME, item: `${url}/` },
-      { "@type": "ListItem", position: 2, name, item: `${url}${pfad}` },
+      ...kette.map((k, i) => ({
+        "@type": "ListItem",
+        position: i + 2,
+        name: k.name,
+        item: `${url}${k.pfad}`,
+      })),
     ],
+  };
+}
+
+/**
+ * Ein redaktioneller Beitrag (Beispielanalyse, Wissensartikel): wer ihn
+ * geschrieben hat und wann. Autor ist die im Impressum genannte Person.
+ */
+export function artikelDaten(a: {
+  titel: string;
+  beschreibung: string;
+  pfad: string;
+  veroeffentlicht: string;
+  geaendert?: string;
+}) {
+  const url = siteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: a.titel,
+    description: a.beschreibung,
+    inLanguage: "de-DE",
+    mainEntityOfPage: `${url}${a.pfad}`,
+    datePublished: a.veroeffentlicht,
+    dateModified: a.geaendert ?? a.veroeffentlicht,
+    image: `${url}/opengraph-image.png`,
+    author: { "@type": "Person", name: VERANTWORTLICH, url: `${url}/ueber-uns` },
+    publisher: { "@id": `${url}/#organisation` },
   };
 }
 

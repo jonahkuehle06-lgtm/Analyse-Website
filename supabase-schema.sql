@@ -144,3 +144,11 @@ create table if not exists public.freischaltungen (
   primary key (user_id, analysis_id)
 );
 alter table public.freischaltungen enable row level security;
+
+-- ---------------------------------------------------------------------------
+-- Nachtrag: öffentliche Beispielanalysen und Änderungsprotokoll
+-- is_public: für jeden lesbar (Beispielanalyse). changelog: Liste aus
+-- { date, note, signalFrom?, signalTo? } - neueste zuerst.
+-- ---------------------------------------------------------------------------
+alter table public.analyses add column if not exists is_public boolean not null default false;
+alter table public.analyses add column if not exists changelog jsonb not null default '[]'::jsonb;

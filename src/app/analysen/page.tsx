@@ -5,6 +5,7 @@ import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import SignalFilter from "@/components/SignalFilter";
 import RichtungUmschalter from "@/components/RichtungUmschalter";
 import { analysenLink } from "@/lib/analysen-link";
+import { beispielPfad } from "@/lib/beispiele";
 import { listAnalyses } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { PLANS, PLAN_ORDER, SIGNAL_LEVELS } from "@/lib/config";
@@ -45,12 +46,14 @@ export default async function AnalysenPage({
      Analysen freigeschaltet sind, bestimmt weiterhin der Gesamtbestand. */
   const richtung: Richtung = params.richtung === "short" ? "short" : "long";
   const inRichtung = all.filter((a) => a.direction === richtung);
-  const freigeschaltet = inRichtung.filter((a) => unlockedIds.has(a.id));
+  // Öffentliche Beispielanalysen sind für jeden lesbar - auch ohne Paket
+  const lesbar = (a: { id: string; isPublic: boolean }) => unlockedIds.has(a.id) || a.isPublic;
+  const freigeschaltet = inRichtung.filter(lesbar);
   const frei = selected
     ? freigeschaltet.filter((a) => a.signal === selected)
     : freigeschaltet;
-  const gesperrt = selected ? [] : inRichtung.filter((a) => !unlockedIds.has(a.id));
-  const hinweis = inRichtung.some((a) => !unlockedIds.has(a.id));
+  const gesperrt = selected ? [] : inRichtung.filter((a) => !lesbar(a));
+  const hinweis = inRichtung.some((a) => !lesbar(a));
   const leer = inRichtung.length === 0 || (selected !== null && frei.length === 0);
 
   return (
@@ -148,7 +151,12 @@ export default async function AnalysenPage({
              allein und volle Breite. */
           <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
             {frei.map((analysis) => (
-              <AnalysisCard key={analysis.id} analysis={analysis} headingLevel={2} />
+              <AnalysisCard
+                key={analysis.id}
+                analysis={analysis}
+                headingLevel={2}
+                href={unlockedIds.has(analysis.id) ? undefined : beispielPfad(analysis)}
+              />
             ))}
             {hinweis && (
               <div

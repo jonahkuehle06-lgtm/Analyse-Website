@@ -43,10 +43,25 @@ export interface Analysis {
    * Ein Zeitraum erscheint nur, wenn alle drei Kurse gepflegt sind.
    */
   scenarios: Szenarien;
+  /** Fuer jeden lesbar - als Beispielanalyse ohne Anmeldung */
+  isPublic: boolean;
+  /** Aenderungsprotokoll, neueste zuerst */
+  changelog: Aenderung[];
   /** ISO-Datum der Erstellung/Veroeffentlichung */
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
+}
+
+/** Ein Eintrag im Aenderungsprotokoll einer Analyse. */
+export interface Aenderung {
+  /** ISO-Datum der Aenderung */
+  date: string;
+  /** Grund in einem Satz */
+  note: string;
+  /** Nur bei Signalwechsel */
+  signalFrom?: SignalLevel;
+  signalTo?: SignalLevel;
 }
 
 export type ZeitraumId = "kurz" | "mittel" | "lang";

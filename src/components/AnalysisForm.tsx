@@ -355,7 +355,71 @@ export default function AnalysisForm({
               defaultValue={analysis?.author ?? defaultAuthor}
             />
           </div>
+          <div>
+            <label className="field-label" htmlFor="conflictDisclosure">
+              Eigene Positionen und Interessenkonflikte
+            </label>
+            <textarea
+              id="conflictDisclosure"
+              name="conflictDisclosure"
+              className="field min-h-[84px] resize-y"
+              maxLength={400}
+              placeholder="z. B. Der Ersteller hält zum Zeitpunkt der Analyse Aktien des Unternehmens."
+              defaultValue={analysis?.conflictDisclosure ?? ""}
+              aria-describedby="conflict-hinweis"
+            />
+            <p id="conflict-hinweis" className="mt-2 text-xs text-[var(--color-muted)]">
+              Erscheint unter der Analyse. Leer lassen, wenn nichts offenzulegen ist.
+            </p>
+          </div>
         </div>
+      </fieldset>
+
+      {/* ------------------------ Veröffentlichung ----------------------- */}
+      <fieldset
+        className="surface p-6 sm:p-7"
+        style={{ borderRadius: "var(--radius-card)" }}
+      >
+        <legend className="mono-label px-2">Veröffentlichung</legend>
+
+        <label className="mt-4 flex cursor-pointer items-start gap-4">
+          <input
+            type="checkbox"
+            name="isPublic"
+            value="ja"
+            defaultChecked={analysis?.isPublic ?? false}
+            className="mt-1 h-5 w-5 shrink-0 accent-[var(--color-platinum)]"
+          />
+          <span>
+            <span className="block text-[0.9375rem] font-medium text-[var(--color-platinum)]">
+              Als öffentliche Beispielanalyse zeigen
+            </span>
+            <span className="mt-1 block text-xs leading-relaxed text-[var(--color-muted)]">
+              Diese Analyse ist dann für jeden ohne Anmeldung vollständig lesbar und
+              erscheint unter „Beispielanalyse“. Suchmaschinen dürfen sie aufnehmen.
+            </span>
+          </span>
+        </label>
+
+        {analysis && (
+          <div className="mt-6">
+            <label className="field-label" htmlFor="aenderungsgrund">
+              Grund der Änderung
+            </label>
+            <input
+              id="aenderungsgrund"
+              name="aenderungsgrund"
+              className="field"
+              maxLength={280}
+              placeholder="z. B. Quartalszahlen eingearbeitet, Kursziel angehoben"
+              aria-describedby="aenderung-hinweis"
+            />
+            <p id="aenderung-hinweis" className="mt-2 text-xs text-[var(--color-muted)]">
+              Wird mit Datum im Verlauf der Analyse angezeigt. Ein Signalwechsel wird
+              immer vermerkt, auch ohne Text. Für Tippfehler leer lassen.
+            </p>
+          </div>
+        )}
       </fieldset>
 
       {state?.error && (

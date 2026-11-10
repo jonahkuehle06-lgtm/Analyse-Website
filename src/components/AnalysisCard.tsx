@@ -39,6 +39,7 @@ export default function AnalysisCard({
   headingLevel = 3,
   interaktiv = true,
   annotiert = false,
+  href,
 }: {
   analysis: Analysis;
   /** Ueberschriften-Ebene des Titels - unter einer h1 direkt h2, sonst h3. */
@@ -47,6 +48,8 @@ export default function AnalysisCard({
   interaktiv?: boolean;
   /** Nummerierte Marken an Signalstaerke, Begruendung und Fusszeile */
   annotiert?: boolean;
+  /** Abweichendes Ziel - gesetzt bei öffentlichen Beispielanalysen, dann mit Vermerk */
+  href?: string;
 }) {
   const meta = SIGNALS[analysis.signal];
   const Titel = headingLevel === 2 ? "h2" : "h3";
@@ -66,7 +69,10 @@ export default function AnalysisCard({
 
       <header className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="mono-label">{analysis.ticker || "—"}</p>
+          <p className="mono-label">
+            {analysis.ticker || "—"}
+            {href && <span className="text-[var(--color-success)]"> · Frei lesbar</span>}
+          </p>
           <Titel className="display mt-2 truncate text-[length:var(--step-h4)] font-normal text-[var(--color-platinum)]">
             {analysis.title}
           </Titel>
@@ -130,7 +136,7 @@ export default function AnalysisCard({
 
   return (
     <Link
-      href={`/analysen/${analysis.id}`}
+      href={href ?? `/analysen/${analysis.id}`}
       className="group block h-full min-w-0"
     >
       {karte}

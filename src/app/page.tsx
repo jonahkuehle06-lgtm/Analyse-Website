@@ -9,6 +9,7 @@ import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
 import { BRAND, PLANS } from "@/lib/config";
 import { kanonisch, strukturierteDaten } from "@/lib/seo";
+import { beispielPfad } from "@/lib/beispiele";
 
 export const dynamic = "force-dynamic";
 
@@ -195,6 +196,8 @@ export default async function HomePage() {
               {preview.map((analysis) =>
                 unlocked ? (
                   <AnalysisCard key={analysis.id} analysis={analysis} />
+                ) : analysis.isPublic ? (
+                  <AnalysisCard key={analysis.id} analysis={analysis} href={beispielPfad(analysis)} />
                 ) : (
                   <LockedAnalysisCard key={analysis.id} analysis={analysis} />
                 ),
