@@ -3,7 +3,9 @@ import Link from "next/link";
 import Metallkarten from "@/components/Metallkarten";
 import AnalysisCard, { LockedAnalysisCard } from "@/components/AnalysisCard";
 import LogoScene from "@/components/LogoScene";
-import CandleChart from "@/components/CandleChart";
+import HeroAnalyse from "@/components/HeroAnalyse";
+import { heroSaetze } from "@/lib/szenarien";
+import { BEISPIEL_ANALYSE } from "@/lib/beispiel";
 import Vergleich from "@/components/Vergleich";
 import { listAnalyses } from "@/lib/db";
 import { currentUser, hasActiveSubscription } from "@/lib/auth";
@@ -65,6 +67,10 @@ export default async function HomePage() {
     currentUser().catch(() => null),
   ]);
   const preview = analyses.slice(0, 3);
+  // Im Einstieg steht eine öffentliche Beispielanalyse - bis es eine gibt,
+  // das fiktive Unternehmen (als Darstellung gekennzeichnet)
+  const heroAnalyse =
+    analyses.find((a) => a.isPublic && a.price !== null && heroSaetze(a).length > 0) ?? BEISPIEL_ANALYSE;
   const unlocked = hasActiveSubscription(user);
 
   return (
@@ -77,7 +83,7 @@ export default async function HomePage() {
       {/* ------------------------------- Hero ------------------------------- */}
       <section className="relative border-b border-[var(--color-line)]">
         <div className="frame bg-[var(--color-ink)]">
-          <div className="relative grid lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="relative grid lg:min-h-[640px] lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-x-14">
             <div className="relative z-10 pt-16 pb-10 sm:pt-20 lg:pt-28 lg:pb-24">
               <span className="tag fade-up">
                 <span
@@ -104,14 +110,20 @@ export default async function HomePage() {
                   Zugang sichern
                   <span className="pfeil" aria-hidden="true">→</span>
                 </Link>
-                <Link href="/methodik" className="btn-link self-start sm:self-auto">
-                  Methodik ansehen
+                <Link href="/beispielanalyse" className="btn-link self-start sm:self-auto">
+                  Beispielanalyse ansehen
                   <span className="pfeil" aria-hidden="true">→</span>
                 </Link>
               </div>
             </div>
 
-            <CandleChart className="-mx-[var(--gutter)] w-[calc(100%+2*var(--gutter))] lg:absolute lg:right-0 lg:bottom-0 lg:mx-0 lg:h-[74%] lg:w-[50%]" />
+            {/* Das Produkt selbst als Blickfang: eine Analysekarte mit Szenario-Fächer */}
+            <HeroAnalyse
+              analysis={heroAnalyse}
+              fiktiv={heroAnalyse.id === BEISPIEL_ANALYSE.id}
+              href="/beispielanalyse"
+              className="fade-up fade-up-3 mb-12 lg:my-16 lg:w-full lg:max-w-[34rem] lg:justify-self-end"
+            />
           </div>
 
           {/* Kennzahlen-Leiste */}

@@ -810,16 +810,16 @@ input[type="radio"] {
      h-16, ab lg 76px) */
   --kopfzeile: calc(4rem + 1px + env(safe-area-inset-top, 0px));
   position: relative;
-  height: 480vh;
-  height: 480svh;
+  height: 300vh;
+  height: 300svh;
 }
 @media (min-width: 64rem) {
   .karten-buehne { --kopfzeile: calc(77px + env(safe-area-inset-top, 0px)); }
 }
 @media (max-aspect-ratio: 1/1) {
   .karten-buehne {
-    height: 540vh;
-    height: 540svh;
+    height: 340vh;
+    height: 340svh;
   }
 }
 
@@ -1008,4 +1008,25 @@ input[type="radio"] {
 @media (prefers-reduced-motion: reduce) {
   .ansicht-von-rechts,
   .ansicht-von-links { animation: none; }
+}
+
+/* ---------------- Analysekarte im Einstieg der Startseite ----------------- */
+/* Der Fächer wischt einmal von links auf, danach erscheinen die Ziele. */
+@keyframes faecher-auf {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes ziel-ein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.hero-faecher { animation: faecher-auf 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.25s both; }
+.hero-ziel { animation: ziel-ein 0.4s ease-out 1s both; }
+/* Feine Lichtkante statt Schatten - Tiefe auf Schwarz */
+.hero-karte {
+  box-shadow: inset 0 1px 0 rgba(239, 234, 225, 0.07), 0 30px 80px -40px rgba(0, 0, 0, 0.9);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-faecher,
+  .hero-ziel { animation: none; }
 }
