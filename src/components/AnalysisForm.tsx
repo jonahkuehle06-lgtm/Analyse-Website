@@ -382,7 +382,30 @@ export default function AnalysisForm({
       >
         <legend className="mono-label px-2">Veröffentlichung</legend>
 
-        <label className="mt-4 flex cursor-pointer items-start gap-4">
+        <div className="mt-4">
+          <label className="field-label" htmlFor="status">
+            Status
+          </label>
+          <select
+            id="status"
+            name="status"
+            className="field"
+            defaultValue={analysis?.status ?? "veroeffentlicht"}
+            aria-describedby="status-hinweis"
+          >
+            <option value="veroeffentlicht">Veröffentlicht</option>
+            <option value="entwurf">Entwurf (nur in der Verwaltung sichtbar)</option>
+            {analysis && analysis.status !== "entwurf" && (
+              <option value="abgeschlossen">Abgeschlossen (bleibt lesbar, wird nicht mehr gepflegt)</option>
+            )}
+          </select>
+          <p id="status-hinweis" className="mt-2 text-xs leading-relaxed text-[var(--color-muted)]">
+            Ein Entwurf erscheint nirgends auf der Seite. Beim Veröffentlichen geht die
+            E-Mail „Neue Analyse“ an Kunden, die Benachrichtigungen eingeschaltet haben.
+          </p>
+        </div>
+
+        <label className="mt-6 flex cursor-pointer items-start gap-4">
           <input
             type="checkbox"
             name="isPublic"

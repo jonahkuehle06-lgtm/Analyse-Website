@@ -47,11 +47,21 @@ export interface Analysis {
   isPublic: boolean;
   /** Aenderungsprotokoll, neueste zuerst */
   changelog: Aenderung[];
+  /**
+   * entwurf: nur in der Verwaltung sichtbar. abgeschlossen: bleibt lesbar,
+   * wird aber nicht mehr gepflegt (mit Datum in closedAt).
+   */
+  status: AnalyseStatus;
+  closedAt: string | null;
+  /** Wann die E-Mail "Neue Analyse" verschickt wurde - sie geht nur einmal raus */
+  benachrichtigtAm: string | null;
   /** ISO-Datum der Erstellung/Veroeffentlichung */
   publishedAt: string;
   createdAt: string;
   updatedAt: string;
 }
+
+export type AnalyseStatus = "entwurf" | "veroeffentlicht" | "abgeschlossen";
 
 /** Ein Eintrag im Aenderungsprotokoll einer Analyse. */
 export interface Aenderung {
@@ -112,5 +122,18 @@ export interface User {
   currentPeriodEnd: string | null;
   /** Geplantes Vertragsende nach einer Kündigung - das Abo läuft bis dahin weiter */
   cancelAt: string | null;
+  /** Beginn des laufenden Besuchs der Übersicht und der Besuch davor - für die Marke "Neu" */
+  analysenGesehenAm: string | null;
+  analysenGesehenDavor: string | null;
+  /** E-Mails zu neuen Analysen und Signalwechseln - nur mit Zustimmung */
+  benachrichtigung: Benachrichtigung;
+  benachrichtigungUmfang: BenachrichtigungUmfang;
+  wochenmailAm: string | null;
+  /** Die kurze Einführung nach dem Kauf wurde geschlossen */
+  einfuehrungGesehen: boolean;
   createdAt: string;
 }
+
+export type Benachrichtigung = "aus" | "sofort" | "woche";
+/** alle: jede Analyse im Paket. merkliste: nur gemerkte Titel. */
+export type BenachrichtigungUmfang = "alle" | "merkliste";

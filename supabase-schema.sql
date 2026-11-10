@@ -152,3 +152,28 @@ alter table public.freischaltungen enable row level security;
 -- ---------------------------------------------------------------------------
 alter table public.analyses add column if not exists is_public boolean not null default false;
 alter table public.analyses add column if not exists changelog jsonb not null default '[]'::jsonb;
+
+-- ---------------------------------------------------------------------------
+-- Nachtrag (10.11.2026): Kundenbereich - Merkliste, Benachrichtigungen,
+-- "Neu" seit dem letzten Besuch, Einführung, Entwurf/Abschluss von Analysen
+-- ---------------------------------------------------------------------------
+alter table public.users
+  add column if not exists analysen_gesehen_am timestamptz,
+  add column if not exists analysen_gesehen_davor timestamptz,
+  add column if not exists benachrichtigung text not null default 'aus',       -- aus | sofort | woche
+  add column if not exists benachrichtigung_umfang text not null default 'alle', -- alle | merkliste
+  add column if not exists wochenmail_am timestamptz,
+  add column if not exists einfuehrung_gesehen boolean not null default false;
+
+alter table public.analyses
+  add column if not exists status text not null default 'veroeffentlicht',     -- entwurf | veroeffentlicht | abgeschlossen
+  add column if not exists closed_at timestamptz,
+  add column if not exists benachrichtigt_am timestamptz;
+
+create table if not exists public.merkliste (
+  user_id uuid not null references public.users(id) on delete cascade,
+  analysis_id uuid not null references public.analyses(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (user_id, analysis_id)
+);
+alter table public.merkliste enable row level security;

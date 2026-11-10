@@ -4,9 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/auth";
 import { createAnalysis, deleteAnalysis, getAnalysis, updateAnalysis } from "@/lib/db";
+import { meldeNeueAnalyse, meldeSignalwechsel } from "@/lib/benachrichtigung";
 import { ZEITRAEUME } from "@/lib/config";
 import { freischaltungenSichern } from "@/lib/freischaltung";
-import type { AnalysisInput, Richtung, SignalLevel, Szenarien, Szenariosatz } from "@/lib/types";
+import type { AnalyseStatus, AnalysisInput, Richtung, SignalLevel, Szenarien, Szenariosatz } from "@/lib/types";
 
 export interface AnalysisFormState {
   error?: string;
@@ -91,6 +92,9 @@ function parse(data: FormData): AnalysisInput | { error: string } {
     isPublic: data.get("isPublic") === "ja",
     // Das Protokoll fuehrt die Speicher-Aktion fort (siehe updateAnalysisAction)
     changelog: [],
+    status: statusAus(text(data, "status")),
+    closedAt: null,
+    benachrichtigtAm: null,
     horizon: text(data, "horizon"),
     author: text(data, "author"),
     conflictDisclosure: text(data, "conflictDisclosure"),
@@ -100,8 +104,12 @@ function parse(data: FormData): AnalysisInput | { error: string } {
   };
 }
 
+function statusAus(v: string): AnalyseStatus {
+  return v === "entwurf" || v === "abgeschlossen" ? v : "veroeffentlicht";
+}
+
 /** Zurück in den Bereich (Long oder Short), aus dem man kam. */
-function adminLink(richtung: Richtung, meldung: "gespeichert" | "geloescht"): string {
+function adminLink(richtung: Richtung, meldung: "gespeichert" | "geloescht" | "entwurf"): string {
   return `/admin?${richtung === "short" ? "richtung=short&" : ""}${meldung}=1`;
 }
 
@@ -124,14 +132,17 @@ export async function createAnalysisAction(
   // Vorher sichern, was Kunden gerade freigeschaltet haben - die neue
   // Analyse schiebt die älteste aus dem Paket in die Historie
   await freischaltungenSichern();
+  // Eine neue Analyse beginnt nie abgeschlossen
+  if (parsed.status === "abgeschlossen") parsed.status = "veroeffentlicht";
   try {
-    await createAnalysis(parsed);
+    const neu = await createAnalysis(parsed);
+    await meldeNeueAnalyse(neu);
   } catch (error) {
     return { error: error instanceof Error ? error.message : "Speichern fehlgeschlagen." };
   }
 
   refresh();
-  redirect(adminLink(parsed.direction, "gespeichert"));
+  redirect(adminLink(parsed.direction, parsed.status === "entwurf" ? "entwurf" : "gespeichert"));
 }
 
 export async function updateAnalysisAction(
@@ -151,13 +162,24 @@ export async function updateAnalysisAction(
   const bisher = await getAnalysis(id).catch(() => null);
   if (!bisher) return { error: "Diese Analyse existiert nicht (mehr)." };
   const grund = text(data, "aenderungsgrund").slice(0, 280);
-  const signalGeaendert = bisher.signal !== parsed.signal;
+  const jetzt = new Date().toISOString();
+  const warEntwurf = bisher.status === "entwurf";
+  // Solange die Analyse ein Entwurf ist, gibt es noch nichts zu protokollieren
+  const signalGeaendert = !warEntwurf && bisher.signal !== parsed.signal;
+  const schliesst = parsed.status === "abgeschlossen" && bisher.status !== "abgeschlossen";
+  const oeffnet = bisher.status === "abgeschlossen" && parsed.status !== "abgeschlossen";
+  parsed.benachrichtigtAm = bisher.benachrichtigtAm;
+  parsed.closedAt = parsed.status === "abgeschlossen" ? (bisher.closedAt ?? jetzt) : null;
   parsed.changelog =
-    grund || signalGeaendert
+    !warEntwurf && (grund || signalGeaendert || schliesst || oeffnet)
       ? [
           {
-            date: new Date().toISOString(),
-            note: grund,
+            date: jetzt,
+            note: schliesst
+              ? `Analyse abgeschlossen.${grund ? ` ${grund}` : ""}`
+              : oeffnet
+                ? `Analyse wieder aufgenommen.${grund ? ` ${grund}` : ""}`
+                : grund,
             ...(signalGeaendert ? { signalFrom: bisher.signal, signalTo: parsed.signal } : {}),
           },
           ...bisher.changelog,
@@ -169,12 +191,37 @@ export async function updateAnalysisAction(
   try {
     const updated = await updateAnalysis(id, parsed);
     if (!updated) return { error: "Diese Analyse existiert nicht (mehr)." };
+    // Erst jetzt veröffentlicht: als neue Analyse melden. Sonst nur den Signalwechsel.
+    if (warEntwurf) await meldeNeueAnalyse(updated);
+    else if (signalGeaendert) await meldeSignalwechsel(updated, bisher.signal, grund);
   } catch (error) {
     return { error: error instanceof Error ? error.message : "Speichern fehlgeschlagen." };
   }
 
   refresh();
-  redirect(adminLink(parsed.direction, "gespeichert"));
+  redirect(adminLink(parsed.direction, parsed.status === "entwurf" ? "entwurf" : "gespeichert"));
+}
+
+/** Legt eine Kopie als Entwurf an und öffnet sie zum Bearbeiten. */
+export async function duplicateAnalysisAction(data: FormData): Promise<void> {
+  if (!(await isAdmin())) redirect("/admin/login");
+
+  const vorlage = await getAnalysis(text(data, "id")).catch(() => null);
+  if (!vorlage) redirect("/admin");
+  const { id: _id, createdAt: _c, updatedAt: _u, ...rest } = vorlage;
+  void _id; void _c; void _u;
+  const kopie = await createAnalysis({
+    ...rest,
+    status: "entwurf",
+    isPublic: false,
+    changelog: [],
+    closedAt: null,
+    benachrichtigtAm: null,
+    publishedAt: new Date().toISOString(),
+  });
+
+  refresh();
+  redirect(`/admin/${kopie.id}`);
 }
 
 export async function deleteAnalysisAction(data: FormData): Promise<void> {

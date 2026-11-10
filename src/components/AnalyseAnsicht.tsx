@@ -46,12 +46,15 @@ export default function AnalyseAnsicht({
   zurueck,
   hinweis,
   ueberschrift = "h1",
+  aktion,
 }: {
   analysis: Analysis;
   zurueck: { href: string; text: string };
   /** Kurzer Vermerk über dem Titel, z. B. "Frei lesbare Beispielanalyse" */
   hinweis?: string;
   ueberschrift?: "h1" | "h2";
+  /** Knopf rechts neben dem Titel, z. B. "Merken" */
+  aktion?: React.ReactNode;
 }) {
   const meta = SIGNALS[analysis.signal];
   const Titel = ueberschrift;
@@ -103,11 +106,19 @@ export default function AnalyseAnsicht({
               {analysis.ticker || "—"}
             </span>
             <span className="tag">{analysis.direction === "short" ? "Short" : "Long"}</span>
+            {analysis.status === "abgeschlossen" && (
+              <span className="tag">
+                Abgeschlossen{analysis.closedAt ? ` am ${datum(analysis.closedAt)}` : ""}
+              </span>
+            )}
             {hinweis && <span className="tag">{hinweis}</span>}
           </div>
-          <Titel className="display mt-6 text-[length:var(--step-h1)] text-[var(--color-platinum)]">
-            {analysis.title}
-          </Titel>
+          <div className="mt-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
+            <Titel className="display text-[length:var(--step-h1)] text-[var(--color-platinum)]">
+              {analysis.title}
+            </Titel>
+            {aktion && <div className="shrink-0 print:hidden">{aktion}</div>}
+          </div>
         </header>
 
         <div className="lg:grid lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:gap-x-14 xl:gap-x-24">

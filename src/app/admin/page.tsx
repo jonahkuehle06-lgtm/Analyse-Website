@@ -17,15 +17,15 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ gespeichert?: string; geloescht?: string; richtung?: string }>;
+  searchParams: Promise<{ gespeichert?: string; geloescht?: string; entwurf?: string; richtung?: string }>;
 }) {
   if (!(await isAdmin())) redirect("/admin/login");
 
-  const { gespeichert, geloescht, richtung: wunsch } = await searchParams;
+  const { gespeichert, geloescht, entwurf, richtung: wunsch } = await searchParams;
   const richtung: Richtung = wunsch === "short" ? "short" : "long";
   const name = richtung === "short" ? "Short" : "Long";
   const [alle, warteliste] = await Promise.all([
-    listAnalyses(),
+    listAnalyses({ entwuerfe: true }),
     // Fehlt die Tabelle noch, bleibt die Verwaltung trotzdem nutzbar
     listWarteliste().catch(() => null),
   ]);
@@ -48,6 +48,13 @@ export default async function AdminPage({
         </div>
         <div className="flex items-center gap-3">
           <Link
+            href="/wissen"
+            target="_blank"
+            className="text-sm text-[var(--color-mist)] hover:text-[var(--color-platinum)]"
+          >
+            Wissens-Entwürfe ↗
+          </Link>
+          <Link
             href="/analysen"
             target="_blank"
             className="text-sm text-[var(--color-mist)] hover:text-[var(--color-platinum)]"
@@ -65,14 +72,16 @@ export default async function AdminPage({
         </div>
       </header>
 
-      {(gespeichert || geloescht) && (
+      {(gespeichert || geloescht || entwurf) && (
         <p
           className="mt-6 rounded-[var(--radius-field)] border border-[rgba(123,227,161,0.3)] bg-[rgba(123,227,161,0.07)] px-5 py-3 text-sm text-[var(--color-success)]"
           role="status"
         >
           {gespeichert
             ? "Analyse gespeichert — sie ist ab sofort live."
-            : "Analyse gelöscht."}
+            : entwurf
+              ? "Entwurf gespeichert. Er ist nur hier in der Verwaltung sichtbar."
+              : "Analyse gelöscht."}
         </p>
       )}
 
@@ -197,6 +206,10 @@ export default async function AdminPage({
                       {analysis.title}
                     </span>
                     <span className="mono-label shrink-0">{analysis.ticker}</span>
+                    {analysis.status === "entwurf" && (
+                      <span className="tag shrink-0 !border-[rgba(232,198,75,0.4)] !text-[var(--color-warning)]">Entwurf</span>
+                    )}
+                    {analysis.status === "abgeschlossen" && <span className="tag shrink-0">Abgeschlossen</span>}
                   </div>
                   <p className="mt-1 line-clamp-1 text-xs text-[var(--color-mist)]">
                     {analysis.reason}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import SignalIndicator from "./SignalIndicator";
 import { SIGNALS } from "@/lib/config";
+import { abstandProzent, prozentText } from "@/lib/szenarien";
 import type { Analysis } from "@/lib/types";
 
 function formatPrice(value: number | null, currency: string): string {
@@ -40,6 +41,8 @@ export default function AnalysisCard({
   interaktiv = true,
   annotiert = false,
   href,
+  neu = false,
+  gemerkt = false,
 }: {
   analysis: Analysis;
   /** Ueberschriften-Ebene des Titels - unter einer h1 direkt h2, sonst h3. */
@@ -50,8 +53,13 @@ export default function AnalysisCard({
   annotiert?: boolean;
   /** Abweichendes Ziel - gesetzt bei öffentlichen Beispielanalysen, dann mit Vermerk */
   href?: string;
+  /** Seit dem letzten Besuch erschienen */
+  neu?: boolean;
+  /** Steht auf der Merkliste des Kunden */
+  gemerkt?: boolean;
 }) {
   const meta = SIGNALS[analysis.signal];
+  const zumZiel = abstandProzent(analysis.price, analysis.targetPrice);
   const Titel = headingLevel === 2 ? "h2" : "h3";
 
   const karte = (
@@ -72,6 +80,9 @@ export default function AnalysisCard({
           <p className="mono-label">
             {analysis.ticker || "—"}
             {href && <span className="text-[var(--color-success)]"> · Frei lesbar</span>}
+            {neu && <span className="text-[var(--color-platinum)]"> · Neu</span>}
+            {gemerkt && <span> · Gemerkt</span>}
+            {analysis.status === "abgeschlossen" && <span> · Abgeschlossen</span>}
           </p>
           <Titel className="display mt-2 truncate text-[length:var(--step-h4)] font-normal text-[var(--color-platinum)]">
             {analysis.title}
@@ -103,6 +114,9 @@ export default function AnalysisCard({
             <dt className="mono-label">Kursziel</dt>
             <dd className="tabular mt-1.5 text-base text-[var(--color-platinum)]">
               {formatPrice(analysis.targetPrice, analysis.currency)}
+              {zumZiel !== null && (
+                <span className="ml-2 text-sm text-[var(--color-mist)]">{prozentText(zumZiel)}</span>
+              )}
             </dd>
           </div>
           <div>

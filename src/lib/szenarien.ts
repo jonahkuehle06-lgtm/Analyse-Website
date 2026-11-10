@@ -24,3 +24,16 @@ export function heroSaetze(a: Analysis): Satz[] {
     ];
   });
 }
+
+/** Abstand vom Kurs der Analyse zum Kursziel in Prozent; null, wenn eines fehlt. */
+export function abstandProzent(kurs: number | null, ziel: number | null): number | null {
+  if (kurs === null || ziel === null || !Number.isFinite(kurs) || !Number.isFinite(ziel) || kurs === 0) {
+    return null;
+  }
+  return ((ziel - kurs) / kurs) * 100;
+}
+
+/** "+22,3 %" oder "−4,1 %" */
+export function prozentText(p: number): string {
+  return `${p >= 0 ? "+" : "−"}${new Intl.NumberFormat("de-DE", { maximumFractionDigits: 1 }).format(Math.abs(p))} %`;
+}

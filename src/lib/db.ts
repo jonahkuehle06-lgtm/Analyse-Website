@@ -4,8 +4,11 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import type {
   Aenderung,
+  AnalyseStatus,
   Analysis,
   AnalysisInput,
+  Benachrichtigung,
+  BenachrichtigungUmfang,
   PlanId,
   SubscriptionStatus,
   Szenarien,
@@ -69,6 +72,7 @@ interface LocalStore {
   users: User[];
   warteliste?: WartelistenEintrag[];
   freischaltungen?: { userId: string; analysisId: string; createdAt: string }[];
+  merkliste?: { userId: string; analysisId: string }[];
 }
 
 const STORE_PATH = path.join(process.cwd(), "data", "store.local.json");
@@ -96,8 +100,20 @@ async function readLocal(): Promise<LocalStore> {
     direction: a.direction === "short" ? "short" : "long",
     isPublic: a.isPublic === true,
     changelog: aenderungenAus(a.changelog),
+    status: statusAus(a.status),
+    closedAt: a.closedAt ?? null,
+    benachrichtigtAm: a.benachrichtigtAm ?? null,
   }));
   if (!memoryStore.users) memoryStore.users = [];
+  memoryStore.users = memoryStore.users.map((u) => ({
+    ...u,
+    analysenGesehenAm: u.analysenGesehenAm ?? null,
+    analysenGesehenDavor: u.analysenGesehenDavor ?? null,
+    benachrichtigung: benachrichtigungAus(u.benachrichtigung),
+    benachrichtigungUmfang: u.benachrichtigungUmfang === "merkliste" ? "merkliste" : "alle",
+    wochenmailAm: u.wochenmailAm ?? null,
+    einfuehrungGesehen: u.einfuehrungGesehen === true,
+  }));
   return memoryStore;
 }
 
@@ -130,6 +146,14 @@ async function supabase(): Promise<SupabaseClientType> {
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+function statusAus(v: unknown): AnalyseStatus {
+  return v === "entwurf" || v === "abgeschlossen" ? v : "veroeffentlicht";
+}
+
+function benachrichtigungAus(v: unknown): Benachrichtigung {
+  return v === "sofort" || v === "woche" ? v : "aus";
+}
 
 /** Numerische Spalte aus Supabase, leer bleibt leer. */
 function zahl(v: unknown): number | null {
@@ -239,6 +263,9 @@ function analysisFromRow(row: any): Analysis {
     direction: row.direction === "short" ? "short" : "long",
     isPublic: row.is_public === true,
     changelog: aenderungenAus(row.changelog),
+    status: statusAus(row.status),
+    closedAt: row.closed_at ?? null,
+    benachrichtigtAm: row.benachrichtigt_am ?? null,
     horizon: row.horizon ?? "",
     author: row.author ?? "",
     conflictDisclosure: row.conflict_disclosure ?? "",
@@ -265,6 +292,9 @@ function analysisToRow(input: AnalysisInput) {
     direction: input.direction,
     is_public: input.isPublic,
     changelog: input.changelog,
+    status: input.status,
+    closed_at: input.closedAt,
+    benachrichtigt_am: input.benachrichtigtAm,
     horizon: input.horizon,
     author: input.author,
     conflict_disclosure: input.conflictDisclosure,
@@ -284,6 +314,12 @@ function userFromRow(row: any): User {
     subscriptionId: row.subscription_id ?? null,
     currentPeriodEnd: row.current_period_end ?? null,
     cancelAt: row.cancel_at ?? null,
+    analysenGesehenAm: row.analysen_gesehen_am ?? null,
+    analysenGesehenDavor: row.analysen_gesehen_davor ?? null,
+    benachrichtigung: benachrichtigungAus(row.benachrichtigung),
+    benachrichtigungUmfang: row.benachrichtigung_umfang === "merkliste" ? "merkliste" : "alle",
+    wochenmailAm: row.wochenmail_am ?? null,
+    einfuehrungGesehen: row.einfuehrung_gesehen === true,
     createdAt: row.created_at,
   };
 }
@@ -292,8 +328,13 @@ function userFromRow(row: any): User {
 /* Oeffentliches Interface                                                     */
 /* -------------------------------------------------------------------------- */
 
-/** Alle Analysen, neueste zuerst. */
-export async function listAnalyses(): Promise<Analysis[]> {
+/**
+ * Alle Analysen, neueste zuerst. Entwürfe sind nur in der Verwaltung zu
+ * sehen - wer sie braucht, fragt ausdrücklich danach.
+ */
+export async function listAnalyses(opt: { entwuerfe?: boolean } = {}): Promise<Analysis[]> {
+  const ohneEntwuerfe = (liste: Analysis[]) =>
+    opt.entwuerfe ? liste : liste.filter((a) => a.status !== "entwurf");
   if (activeDriver() === "supabase") {
     const sb = await supabase();
     const { data, error } = await sb
@@ -302,11 +343,11 @@ export async function listAnalyses(): Promise<Analysis[]> {
       .order("published_at", { ascending: false })
       .order("created_at", { ascending: false });
     if (error) throw new Error(`Analysen konnten nicht geladen werden: ${error.message}`);
-    return (data ?? []).map(analysisFromRow);
+    return ohneEntwuerfe((data ?? []).map(analysisFromRow));
   }
   const store = await readLocal();
-  return [...store.analyses].sort(
-    (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
+  return ohneEntwuerfe(
+    [...store.analyses].sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt)),
   );
 }
 
@@ -504,6 +545,13 @@ export interface UserPatch {
   subscriptionId?: string | null;
   currentPeriodEnd?: string | null;
   cancelAt?: string | null;
+  email?: string;
+  analysenGesehenAm?: string | null;
+  analysenGesehenDavor?: string | null;
+  benachrichtigung?: Benachrichtigung;
+  benachrichtigungUmfang?: BenachrichtigungUmfang;
+  wochenmailAm?: string | null;
+  einfuehrungGesehen?: boolean;
 }
 
 function patchToRow(patch: UserPatch) {
@@ -515,6 +563,13 @@ function patchToRow(patch: UserPatch) {
   if ("subscriptionId" in patch) row.subscription_id = patch.subscriptionId;
   if ("currentPeriodEnd" in patch) row.current_period_end = patch.currentPeriodEnd;
   if ("cancelAt" in patch) row.cancel_at = patch.cancelAt;
+  if ("email" in patch) row.email = patch.email;
+  if ("analysenGesehenAm" in patch) row.analysen_gesehen_am = patch.analysenGesehenAm;
+  if ("analysenGesehenDavor" in patch) row.analysen_gesehen_davor = patch.analysenGesehenDavor;
+  if ("benachrichtigung" in patch) row.benachrichtigung = patch.benachrichtigung;
+  if ("benachrichtigungUmfang" in patch) row.benachrichtigung_umfang = patch.benachrichtigungUmfang;
+  if ("wochenmailAm" in patch) row.wochenmail_am = patch.wochenmailAm;
+  if ("einfuehrungGesehen" in patch) row.einfuehrung_gesehen = patch.einfuehrungGesehen;
   return row;
 }
 
@@ -569,6 +624,12 @@ export async function upsertUser(email: string, patch: UserPatch = {}): Promise<
       subscriptionId: null,
       currentPeriodEnd: null,
       cancelAt: null,
+      analysenGesehenAm: null,
+      analysenGesehenDavor: null,
+      benachrichtigung: "aus",
+      benachrichtigungUmfang: "alle",
+      wochenmailAm: null,
+      einfuehrungGesehen: false,
       createdAt: now,
       ...stripUndefined(patch),
     };
@@ -586,6 +647,79 @@ function stripUndefined<T extends object>(obj: T): Partial<T> {
   return Object.fromEntries(
     Object.entries(obj).filter(([, v]) => v !== undefined),
   ) as Partial<T>;
+}
+
+/**
+ * Ändert Felder eines Nutzers über seine Kennung (nicht über die Adresse -
+ * so lässt sich auch die Adresse selbst ändern).
+ */
+export async function updateUser(id: string, patch: UserPatch): Promise<User | null> {
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { data, error } = await sb.from("users").update(patchToRow(patch)).eq("id", id).select().maybeSingle();
+    if (error) throw new Error(error.message);
+    return data ? userFromRow(data) : null;
+  }
+  lokalSchreibenPruefen();
+  const store = await readLocal();
+  const index = store.users.findIndex((u) => u.id === id);
+  if (index === -1) return null;
+  store.users[index] = { ...store.users[index], ...stripUndefined(patch) };
+  await writeLocal(store);
+  return store.users[index];
+}
+
+/** Nutzer, die E-Mails zu Analysen bestellt haben und ein laufendes Abo haben. */
+export async function listBenachrichtigte(art: "sofort" | "woche"): Promise<User[]> {
+  return (await listAktiveNutzer()).filter((u) => u.benachrichtigung === art);
+}
+
+/* ------------------------------ Merkliste --------------------------------- */
+
+export async function merklisteLesen(userId: string): Promise<Set<string>> {
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { data, error } = await sb.from("merkliste").select("analysis_id").eq("user_id", userId);
+    if (error) throw new Error(`Merkliste nicht geladen: ${error.message}`);
+    return new Set((data ?? []).map((r: any) => r.analysis_id as string));
+  }
+  const store = await readLocal();
+  return new Set((store.merkliste ?? []).filter((m) => m.userId === userId).map((m) => m.analysisId));
+}
+
+/** Setzt oder löscht den Merker für eine Analyse. */
+export async function merklisteSetzen(userId: string, analysisId: string, gemerkt: boolean): Promise<void> {
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { error } = gemerkt
+      ? await sb
+          .from("merkliste")
+          .upsert({ user_id: userId, analysis_id: analysisId }, { onConflict: "user_id,analysis_id", ignoreDuplicates: true })
+      : await sb.from("merkliste").delete().eq("user_id", userId).eq("analysis_id", analysisId);
+    if (error) throw new Error(`Merkliste nicht gespeichert: ${error.message}`);
+    return;
+  }
+  lokalSchreibenPruefen();
+  const store = await readLocal();
+  const liste = (store.merkliste ??= []).filter((m) => !(m.userId === userId && m.analysisId === analysisId));
+  if (gemerkt) liste.push({ userId, analysisId });
+  store.merkliste = liste;
+  await writeLocal(store);
+}
+
+/** Vermerkt, dass die E-Mail "Neue Analyse" verschickt wurde. */
+export async function analyseBenachrichtigt(id: string): Promise<void> {
+  const jetzt = new Date().toISOString();
+  if (activeDriver() === "supabase") {
+    const sb = await supabase();
+    const { error } = await sb.from("analyses").update({ benachrichtigt_am: jetzt }).eq("id", id);
+    if (error) throw new Error(error.message);
+    return;
+  }
+  const store = await readLocal();
+  const a = store.analyses.find((x) => x.id === id);
+  if (a) a.benachrichtigtAm = jetzt;
+  await writeLocal(store).catch(() => {});
 }
 
 /* ------------------------------ Warteliste -------------------------------- */

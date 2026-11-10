@@ -13,6 +13,7 @@ import {
   kuendigungsbestaetigung,
   vertragsbestaetigung,
   widerrufsbestaetigung,
+  willkommenMail,
   type KuendigungsDaten,
   type WiderrufsDaten,
 } from "@/lib/mail/vorlagen";
@@ -244,6 +245,23 @@ export async function sendeVertragsbestaetigung(sessionId: string): Promise<void
 
   const versand = await sendeMail({ an: email, ...mail, anhaenge: await rechtstextAnhaenge() });
   if (versand.status === "nicht-konfiguriert") return;
+
+  // Kurze Orientierung für den Start - getrennt von der Vertragsbestätigung,
+  // und ihr Ausfall darf diese nicht wiederholen
+  try {
+    await sendeMail({
+      an: email,
+      ...willkommenMail({
+        plan,
+        analysen: urlZu("/analysen"),
+        methodik: urlZu("/methodik"),
+        konto: urlZu("/konto"),
+      }),
+      archiv: false,
+    });
+  } catch (error) {
+    console.error("[Abo] Willkommensmail nicht versendet:", error);
+  }
 
   await stripe().subscriptions.update(abo.id, {
     metadata: { vertragsbestaetigung: new Date().toISOString() },

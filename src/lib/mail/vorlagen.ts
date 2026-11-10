@@ -650,3 +650,148 @@ export function interneMeldung(m: {
     gruss: false,
   });
 }
+
+/* ------------------------------------------------------------------------ */
+/* Benachrichtigungen zu Analysen (nur mit Zustimmung im Konto)             */
+/* ------------------------------------------------------------------------ */
+
+function abmeldeHinweis(abmelden: string): Baustein {
+  return {
+    art: "klein",
+    text: `Du bekommst diese E-Mail, weil du Benachrichtigungen in deinem Konto eingeschaltet hast. Abbestellen: ${abmelden}`,
+  };
+}
+
+export function neueAnalyseMail(m: { titel: string; ticker: string; link: string; abmelden: string }): FertigeMail {
+  const name = m.ticker ? `${m.titel} (${m.ticker})` : m.titel;
+  return render({
+    betreff: `Neue Analyse: ${m.titel}`,
+    vorschau: `Zu ${name} ist eine neue Analyse erschienen.`,
+    titel: "Neue Analyse",
+    anrede: hallo(""),
+    bausteine: [
+      { art: "absatz", text: `zu ${name} ist eine neue Analyse erschienen. Sie ist in deinem Paket freigeschaltet.` },
+      { art: "knopf", text: "Analyse öffnen", href: m.link },
+      abmeldeHinweis(m.abmelden),
+    ],
+  });
+}
+
+export function signalwechselMail(m: {
+  titel: string;
+  ticker: string;
+  von: string;
+  zu: string;
+  grund: string;
+  link: string;
+  abmelden: string;
+}): FertigeMail {
+  const name = m.ticker ? `${m.titel} (${m.ticker})` : m.titel;
+  return render({
+    betreff: `Signalwechsel: ${m.titel}`,
+    vorschau: `Die Signalstärke von ${name} hat sich geändert.`,
+    titel: "Signalwechsel",
+    anrede: hallo(""),
+    bausteine: [
+      { art: "absatz", text: `die Signalstärke von ${name} hat sich geändert.` },
+      {
+        art: "tabelle",
+        titel: "Änderung",
+        zeilen: [
+          ["Bisher", m.von],
+          ["Jetzt", m.zu],
+          ...(m.grund ? ([["Grund", m.grund]] as [string, string][]) : []),
+        ],
+      },
+      { art: "knopf", text: "Analyse öffnen", href: m.link },
+      abmeldeHinweis(m.abmelden),
+    ],
+  });
+}
+
+export function wochenuebersichtMail(m: {
+  neu: { titel: string; ticker: string }[];
+  wechsel: { titel: string; von: string; zu: string }[];
+  link: string;
+  abmelden: string;
+}): FertigeMail {
+  const bausteine: Baustein[] = [
+    { art: "absatz", text: "das hat sich in den letzten sieben Tagen in deinem Paket getan." },
+  ];
+  if (m.neu.length > 0) {
+    bausteine.push({
+      art: "tabelle",
+      titel: "Neue Analysen",
+      zeilen: m.neu.map((a) => [a.ticker || "Analyse", a.titel]),
+    });
+  }
+  if (m.wechsel.length > 0) {
+    bausteine.push({
+      art: "tabelle",
+      titel: "Signalwechsel",
+      zeilen: m.wechsel.map((w) => [w.titel, `${w.von} → ${w.zu}`]),
+    });
+  }
+  bausteine.push({ art: "knopf", text: "Zu den Analysen", href: m.link }, abmeldeHinweis(m.abmelden));
+  return render({
+    betreff: "Deine Wochenübersicht",
+    vorschau: "Neue Analysen und Signalwechsel der letzten sieben Tage.",
+    titel: "Wochenübersicht",
+    anrede: hallo(""),
+    bausteine,
+  });
+}
+
+/* ------------------------------------------------------------------------ */
+/* Willkommen nach dem ersten Kauf                                          */
+/* ------------------------------------------------------------------------ */
+
+export function willkommenMail(m: { plan: PlanId; analysen: string; methodik: string; konto: string }): FertigeMail {
+  return render({
+    betreff: "Willkommen bei PAX Solutions",
+    vorschau: "So findest du dich in drei Schritten zurecht.",
+    titel: "Willkommen",
+    anrede: hallo(""),
+    bausteine: [
+      {
+        art: "absatz",
+        text: `dein Paket ${PLANS[m.plan].name} ist aktiv. So findest du dich in drei Schritten zurecht.`,
+      },
+      {
+        art: "tabelle",
+        titel: "Erste Schritte",
+        zeilen: [
+          ["1. Analysen öffnen", `Die ${PLANS[m.plan].limit} aktuellsten Analysen sind freigeschaltet: ${m.analysen}`],
+          ["2. Signalstärke und Szenarien lesen", `Was die fünf Stufen und die Szenarien A, B und C bedeuten, steht in der Methodik: ${m.methodik}`],
+          ["3. Benachrichtigungen einstellen", `Im Konto legst du fest, ob du bei neuen Analysen eine E-Mail bekommst: ${m.konto}`],
+        ],
+      },
+      { art: "knopf", text: "Zu den Analysen", href: m.analysen },
+      FRAGEN,
+    ],
+  });
+}
+
+/* ------------------------------------------------------------------------ */
+/* Neue E-Mail-Adresse bestätigen                                           */
+/* ------------------------------------------------------------------------ */
+
+export function emailWechselMail(link: string): FertigeMail {
+  return render({
+    betreff: "Neue E-Mail-Adresse bestätigen",
+    vorschau: "Mit diesem Link bestätigst du deine neue E-Mail-Adresse. Er ist eine Stunde gültig.",
+    titel: "Neue E-Mail-Adresse bestätigen",
+    anrede: hallo(""),
+    bausteine: [
+      {
+        art: "absatz",
+        text: "du möchtest diese Adresse künftig für dein Konto bei PAX Solutions nutzen. Bitte bestätige sie. Der Link ist eine Stunde gültig.",
+      },
+      { art: "knopf", text: "Adresse bestätigen", href: link },
+      {
+        art: "klein",
+        text: "Du hast keine Änderung angefordert? Dann ignoriere diese E-Mail – an deinem Konto ändert sich nichts.",
+      },
+    ],
+  });
+}

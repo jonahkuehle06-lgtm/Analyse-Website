@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { WISSEN } from "@/lib/wissen";
 import Wordmark from "./Wordmark";
 import DoveMark from "./DoveMark";
 import ConsentSettingsLink from "./ConsentSettingsLink";
@@ -19,6 +20,9 @@ const PRODUCT = [
   { href: "/preise", label: "Pakete" },
   { href: "/methodik", label: "Methodik" },
   { href: "/beispielanalyse", label: "Beispielanalyse" },
+  { href: "/rechner", label: "Rechner" },
+  // Der Wissensbereich erscheint erst, wenn mindestens ein Artikel freigegeben ist
+  ...(WISSEN.some((a) => a.freigegeben) ? [{ href: "/wissen", label: "Wissen" }] : []),
   { href: "/ueber-uns", label: "Über uns" },
   { href: "/so-arbeiten-wir", label: "So arbeiten wir" },
   { href: "/hilfe", label: "Hilfe und Kontakt" },

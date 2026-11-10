@@ -3,15 +3,18 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { SIGNALS, SIGNAL_LEVELS } from "@/lib/config";
-import { analysenLink } from "@/lib/analysen-link";
+import { analysenLink, type Ansicht } from "@/lib/analysen-link";
 import type { Richtung, SignalLevel } from "@/lib/types";
 
 export default function SignalFilter({
   active,
   richtung = "long",
+  ansicht,
 }: {
   active: SignalLevel | null;
   richtung?: Richtung;
+  /** Suche, Sortierung und Ansicht bleiben beim Filtern erhalten */
+  ansicht?: Ansicht;
 }) {
   const leiste = useRef<HTMLDivElement>(null);
 
@@ -51,7 +54,7 @@ export default function SignalFilter({
       aria-label="Nach Signalstärke filtern"
     >
       <Link
-        href={analysenLink(richtung, null)}
+        href={analysenLink(richtung, null, ansicht)}
         aria-current={active === null ? "true" : undefined}
         className={`inline-flex min-h-10 shrink-0 items-center rounded-full border px-4 text-sm whitespace-nowrap transition-colors duration-200 ${
           active === null
@@ -67,7 +70,7 @@ export default function SignalFilter({
         return (
           <Link
             key={level}
-            href={analysenLink(richtung, level)}
+            href={analysenLink(richtung, level, ansicht)}
             aria-current={isActive ? "true" : undefined}
             className={`inline-flex min-h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm whitespace-nowrap transition-colors duration-200 ${
               isActive

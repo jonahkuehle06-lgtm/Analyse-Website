@@ -8,6 +8,13 @@ import { logoutAction } from "@/lib/actions/auth";
 import { openPortalAction } from "@/lib/actions/billing";
 import { PLANS } from "@/lib/config";
 import { listAnalyses } from "@/lib/db";
+import AuthForm from "@/components/AuthForm";
+import BenachrichtigungForm from "@/components/BenachrichtigungForm";
+import {
+  benachrichtigungAction,
+  emailAendernAction,
+  passwortAendernAction,
+} from "@/lib/actions/konto";
 
 export const dynamic = "force-dynamic";
 
@@ -28,12 +35,12 @@ const STATUS_LABEL: Record<string, string> = {
 export default async function KontoPage({
   searchParams,
 }: {
-  searchParams: Promise<{ fehler?: string }>;
+  searchParams: Promise<{ fehler?: string; email?: string }>;
 }) {
   const user = await currentUser();
   if (!user) redirect("/login");
 
-  const { fehler } = await searchParams;
+  const { fehler, email } = await searchParams;
   const active = hasActiveSubscription(user);
   const plan = user.plan ? PLANS[user.plan] : null;
   const total = (await listAnalyses()).length;
@@ -49,6 +56,17 @@ export default async function KontoPage({
         <p className="mt-8 text-[0.9375rem] text-[var(--color-danger)]" role="alert">
           Zu diesem Konto sind noch keine Zahlungsdaten hinterlegt. Bitte zunächst ein
           Paket buchen.
+        </p>
+      )}
+
+      {email === "geaendert" && (
+        <p className="mt-8 text-[0.9375rem] text-[var(--color-success)]" role="status">
+          Deine E-Mail-Adresse ist geändert. Du meldest dich künftig mit der neuen Adresse an.
+        </p>
+      )}
+      {email === "abgelaufen" && (
+        <p className="mt-8 text-[0.9375rem] text-[var(--color-danger)]" role="alert">
+          Der Link ist abgelaufen oder wurde schon benutzt. Bitte fordere unten einen neuen an.
         </p>
       )}
 
@@ -119,6 +137,77 @@ export default async function KontoPage({
           </button>
         </form>
       </div>
+
+      {/* ---------------------------- Einstellungen ---------------------------- */}
+      <section
+        aria-labelledby="benachrichtigung-titel"
+        className="mt-16 grid gap-6 border-t border-[var(--color-line)] pt-10 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-10"
+      >
+        <div>
+          <h2 id="benachrichtigung-titel" className="display text-[length:var(--step-h4)] font-normal text-[var(--color-platinum)]">
+            Benachrichtigungen
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-[var(--color-mist)]">
+            E-Mails zu Analysen bekommst du nur, wenn du sie hier einschaltest. In jeder
+            E-Mail steht ein Link zum Abbestellen.
+          </p>
+        </div>
+        <BenachrichtigungForm
+          action={benachrichtigungAction}
+          art={user.benachrichtigung}
+          umfang={user.benachrichtigungUmfang}
+          wocheMoeglich={Boolean(process.env.CRON_SECRET)}
+        />
+      </section>
+
+      {user.passwordHash && (
+        <>
+          <section
+            aria-labelledby="passwort-titel"
+            className="mt-12 grid gap-6 border-t border-[var(--color-line)] pt-10 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-10"
+          >
+            <h2 id="passwort-titel" className="display text-[length:var(--step-h4)] font-normal text-[var(--color-platinum)]">
+              Passwort ändern
+            </h2>
+            <div className="max-w-md">
+              <AuthForm
+                action={passwortAendernAction}
+                submitLabel="Passwort ändern"
+                fields={[
+                  { name: "passwordCurrent", label: "Aktuelles Passwort", type: "password", autoComplete: "current-password" },
+                  { name: "passwordNew", label: "Neues Passwort", type: "password", autoComplete: "new-password" },
+                  { name: "passwordConfirm", label: "Neues Passwort wiederholen", type: "password", autoComplete: "new-password" },
+                ]}
+              />
+            </div>
+          </section>
+
+          <section
+            aria-labelledby="email-titel"
+            className="mt-12 grid gap-6 border-t border-[var(--color-line)] pt-10 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-10"
+          >
+            <div>
+              <h2 id="email-titel" className="display text-[length:var(--step-h4)] font-normal text-[var(--color-platinum)]">
+                E-Mail-Adresse ändern
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--color-mist)]">
+                Wir schicken einen Link an die neue Adresse. Erst nach dem Klick darauf
+                gilt sie für dein Konto und deine Rechnungen.
+              </p>
+            </div>
+            <div className="max-w-md">
+              <AuthForm
+                action={emailAendernAction}
+                submitLabel="Link an neue Adresse schicken"
+                fields={[
+                  { name: "emailNew", label: "Neue E-Mail-Adresse", type: "email", autoComplete: "email" },
+                  { name: "passwordCurrent2", label: "Aktuelles Passwort", type: "password", autoComplete: "current-password" },
+                ]}
+              />
+            </div>
+          </section>
+        </>
+      )}
 
       <p className="mt-12 max-w-[70ch] text-xs leading-relaxed text-[var(--color-muted)]">
         Über „Abo verwalten“ öffnet sich das Kundenportal. Dort änderst du
