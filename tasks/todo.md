@@ -287,3 +287,28 @@ Plan aus dem Review (Stripe-Plugin installiert; MCP/Planer in der Cloud-Session 
 - [x] Geprüft: signierte Test-Events (200, Mails im Postausgang), falsche Signatur 400; Texte auf /preise, /agb; tsc, Build
 - Bewusst so gelassen: Rückkehrseite schreibt weiter den Abo-Status (nur Spiegel von Stripe, Zugang nur bei aktivem Abo)
 - [ ] Freigabe; danach SDK-Update (v23) in einer Stripe-Sandbox
+
+---
+
+# Gesamtplan „Website auf Spitzenniveau“ (10.11.2026)
+
+Auftrag: Seite in allen Belangen verbessern (kundenfreundlich, auffindbar, schön,
+professionell). Erst Plan vorlegen, dann nur Freigegebenes umsetzen.
+Der ausführliche Plan mit Befunden und Belegen liegt dem Nutzer als Datei vor
+(`plan-website-2026-11.md`) und ist bewusst noch nicht eingecheckt.
+
+## Plan (wartet auf Freigabe)
+- [x] Bestandsaufnahme: Live-Seite und Kundenbereich geprüft, Lighthouse/axe/Handy gemessen
+- [x] Recherche: Wettbewerb, SEO, Nutzerforschung, Foren, Design/Motion, Werkzeuge
+- [x] Plan in Paketen geschrieben
+- [ ] Freigabe durch den Nutzer (alles, Pakete oder einzelne Punkte)
+- [ ] Paket A – Vertrauen und ehrliches Angebot
+- [ ] Paket B – Startseite und Verkaufsseiten
+- [ ] Paket C – Kundenbereich
+- [ ] Paket D – Auffindbarkeit
+- [ ] Paket E – Gestaltung und Bewegung
+- [ ] Paket F – Messen und absichern
+- [ ] Paket G – Wachstum (später)
+
+## Offen vor dem Start
+- GitHub-Repository ist öffentlich: Plan und Recherche erst nach Entscheidung des Nutzers einchecken.

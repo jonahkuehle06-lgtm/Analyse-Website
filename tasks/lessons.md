@@ -30,3 +30,5 @@ what went wrong, and the rule that prevents it.
   **Rule:** Immer dann Unteragenten einsetzen, wenn es einen Vorteil bringt (Recherche, Exploration, Prüfläufe, parallele Aufgaben) – auch wenn ein Unteragent etwas besser oder schneller kann als der Hauptagent. Im Zweifel delegieren, damit der Hauptkontext und das Limit des Nutzers geschont werden.
 - **Pattern:** Der Kleinunternehmer-Hinweis (§ 19 UStG) wurde überall eingebaut; der Nutzer will ihn nur, wo er zwingend ist.
   **Rule:** Pflicht- und Steuerhinweise nur dort einsetzen, wo sie vorgeschrieben sind (z. B. Rechnungen), nicht in Werbe- und Seitentexte streuen.
+- **Pattern:** Acht Recherche-Unteragenten gleichzeitig haben das 5-Stunden-Limit aufgebraucht; vier wurden abgeschnitten.
+  **Rule:** Höchstens zwei bis drei Unteragenten parallel starten, jeden Bericht früh in eine Datei schreiben lassen und Messungen mit kurzen Skripten selbst machen.
