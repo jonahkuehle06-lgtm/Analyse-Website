@@ -15,7 +15,6 @@ import ConsentBanner from "@/components/ConsentBanner";
 import Besucherstatistik from "@/components/Besucherstatistik";
 import RevealObserver from "@/components/RevealObserver";
 import { BRAND, siteUrl } from "@/lib/config";
-import { currentUser } from "@/lib/auth";
 import { OPEN_GRAPH } from "@/lib/seo";
 
 /*
@@ -61,8 +60,7 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const user = await currentUser();
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const chatEnabled = Boolean(process.env.ANTHROPIC_API_KEY);
 
   return (
@@ -79,7 +77,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <a href="#inhalt" className="skip-link">
           Zum Inhalt springen
         </a>
-        <SiteHeader loggedIn={Boolean(user)} />
+        <SiteHeader />
         <main id="inhalt" tabIndex={-1} className="min-h-[60vh] outline-none">
           {children}
         </main>

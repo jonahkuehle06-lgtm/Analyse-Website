@@ -12,8 +12,12 @@ const NAV = [
   { href: "/ueber-uns", label: "Über uns" },
 ];
 
-export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean }) {
+/** Merkt sich die Antwort für die Sitzung des Tabs - so springt die Kopfzeile beim Neuladen nicht. */
+const MERKER = "pax-angemeldet";
+
+export default function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
@@ -26,6 +30,28 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
 
   useEffect(() => {
     setOpen(false);
+  }, [pathname]);
+
+  // Anmeldestand im Browser erfragen - bei jedem Seitenwechsel, denn An- und
+  // Abmelden sind Seitenwechsel. Bis zur Antwort gilt der zuletzt bekannte Stand.
+  useEffect(() => {
+    let aktuell = true;
+    try {
+      if (sessionStorage.getItem(MERKER) === "1") setLoggedIn(true);
+    } catch {}
+    fetch("/api/sitzung", { cache: "no-store", credentials: "same-origin" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { angemeldet?: boolean } | null) => {
+        if (!aktuell || !d) return;
+        setLoggedIn(d.angemeldet === true);
+        try {
+          sessionStorage.setItem(MERKER, d.angemeldet ? "1" : "0");
+        } catch {}
+      })
+      .catch(() => {});
+    return () => {
+      aktuell = false;
+    };
   }, [pathname]);
 
   useEffect(() => {

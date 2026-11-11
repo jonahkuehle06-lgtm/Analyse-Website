@@ -86,7 +86,8 @@ export default function AnalyseAnsicht({
 
   return (
     <div className="frame">
-      <div className="py-10 sm:py-14">
+      {/* Beim Öffnen blendet die Analyse von unten ein (Regel in globals.css) */}
+      <div className="analyse-auf py-10 sm:py-14">
         <Link
           href={zurueck.href}
           className="btn-link !border-transparent text-[0.9375rem] text-[var(--color-mist)] hover:!border-[var(--color-mist)] hover:text-[var(--color-platinum)] print:hidden"

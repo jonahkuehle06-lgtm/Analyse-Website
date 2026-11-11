@@ -7,7 +7,13 @@ import JsonLd from "@/components/JsonLd";
 import { beispielPfad, findBeispiel, listBeispiele } from "@/lib/beispiele";
 import { artikelDaten, brotkrumen, kanonisch } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// Fest ausgeliefert und alle fünf Minuten erneuert; beim Speichern in der
+// Verwaltung sofort (siehe refresh() in den Analyse-Aktionen)
+export const revalidate = 300;
+
+export function generateStaticParams() {
+  return [];
+}
 
 function beschreibung(titel: string): string {
   return `Vollständige Beispielanalyse zu ${titel}: Signalstärke, Begründung, Kursziel und Szenarien in drei Zeiträumen – frei lesbar.`;

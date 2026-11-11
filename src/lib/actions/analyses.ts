@@ -116,6 +116,7 @@ function adminLink(richtung: Richtung, meldung: "gespeichert" | "geloescht" | "e
 function refresh() {
   revalidatePath("/");
   revalidatePath("/beispielanalyse");
+  revalidatePath("/beispielanalyse/[slug]", "page");
   revalidatePath("/analysen");
   revalidatePath("/admin");
 }

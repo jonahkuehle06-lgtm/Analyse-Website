@@ -334,9 +334,14 @@ Der ausführliche Plan mit Befunden und Belegen liegt dem Nutzer als Datei vor
 ## Offen
 - Startseite ist am PC rund 11.000 px hoch; das Ziel von etwa 6.000 px braucht eine
   Entscheidung, welche Abschnitte entfallen (z. B. Kennzahlen-Leiste, Vergleich).
-- Seitenübergänge (Karte öffnet sich zur Analyse) brauchen React 19.3; die Seite läuft auf 19.1.
-- Marketingseiten fest ausliefern: Die Kopfzeile liest die Anmeldung, deshalb ist jede Seite
-  dynamisch. Der Umbau ist eine eigene Aufgabe.
+- Seitenübergänge (11.11.2026): Die Analyse blendet beim Öffnen von unten ein (reines CSS).
+  Das „Wandern“ des Titels von der Karte in die Überschrift wurde mit React 19.3 gebaut und
+  gemessen: Es greift nicht, weil die Karte fast immer weiter unten liegt und die neue
+  Überschrift beim Wechsel außerhalb des Bildschirms ist. React bleibt deshalb auf 19.1.
+- Feste Auslieferung (11.11.2026): Die Kopfzeile erfragt den Anmeldestand im Browser
+  (`/api/sitzung`). 15 Seiten werden fest ausgeliefert (Methodik, Über uns, So arbeiten wir,
+  Hilfe, Rechner, Rechtstexte), Beispielanalysen alle fünf Minuten erneuert. Startseite und
+  Preisseite bleiben dynamisch, weil sie Kunden ihr Paket und freigeschaltete Karten zeigen.
 - Wochenübersicht: erscheint im Konto erst, wenn `CRON_SECRET` in Vercel gesetzt ist.
 - Besucherstatistik, Cookie-Fenster (GTM entfernen), Rechtstexte zu Benachrichtigungen und
   Statistik: rechtlich prüfen lassen.

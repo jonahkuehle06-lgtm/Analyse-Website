@@ -1059,3 +1059,20 @@ input[type="radio"] {
 @media (prefers-reduced-motion: reduce) {
   .platzhalter { animation: none; }
 }
+
+/* ----------------------------- Seitenübergänge ---------------------------- */
+/* Öffnet man eine Analyse, blendet sie von unten ein. Bewusst reines CSS:
+   Der Titel der Karte kann nicht in die Überschrift "wandern" (View
+   Transitions), weil die Karte meist weiter unten liegt und die Überschrift
+   beim Seitenwechsel noch außerhalb des Bildschirms ist - gemessen am
+   11.11.2026. Bei "weniger Bewegung" steht die Seite sofort. */
+@keyframes analyse-auf {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+.analyse-auf {
+  animation: analyse-auf 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+@media print {
+  .analyse-auf { animation: none; }
+}
