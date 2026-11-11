@@ -34,7 +34,7 @@ type Baustein =
   | { art: "hinweis"; text: string }
   | { art: "zitat"; titel: string; text: string }
   | { art: "knopf"; text: string; href: string }
-  | { art: "klein"; text: string };
+  | { art: "klein"; text: string; link?: { text: string; href: string } };
 
 interface Inhalt {
   betreff: string;
@@ -127,15 +127,18 @@ function bausteinHtml(b: Baustein): string {
     case "knopf":
       return `<p style="margin:26px 0"><a href="${esc(b.href)}" style="display:inline-block;padding:14px 26px;border-radius:999px;background:${C.tinte};color:${C.platin};font-size:15px;font-weight:600;text-decoration:none">${esc(b.text)} &rarr;</a></p>`;
     case "klein":
-      return `<p style="margin:14px 0 0;font-size:13px;line-height:1.55;color:${C.gedimmt}">${mehrzeilig(b.text)}</p>`;
+      return `<p style="margin:14px 0 0;font-size:13px;line-height:1.55;color:${C.gedimmt}">${mehrzeilig(b.text)}${
+        b.link ? ` <a href="${esc(b.link.href)}" style="color:${C.gedimmt};text-decoration:underline">${esc(b.link.text)}</a>` : ""
+      }</p>`;
   }
 }
 
 function bausteinText(b: Baustein): string {
   switch (b.art) {
     case "absatz":
-    case "klein":
       return b.text;
+    case "klein":
+      return b.link ? `${b.text} ${b.link.text}: ${b.link.href}` : b.text;
     case "hinweis":
       return `> ${b.text.replace(/\n/g, "\n> ")}`;
     case "tabelle":
@@ -658,7 +661,8 @@ export function interneMeldung(m: {
 function abmeldeHinweis(abmelden: string): Baustein {
   return {
     art: "klein",
-    text: `Du bekommst diese E-Mail, weil du Benachrichtigungen in deinem Konto eingeschaltet hast. Abbestellen: ${abmelden}`,
+    text: "Du bekommst diese E-Mail, weil du Benachrichtigungen in deinem Konto eingeschaltet hast.",
+    link: { text: "Benachrichtigungen abbestellen", href: abmelden },
   };
 }
 

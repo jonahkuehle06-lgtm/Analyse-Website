@@ -15,7 +15,8 @@ concurrency:
 
 jobs:
   pruefung:
-    runs-on: ubuntu-latest
+    # Feste Version: Die hier verwendete Playwright-Version unterstützt Ubuntu 26.04 noch nicht
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     env:
       CI: "true"

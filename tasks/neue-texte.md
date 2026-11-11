@@ -32,7 +32,7 @@ Bitte je Block „passt“ oder die gewünschte Änderung nennen.
 - „Neue Analyse: <Titel>“ – „zu <Titel> (<Kürzel>) ist eine neue Analyse erschienen. Sie ist in deinem Paket freigeschaltet.“ Knopf „Analyse öffnen“
 - „Signalwechsel: <Titel>“ – „die Signalstärke von <Titel> hat sich geändert.“ Tabelle Bisher / Jetzt / Grund, Knopf „Analyse öffnen“
 - „Deine Wochenübersicht“ – „das hat sich in den letzten sieben Tagen in deinem Paket getan.“ Abschnitte „Neue Analysen“, „Signalwechsel“, Knopf „Zu den Analysen“
-- Fußzeile dieser drei: „Du bekommst diese E-Mail, weil du Benachrichtigungen in deinem Konto eingeschaltet hast. Abbestellen: <Link>“
+- Fußzeile dieser drei: „Du bekommst diese E-Mail, weil du Benachrichtigungen in deinem Konto eingeschaltet hast.“ mit Link „Benachrichtigungen abbestellen“
 - „Willkommen bei PAX Solutions“ – „dein Paket <Name> ist aktiv. So findest du dich in drei Schritten zurecht.“ Schritte „1. Analysen öffnen“, „2. Signalstärke und Szenarien lesen“, „3. Benachrichtigungen einstellen“, Knopf „Zu den Analysen“
 - „Neue E-Mail-Adresse bestätigen“ – „du möchtest diese Adresse künftig für dein Konto bei PAX Solutions nutzen. Bitte bestätige sie. Der Link ist eine Stunde gültig.“ Knopf „Adresse bestätigen“; „Du hast keine Änderung angefordert? Dann ignoriere diese E-Mail – an deinem Konto ändert sich nichts.“
 

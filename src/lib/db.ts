@@ -78,10 +78,14 @@ interface LocalStore {
 const STORE_PATH = path.join(process.cwd(), "data", "store.local.json");
 const SEED_PATH = path.join(process.cwd(), "data", "seed.json");
 
-let memoryStore: LocalStore | null = null;
+/* Ein Stand für den ganzen Prozess: Seiten, Server-Aktionen und Route-Handler
+   laden dieses Modul getrennt. Läge der Stand im Modul, hätte jeder seine
+   eigene Kopie und überschriebe die Änderungen der anderen. */
+const lokal = globalThis as typeof globalThis & { __paxLokalerSpeicher?: LocalStore | null };
 
 async function readLocal(): Promise<LocalStore> {
-  if (memoryStore) return memoryStore;
+  if (lokal.__paxLokalerSpeicher) return lokal.__paxLokalerSpeicher;
+  let memoryStore: LocalStore;
   try {
     const raw = await fs.readFile(STORE_PATH, "utf8");
     memoryStore = JSON.parse(raw) as LocalStore;
@@ -114,11 +118,12 @@ async function readLocal(): Promise<LocalStore> {
     wochenmailAm: u.wochenmailAm ?? null,
     einfuehrungGesehen: u.einfuehrungGesehen === true,
   }));
+  lokal.__paxLokalerSpeicher = memoryStore;
   return memoryStore;
 }
 
 async function writeLocal(store: LocalStore): Promise<void> {
-  memoryStore = store;
+  lokal.__paxLokalerSpeicher = store;
   try {
     await fs.mkdir(path.dirname(STORE_PATH), { recursive: true });
     await fs.writeFile(STORE_PATH, JSON.stringify(store, null, 2), "utf8");
