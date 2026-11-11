@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "So arbeiten wir",
   description:
     "Was du bei PAX Solutions bekommst und was es bei uns nicht gibt: klare Preise, Kündigung online, Szenarien statt Versprechen, Offenlegung in jeder Analyse.",
-  ...kanonisch("/so-arbeiten-wir"),
+  ...kanonisch("/so-arbeiten-wir", "So arbeiten wir"),
 };
 
 /**

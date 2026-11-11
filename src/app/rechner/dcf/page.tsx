@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "DCF-Rechner",
   description:
     "Schätze zehn Jahre Free Cashflow, einen Endwert und den heutigen Wert je Aktie. Mit Empfindlichkeitstabelle für Abzinsungssatz und ewiges Wachstum.",
-  ...kanonisch("/rechner/dcf"),
+  ...kanonisch("/rechner/dcf", "DCF-Rechner"),
 };
 
 export default function Seite() {

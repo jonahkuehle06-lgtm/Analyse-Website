@@ -19,7 +19,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: artikel.titel,
     description: artikel.beschreibung,
-    ...kanonisch(pfad),
+    // Entwürfe behalten das allgemeine Bild - ihr Titel soll nicht nach außen dringen
+    ...kanonisch(pfad, artikel.freigegeben ? artikel.titel : undefined),
     ...(artikel.freigegeben ? {} : { robots: { index: false, follow: false } }),
   };
 }

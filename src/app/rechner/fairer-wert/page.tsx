@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Fairer Wert und Sicherheitsmarge",
   description:
     "Vergleiche deinen geschätzten fairen Wert mit dem aktuellen Kurs und sieh, welcher Kurs zu deiner gewünschten Sicherheitsmarge passt.",
-  ...kanonisch("/rechner/fairer-wert"),
+  ...kanonisch("/rechner/fairer-wert", "Fairer Wert und Sicherheitsmarge"),
 };
 
 export default function Seite() {

@@ -24,7 +24,7 @@ export async function generateMetadata({
   return {
     title: `${a.title} – Beispielanalyse`,
     description: beschreibung(a.title),
-    ...kanonisch(beispielPfad(a)),
+    ...kanonisch(beispielPfad(a), a.title),
   };
 }
 

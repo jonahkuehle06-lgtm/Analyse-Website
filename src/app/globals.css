@@ -366,6 +366,8 @@ body {
   background: var(--color-anthracite);
   border: 1px solid var(--color-line);
   border-radius: var(--radius-card);
+  /* Feine Lichtkante oben - Tiefe auf Schwarz ohne Schatten */
+  box-shadow: inset 0 1px 0 rgba(239, 234, 225, 0.045);
 }
 
 .surface-hover {
@@ -1022,6 +1024,18 @@ input[type="radio"] {
 }
 .hero-faecher { animation: faecher-auf 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.25s both; }
 .hero-ziel { animation: ziel-ein 0.4s ease-out 1s both; }
+/* Derselbe Aufbau in der Analyse selbst - etwas zügiger, weil man beim
+   Wechsel des Zeitraums nicht warten soll */
+.faecher-linien { animation: faecher-auf 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.05s both; }
+.faecher-ziel { animation: ziel-ein 0.3s ease-out 0.55s both; }
+@media print {
+  .faecher-linien,
+  .faecher-ziel,
+  .hero-faecher,
+  .hero-ziel,
+  .faecher-linien,
+  .faecher-ziel { animation: none; }
+}
 /* Feine Lichtkante statt Schatten - Tiefe auf Schwarz */
 .hero-karte {
   box-shadow: inset 0 1px 0 rgba(239, 234, 225, 0.07), 0 30px 80px -40px rgba(0, 0, 0, 0.9);
@@ -1029,4 +1043,19 @@ input[type="radio"] {
 @media (prefers-reduced-motion: reduce) {
   .hero-faecher,
   .hero-ziel { animation: none; }
+}
+
+/* --------------------------- Lade-Platzhalter ----------------------------- */
+/* Ruhiges Pulsieren in der Form des Inhalts, der gleich erscheint. */
+@keyframes platzhalter-puls {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+.platzhalter {
+  border-radius: 999px;
+  background: var(--color-line-strong);
+  animation: platzhalter-puls 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .platzhalter { animation: none; }
 }

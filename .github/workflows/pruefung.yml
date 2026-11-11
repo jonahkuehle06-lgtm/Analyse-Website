@@ -1,0 +1,46 @@
+name: Prüfung
+
+# Läuft bei jeder Änderung: Typen, Lint, Build und die Tests im Browser.
+# Alle Werte hier sind reine Testwerte - keine echten Zugangsdaten.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pruefung-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pruefung:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: "true"
+      BASE_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      AUTH_SECRET: nur-fuer-tests-0123456789abcdef0123456789abcdef
+      ADMIN_EMAIL: admin@example.com
+      # Hash des Test-Passworts aus tests/hilfen.ts - gilt nur in diesem Lauf
+      ADMIN_PASSWORD_HASH: "scrypt:99f973179ee5afcb5c566e6e5327515e:8de8d6123ebd47a08f3f575fc09d2fa88337297f139c93b1ce1535baf326e5088bf766a231cdb77ac2673ba8c6aaa6eee11e9f986b4f86e3a92516269f8e4e86"
+      MAIL_OUTBOX: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npm test -- --trace off
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-bericht
+          path: playwright-report/
+          retention-days: 7

@@ -14,3 +14,7 @@ data/*.local.json
 data/outbox/
 .claude/worktrees/
 AGENTS.md
+
+# Playwright
+test-results/
+playwright-report/

@@ -57,8 +57,10 @@ export default function SiteHeader({ loggedIn = false }: { loggedIn?: boolean })
       }`}
     >
       <div className="frame flex h-16 items-center justify-between gap-6 lg:h-[76px]">
-        <Link href="/" aria-label="PAX Solutions – zur Startseite" className="shrink-0">
+        {/* Der sichtbare Schriftzug ist der Name des Links; das Ziel steht für Screenreader dahinter */}
+        <Link href="/" className="shrink-0">
           <Wordmark />
+          <span className="sr-only"> – zur Startseite</span>
         </Link>
 
         {/* Volle Navigation erst ab 1024 px - auf Tablets passt sie nicht in eine Zeile */}

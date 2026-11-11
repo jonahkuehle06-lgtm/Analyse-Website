@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Hilfe und Kontakt",
   description:
     "Antworten auf häufige Fragen zu den Aktienanalysen von PAX Solutions: Aufbau einer Analyse, Szenarien, Pakete, Bezahlung und Kündigung – und der direkte Kontakt.",
-  ...kanonisch("/hilfe"),
+  ...kanonisch("/hilfe", "Hilfe und Kontakt"),
 };
 
 const GRUPPEN = [

@@ -48,7 +48,11 @@ export default function SignalIndicator({
               key={step}
               className={`${barHeight} flex-1 rounded-full transition-colors duration-300`}
               style={{
-                backgroundColor: active ? meta.color : "var(--color-line-strong)",
+                // Die Skala bleibt als Ganzes lesbar: jede Stufe trägt ihre
+                // Farbe, gedämpft - nur die aktive leuchtet
+                backgroundColor: active
+                  ? meta.color
+                  : `color-mix(in srgb, ${SIGNALS[step].color} 26%, var(--color-line-strong))`,
               }}
             />
           );

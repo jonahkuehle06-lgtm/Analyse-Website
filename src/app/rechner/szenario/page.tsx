@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Szenario-Rechner",
   description:
     "Gib Kurs, drei Kursziele und ihre Wahrscheinlichkeiten ein und sieh den Erwartungswert und den Abstand zum aktuellen Kurs.",
-  ...kanonisch("/rechner/szenario"),
+  ...kanonisch("/rechner/szenario", "Szenario-Rechner"),
 };
 
 export default function Seite() {

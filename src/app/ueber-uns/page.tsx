@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Über uns",
   description:
     "Wer hinter PAX Solutions steht: Jonah Kühle und sein Value-Ansatz bei Aktienanalysen – mit dem Ziel, finanzielle Bildung für jeden zugänglich zu machen.",
-  ...kanonisch("/ueber-uns"),
+  ...kanonisch("/ueber-uns", "Über uns"),
 };
 
 /**

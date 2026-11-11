@@ -27,10 +27,28 @@ const VORSCHAUBILD = {
  * Kanonische Adresse einer öffentlichen Seite, zugleich Adresse der Vorschau.
  * So zählen Varianten mit Parametern (Filter, Hinweise) nicht als eigene Seiten.
  */
-export function kanonisch(pfad: string): Pick<Metadata, "alternates" | "openGraph"> {
+export function kanonisch(
+  pfad: string,
+  /** Titel für das eigene Vorschaubild der Seite (opengraph-image.tsx im selben Ordner) */
+  eigenesBild?: string,
+): Pick<Metadata, "alternates" | "openGraph" | "twitter"> {
+  if (!eigenesBild) {
+    return {
+      alternates: { canonical: pfad },
+      openGraph: { ...OPEN_GRAPH, url: pfad, images: [VORSCHAUBILD] },
+    };
+  }
+  const bild = {
+    url: `${pfad}/opengraph-image`,
+    width: 1200,
+    height: 630,
+    type: "image/png",
+    alt: `${SEITENNAME} – ${eigenesBild}`,
+  };
   return {
     alternates: { canonical: pfad },
-    openGraph: { ...OPEN_GRAPH, url: pfad, images: [VORSCHAUBILD] },
+    openGraph: { ...OPEN_GRAPH, url: pfad, images: [bild] },
+    twitter: { card: "summary_large_image", images: [bild] },
   };
 }
 

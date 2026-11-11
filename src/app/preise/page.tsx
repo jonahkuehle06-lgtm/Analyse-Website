@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Pakete und Preise",
   description: `${PLANS.basic.name}, ${PLANS.black.name} und ${PLANS.platin.name}: Zugang zu ${PLANS.basic.limit}, ${PLANS.black.limit} oder ${PLANS.platin.limit} Aktienanalysen von PAX Solutions – monatlich oder jährlich mit ${YEARLY_DISCOUNT_MONTHS} Monaten gratis.`,
-  ...kanonisch("/preise"),
+  ...kanonisch("/preise", "Pakete"),
 };
 
 const FAQ = FAQ_PAKETE;

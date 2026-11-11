@@ -141,8 +141,10 @@ export default function ScenarioChart({
       {/* Diagramm. Linien als SVG, Beschriftung als HTML - so skaliert die
           Schrift nicht mit dem Diagramm mit und bleibt am Telefon lesbar. */}
       <div className="relative mt-7 h-[230px] sm:h-[280px]">
+        {/* Der Fächer wischt einmal von links auf, danach erscheinen die Ziele
+            (bei "weniger Bewegung" steht sofort der Endzustand). */}
         <svg
-          className="absolute inset-0 h-full w-full"
+          className="faecher-linien absolute inset-0 h-full w-full"
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
           aria-hidden="true"
@@ -189,7 +191,7 @@ export default function ScenarioChart({
         {szenarien.map((s) => (
           <div
             key={s.fall}
-            className="absolute -translate-y-1/2"
+            className="faecher-ziel absolute -translate-y-1/2"
             style={{ left: `${X1}%`, top: `${y(s.kurs) * 100}%` }}
           >
             <span

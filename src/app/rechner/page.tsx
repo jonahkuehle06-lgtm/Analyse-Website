@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Rechner",
   description:
     "Drei Rechner für deine eigenen Annahmen: Szenarien mit Wahrscheinlichkeiten, DCF-Bewertung, fairer Wert und Sicherheitsmarge. Alles rechnet in deinem Browser.",
-  ...kanonisch("/rechner"),
+  ...kanonisch("/rechner", "Rechner"),
 };
 
 const RECHNER = [
