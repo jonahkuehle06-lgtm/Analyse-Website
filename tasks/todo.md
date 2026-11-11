@@ -301,14 +301,47 @@ Der ausführliche Plan mit Befunden und Belegen liegt dem Nutzer als Datei vor
 - [x] Bestandsaufnahme: Live-Seite und Kundenbereich geprüft, Lighthouse/axe/Handy gemessen
 - [x] Recherche: Wettbewerb, SEO, Nutzerforschung, Foren, Design/Motion, Werkzeuge
 - [x] Plan in Paketen geschrieben
-- [ ] Freigabe durch den Nutzer (alles, Pakete oder einzelne Punkte)
-- [ ] Paket A – Vertrauen und ehrliches Angebot
-- [ ] Paket B – Startseite und Verkaufsseiten
-- [ ] Paket C – Kundenbereich
-- [ ] Paket D – Auffindbarkeit
-- [ ] Paket E – Gestaltung und Bewegung
-- [ ] Paket F – Messen und absichern
+- [x] Freigabe durch den Nutzer: „Setzte alles um“ (10.11.2026), Bilder und öffentliche Analysen folgen
+- [x] Paket A – Vertrauen und ehrliches Angebot (A8 Bilanz folgt, sobald Daten da sind)
+- [x] Paket B – Startseite und Verkaufsseiten (Länge der Startseite noch nicht gekürzt, siehe Offen)
+- [x] Paket C – Kundenbereich (C1–C7)
+- [x] Paket D – Auffindbarkeit: Rechner, Wissens-Entwürfe, Vorschaubilder (D5/D6 liegen beim Inhaber)
+- [x] Paket E – Gestaltung und Bewegung (E3 Seitenübergänge und E7 heller Modus offen)
+- [x] Paket F – Tests und Statistik vorbereitet (F2 Überwachung und F5/F6 liegen beim Inhaber)
 - [ ] Paket G – Wachstum (später)
 
-## Offen vor dem Start
-- GitHub-Repository ist öffentlich: Plan und Recherche erst nach Entscheidung des Nutzers einchecken.
+## Ergebnis (Stand 11.11.2026, alles nur auf dem Arbeitsbranch)
+- Kundenbereich:
+  - Übersicht mit Suche, Sortierung, Listenansicht, Marke „Neu“ seit dem letzten Besuch,
+    Abstand zum Kursziel und einer Einführung nach dem Kauf.
+  - Merkliste, E-Mails zu neuen Analysen und Signalwechseln (nur mit Zustimmung, Abbestellen
+    per Link), Wochenübersicht per Zeitplan, Willkommensmail.
+  - Konto: Benachrichtigungen, Passwort und E-Mail-Adresse ändern.
+  - Verwaltung: Entwurf mit Vorschau, Duplizieren, Abschließen.
+- Öffentlich: Rechner (Szenario, DCF, fairer Wert), Methodik mit Sprungmarken, Zeiträumen
+  und Long/Short, eigenes Vorschaubild je wichtiger Seite, zehn Wissens-Entwürfe (unsichtbar
+  bis zur Freigabe).
+- Technik: Lade-Platzhalter, Aufbau des Szenario-Fächers, automatische Tests mit
+  GitHub-Workflow, Besucherstatistik vorbereitet (aus, bis die Variablen gesetzt sind).
+- Datenbank (Supabase, bereits eingespielt, nur zusätzliche Spalten und eine Tabelle):
+  `users` (Besuch, Benachrichtigung, Einführung), `analyses` (Status, Abschluss,
+  Benachrichtigung), `merkliste`. Die Live-Seite ignoriert sie.
+- Geprüft: 92 Browser-Tests lokal (Desktop und Handy), Kundenbereich und Verwaltung von Hand
+  durchgespielt (Entwurf → Vorschau → Veröffentlichen → E-Mail im Postausgang), keine
+  seitliche Verschiebung auf den neuen Seiten.
+- Neue Texte zur Freigabe: `tasks/neue-texte.md`.
+
+## Offen
+- Startseite ist am PC rund 11.000 px hoch; das Ziel von etwa 6.000 px braucht eine
+  Entscheidung, welche Abschnitte entfallen (z. B. Kennzahlen-Leiste, Vergleich).
+- Seitenübergänge (Karte öffnet sich zur Analyse) brauchen React 19.3; die Seite läuft auf 19.1.
+- Marketingseiten fest ausliefern: Die Kopfzeile liest die Anmeldung, deshalb ist jede Seite
+  dynamisch. Der Umbau ist eine eigene Aufgabe.
+- Wochenübersicht: erscheint im Konto erst, wenn `CRON_SECRET` in Vercel gesetzt ist.
+- Besucherstatistik, Cookie-Fenster (GTM entfernen), Rechtstexte zu Benachrichtigungen und
+  Statistik: rechtlich prüfen lassen.
+- Wortwahl „hohe Renditen“, „finanzielle Freiheit“, „Institutionelle Standards“ und der
+  Vergleich mit „anderen Analysehäusern“: Vorschläge liegen vor, nichts geändert.
+- Fotos: `public/bilder/portrait.*` (4:5) und `public/bilder/arbeitsplatz.*` (3:2).
+- Öffentliche Beispielanalyse: Häkchen „Als öffentliche Beispielanalyse zeigen“ in der Verwaltung.
+- Nicht mehr genutzte Dateien `CandleChart*.tsx` bleiben vorerst liegen.

@@ -12,6 +12,7 @@ import {
   gtmId,
 } from "@/components/GoogleTagManager";
 import ConsentBanner from "@/components/ConsentBanner";
+import Besucherstatistik from "@/components/Besucherstatistik";
 import RevealObserver from "@/components/RevealObserver";
 import { BRAND, siteUrl } from "@/lib/config";
 import { currentUser } from "@/lib/auth";
@@ -89,6 +90,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {gtmId() && <ConsentBanner />}
         <RevealObserver />
         <GoogleTagManagerScript />
+        <Besucherstatistik />
       </body>
     </html>
   );
